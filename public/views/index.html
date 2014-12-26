@@ -1,0 +1,75 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+
+    <title>Starter Node and Angular</title>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,800,600,300,700'
+	rel='stylesheet' type='text/css'>
+    <!-- CSS -->
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css"> <!-- custom styles -->
+	<link href="libs/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
+
+    <!-- JS -->
+	
+	<!-- <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script> -->
+	<script src="libs/jquery/dist/jquery.min.js"></script>	 
+    <script src="libs/angular/angular.min.js"></script>
+    <script src="libs/angular-route/angular-route.min.js"></script>
+	<script src='libs/lodash/dist/lodash.js'></script>
+	<script src='libs/angular-google-maps/dist/angular-google-maps.js'></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- ANGULAR CUSTOM -->
+    <script src="js/controllers/MainCtrl.js"></script>
+    <script src="js/controllers/ProducteurCtrl.js"></script>
+	<script src="js/controllers/ValidationAdresseCtrl.js"></script>
+
+	<script src="js/controllers/AuthentificationCtrl.js"></script>
+    <script src="js/services/AuthentificationService.js"></script>
+    <script src="js/services/ProducteurService.js"></script>
+    <script src="js/appRoutes.js"></script>
+    <script src="js/app.js"></script>
+	<script src="libs/angular-xeditable/dist/js/xeditable.js"></script>
+
+</head>
+<body ng-app="locashopApp" ng-controller="AuthentificationController">
+	<div class="container">
+
+		<!-- HEADER -->
+		<nav class="navbar navbar-inverse">
+			<ul class="nav navbar-nav">
+				<li><a href="/producteurs">Producteurs</a></li>
+			</ul>
+			<ul class="nav navbar-nav">
+				<li><a href="/consommateurs">Consommateurs</a></li>
+			</ul>
+			 <ul ng-show="!$root.isLoggedIn" class="nav navbar-nav">
+				<li><a href="/auth/inscription">Inscription</a></li>
+			</ul>
+			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
+				<li><a href="/auth/validationAdresse">Validation d'adresse</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right spacer-right">
+				<li ng-show="$root.isLoggedIn" class="dropdown">
+				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" ng-show="$root.isLoggedIn">{{$root.userInfo.username}} <span class="caret"></span></a>
+				  <ul class="dropdown-menu" role="menu">
+					<li><a ng-click="logout()" href="/">Logout</a></li>
+				  </ul>
+				</li>
+				<li ng-show="!$root.isLoggedIn">
+					<a href="/auth/login">Login</a>
+				</li>
+			</ul>
+		</nav>		
+
+		<!-- ANGULAR DYNAMIC CONTENT -->
+		<div ng-view></div>
+
+	</div>
+</body>
+</html>
+

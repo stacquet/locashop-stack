@@ -1,0 +1,27 @@
+<div class="container">
+
+<div class="col-sm-6 col-sm-offset-3">
+
+    <h1><span class="fa fa-sign-in"></span> Login</h1>
+		<form>
+			<div class="alert alert-danger" ng-show="(loginMessages.length > 0)">
+				<p ng-repeat="loginMessage in loginMessages">{{loginMessage}}</p>
+			</div>
+
+			<div class="form-group">
+				<label>Email</label>
+				<input type="text" class="form-control" ng-model="email" id="email">
+			</div>
+			<div class="form-group">
+				<label>Password</label>
+				<input type="password" class="form-control" ng-model="password" id="password">
+			</div>
+
+			<button type="submit" ng-click="login()" class="btn btn-warning btn-lg">Login</button>
+		</form>
+    <p class="spacer">Pas encore de compte ? <a href="/inscription">Inscrivez-vous !</a></p>
+    <p>Ou retournez à l'accueil <a href="/">home</a>.</p>
+
+</div>
+
+</div>
