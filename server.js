@@ -10,9 +10,13 @@ var cookieParser 	= require('cookie-parser');
 var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
+var winston 		= require('winston');
 
 // configuration ===========================================
-    
+winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
+winston.remove(winston.transports.Console);
+
+winston.log('info', 'Hello distributed log files!');
 // config files
 //var db = require('./config/db');
 var pool_mysql  = mysql.createPool({
@@ -41,10 +45,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('X-HTTP-Method-Override')); 
 
 app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser()); // get information from html forms
+ //app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' ,
+app.use(session({ secret: 'thisisItheone' ,
 	cookie : {
 		maxAge: 2*3600*1000 // see below
 	  }})); // session secret
@@ -56,7 +60,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(express.static(__dirname + '/public')); 
 require('./config/passport')(passport); // pass passport for configuration
 // routes ==================================================
-require('./app/routes')(app,pool_mysql,passport); // configure our routes
+require('./app/routes')(app,passport); // configure our routes
 // start app ===============================================
 // startup our app at http://localhost:8080
 app.listen(port);               

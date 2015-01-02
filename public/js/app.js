@@ -1,4 +1,4 @@
 angular.module('locashopApp', 
 	['ngRoute','uiGmapgoogle-maps', 'appRoutes', 'MainCtrl',
-	'xeditable', 'ProducteurCtrl', 'ProducteurService','AuthentificationCtrl',
+	'xeditable', 'ProducteurCtrl', 'UserCtrl','UserService','ProducteurService','AuthentificationCtrl',
 	'AuthentificationService','ValidationAdresseCtrl']);

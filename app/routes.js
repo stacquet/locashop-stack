@@ -3,7 +3,8 @@
 // grab the nerd model we just created
 //var Nerd = require('./models/nerd');
 var Inscription = require('./services/inscription');
-module.exports = function(app,mysql_pool,passport) {
+var User = require('./services/user');
+module.exports = function(app,passport) {
 	
     // sample api route
     app.get('/api/producteurs', function(req, res) {
@@ -78,6 +79,23 @@ module.exports = function(app,mysql_pool,passport) {
 		else{
 			res.sendfile('./public/views/producteurs.html');
 		}
+	});
+	
+	// =====================================
+	// ADMIN SECTION =========================
+	// =====================================
+	// 
+	app.get('/api/auth/users', function(req, res) {
+		if(req.user) console.log("role "+req.user.role);
+		/*if(req.user.role === "admin"){
+			res.sendfile('./public/views/users.html');
+			}
+		else{
+			res.sendfile('./public/views/index.html');
+		}*/
+		User.getUsersList(function(data,err){
+			res.send(data);
+			});
 	});
 	
 	// =====================================
