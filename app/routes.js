@@ -85,7 +85,7 @@ module.exports = function(app,passport) {
 	// ADMIN SECTION =========================
 	// =====================================
 	// 
-	app.get('/api/auth/users', function(req, res) {
+	app.get('/api/auth/users', isLoggedIn, function(req, res) {
 		if(req.user) console.log("role "+req.user.role);
 		/*if(req.user.role === "admin"){
 			res.sendfile('./public/views/users.html');
@@ -96,6 +96,14 @@ module.exports = function(app,passport) {
 		User.getUsersList(function(data,err){
 			res.send(data);
 			});
+	});
+	
+	app.post('/api/auth/users/delete', function(req, res) {
+		if(req.body.idUser !== undefined){
+			User.delete(req.body.idUser,function(data,err){
+				res.send(data);
+			});
+		}
 	});
 	
 	// =====================================
@@ -122,7 +130,11 @@ function isAuthorized(req, res, next){
 }
 
 function isLoggedIn(req, res, next) {
-
+	console.log(req.route.path);
+	User.getUsersList(function(data,err){
+			//res.send(data);
+			console.log('tata');
+			});
 	// if user is authenticated in the session, carry on 
 	if (req.isAuthenticated()){
 		console.log('identifie !');

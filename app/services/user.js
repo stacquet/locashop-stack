@@ -11,5 +11,15 @@ module.exports = {
 							}
 							return callback(rows);
 				});
+		},
+		
+		delete : function(idUser,callback){
+				connection.query("delete from users where id='"+idUser+"'", function(err, rows) {
+						if(err){
+							return callback(err);
+						}
+						return callback(rows);
+				});
 		}
+		
 };

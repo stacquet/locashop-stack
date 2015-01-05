@@ -2,8 +2,15 @@
 angular.module('UserCtrl', [])
 .controller('UserController', function($scope,User) {
 
-    $scope.users = User.getUsersList();
+    User.getUsersList(function(data){
+		$scope.usersList = data;
+	});
 	
+	$scope.suppressionUtilisateur = function(idIndex,idUser){
+		User.suppressionUtilisateur(idUser,function(data){
+			$scope.usersList.splice(idIndex,1);
+		});
+	};
 	
 	$scope.chargement = function(){
 		$scope.resultat=Producteur.chargement();

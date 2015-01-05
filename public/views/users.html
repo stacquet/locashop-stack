@@ -1,9 +1,19 @@
 <table class="table">
-  <thead>
-        <tr>
-            <th data-field="id">Item ID</th>
-            <th data-field="name">Item Name</th>
-            <th data-field="price">Item Price</th>
-        </tr>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>USERNAME</th>
+			<th>PASSWORD</th>
+			<th>ROLE</th>
+		</tr>
     </thead>
+    <tbody>
+		<tr ng-repeat="user in usersList">
+			<td>{{user.id}}</td>
+			<td>{{user.username}}</td>
+			<td>{{user.password}}</td>
+			<td>{{user.role}}</td>
+			<td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="suppressionUtilisateur($index,user.id)"></span>
+		</tr>
+    </tbody>
 </table>

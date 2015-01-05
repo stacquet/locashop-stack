@@ -5,9 +5,27 @@ angular.module('UserService', []).factory('User', ['$http', function($http) {
 	
 		
         // call to get all nerds
-        getUsersList : function() {
-            return $http.get('/api/auth/users');
+        getUsersList : function(callback) {
+            $http.get('/api/auth/users')
+				.success(function(data, status, headers, config) {
+					return callback(data);
+				})
+				.error(function(data, status, headers, config) {
+					// called asynchronously if an error occurs
+					// or server returns response with an error status.
+				});
         },
+		
+		suppressionUtilisateur : function(idUser,callback){
+			$http.post('/api/auth/users/delete',{"idUser" : idUser})
+				.success(function(data, status, headers, config) {
+					return callback(data);
+				})
+				.error(function(data, status, headers, config) {
+					// called asynchronously if an error occurs
+					// or server returns response with an error status.
+				});
+		},
 
 		ajout_producteur : function(){
 			return $http.get('/producteurs/producteur_details');
