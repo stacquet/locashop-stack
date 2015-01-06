@@ -36,6 +36,11 @@
 					templateUrl: 'views/users.html',
 					controller: 'UserController'
 				})
+				
+				.when('/user/producteur', {
+					templateUrl: 'views/producteurs.html',
+					controller: 'ProducteurController'
+				})
 				/*.validationAdresse('/user/validationAdresse', {
 					templateUrl: 'views/validationAdresse.html',
 					controller: 'SearchBoxController'
