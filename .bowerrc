@@ -1,5 +1,7 @@
 
 {
-    "directory": "public/libs"
+    "directory": "public/libs",
+	"proxy":"http://stacquet:Charlotte5@192.168.77.13:8080",
+	"https-proxy":"http://stacquet:Charlotte5@192.168.77.13:8080"
 }
 
