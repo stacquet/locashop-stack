@@ -18,7 +18,6 @@ winston.remove(winston.transports.Console);
 
 winston.log('info', 'Hello distributed log files!');
 // config files
-//var db = require('./config/db');
 var pool_mysql  = mysql.createPool({
    host     : 'localhost',
    user     : 'root',
