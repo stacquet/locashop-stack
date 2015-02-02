@@ -1,12 +1,8 @@
-var mysql = require('mysql');
-var dbconfig = require('../../config/database');
-var connection = mysql.createConnection(dbconfig.connection);
-connection.query('USE ' + dbconfig.database);
-
-module.exports = {
-		checkEmailAvailable : function(email,callback){
+module.exports = function() {
+		var Inscription={};
+		Inscription.checkEmailAvailable = function(email,callback){
 			if(email){
-				connection.query("select * from users where username = " + connection.escape(email), function(err, rows) {
+				global.mysqlPool.query("select * from users where username = " + global.mysqlPool.escape(email), function(err, rows) {
 							if (err){
 								return callback(err);
 							}
@@ -21,6 +17,8 @@ module.exports = {
 			else{
 				return callback(false);
 			}
-		}
+		};
+
+		return Inscription;
 
 };

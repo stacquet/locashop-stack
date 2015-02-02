@@ -1,14 +1,12 @@
-﻿// app/routes.js
+﻿	module.exports = function(app,passport) {
 
-// grab the nerd model we just created
-//var Nerd = require('./models/nerd');
-var Inscription = require('./services/inscription');
-var User = require('./services/user');
-module.exports = function(app,passport) {
-	
+	var modelServices = require('./services/modelServices')();
     // sample api route
     app.get('/api/producteurs', function(req, res) {
-        
+        modelServices.Producteur.findById(1,function(callback){
+			global.winston.log('info','producteur '+modelServices.Producteur.id);
+			res.send(callback);
+		});
     });
    // route to handle creating goes here (app.post)
     // route to handle delete goes here (app.delete)
@@ -71,7 +69,7 @@ module.exports = function(app,passport) {
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res) {
+	app.get('/profile',  function(req, res) {
 		console.log("role "+req.user.role);
 		if(req.user.role === "admin"){
 			res.sendfile('./public/views/index.html');
@@ -85,20 +83,16 @@ module.exports = function(app,passport) {
 	// ADMIN SECTION =========================
 	// =====================================
 	// 
-	app.get('/api/auth/users', isLoggedIn, function(req, res) {
+	app.get('/api/auth/users', modelServices.User.isLoggedIn, function(req, res) {
 		if(req.user) console.log("role "+req.user.role);
-		/*if(req.user.role === "admin"){
-			res.sendfile('./public/views/users.html');
-			}
-		else{
-			res.sendfile('./public/views/index.html');
-		}*/
-		User.getUsersList(function(data,err){
-			res.send(data);
+		modelServices.User.getUsersList(function(data,err){
+			if(err) global.winston.log('error',err);
+				console.log(data);
+				res.send(data);
 			});
 	});
 	
-	app.post('/api/auth/users/delete', function(req, res) {
+	app.post('/api/auth/users/delete',modelServices.User.isLoggedIn, function(req, res) {
 		if(req.body.idUser !== undefined){
 			User.delete(req.body.idUser,function(data,err){
 				res.send(data);
@@ -122,26 +116,15 @@ module.exports = function(app,passport) {
 	app.get('*', function(req, res) {
 		res.sendfile('./public/views/index.html');
 	});
-};
-
-function isAuthorized(req, res, next){
-
-
 }
+	function isLoggedIn(req, res, next) {
+		// if user is authenticated in the session, carry on 
+		if (req.isAuthenticated()){
+			console.log('identifie !');
+			return next();
+		}
+		console.log('non identifie !');
 
-function isLoggedIn(req, res, next) {
-	console.log(req.route.path);
-	User.getUsersList(function(data,err){
-			//res.send(data);
-			console.log('tata');
-			});
-	// if user is authenticated in the session, carry on 
-	if (req.isAuthenticated()){
-		console.log('identifie !');
-		return next();
-	}
-	console.log('non identifie !');
-
-	// if they aren't redirect them to the home page
-	res.redirect('/login');
-}
+		// if they aren't redirect them to the home page
+		res.redirect('/login');
+	};

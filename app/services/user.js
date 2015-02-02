@@ -1,25 +1,35 @@
-var mysql = require('mysql');
-var dbconfig = require('../../config/database');
-var connection = mysql.createConnection(dbconfig.connection);
-connection.query('USE ' + dbconfig.database);
-
-module.exports = {
-		getUsersList : function(callback){
-				connection.query("select * from users ", function(err, rows) {
+module.exports = function(){
+	var User = {};
+	User.getUsersList = function(callback){
+				global.mysqlPool.query("select * from users ", function(err, rows) {
 							if (err){
 								return callback(err);
 							}
 							return callback(rows);
 				});
-		},
+		};
 		
-		delete : function(idUser,callback){
-				connection.query("delete from users where id='"+idUser+"'", function(err, rows) {
+	User.delete = function(idUser,callback){
+				global.mysqlPool.query("delete from users where id='"+idUser+"'", function(err, rows) {
 						if(err){
 							return callback(err);
 						}
 						return callback(rows);
 				});
+		};
+		
+	User.isLoggedIn = function(req, res, next) {
+		// if user is authenticated in the session, carry on 
+		if (req.isAuthenticated()){
+			console.log('identifie !');
+			return next();
 		}
+		console.log('non identifie !');
+
+		// if they aren't redirect them to the home page
+		res.redirect('/login');
+	};
+	
+	return User;
 		
 };
