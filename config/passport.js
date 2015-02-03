@@ -11,13 +11,11 @@ module.exports = function(passport) {
 // passport needs ability to serialize and unserialize users out of session
 // used to serialize the user for the session
 	passport.serializeUser(function(user, done) {
-		console.log('serialize' + JSON.stringify(user));
-		done(null, user.id);
+		done(null, user.id_user);
 	});
 	// used to deserialize the user
 	passport.deserializeUser(function(id, done) {
 		global.mysqlPool.query("select * from ref_user where id_user = "+ id, function(err, rows){
-			req.flash('signupMessage', 'Cet email est déjà pris !');
 			done(err, rows[0]);
 		});
 	});
@@ -42,21 +40,22 @@ module.exports = function(passport) {
 				if (err)
 					return done(err);
 				if (rows.length) {
+					console.log('mail déjà pris');
 					return done(null, false, req.flash('signupMessage', 'Cet email est déjà pris !'));
 				} else {
 				// if there is no user with that username
 				// create the user
 					var newUserMysql = {
-						username: email,
+						email: email,
 						password: bcrypt.hashSync(password, null, null) // use the generateHash function in our user model
 					};
 					var insertQuery = "INSERT INTO ref_user ( email, password, id_profil ) values (" + 
-						global.mysqlPool.escape(newUserMysql.username) + "," + global.mysqlPool.escape(newUserMysql.password) + ",'P_CONSOMMATEUR')";
+						global.mysqlPool.escape(newUserMysql.email) + "," + global.mysqlPool.escape(newUserMysql.password) + ",'P_CONSOMMATEUR')";
 							global.mysqlPool.query(insertQuery,function(err, rows) {
 						if(err) 
 							//return done(null, false, req.flash('signupMessage', 'Erreur interne à l\' inscription'));
 							return done(err);
-						newUserMysql.id = rows.insertId;
+						newUserMysql.id_user = rows.insertId;
 						return done(null, newUserMysql);
 					});
 				}

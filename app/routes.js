@@ -60,7 +60,7 @@
 	// process the signup form
 	app.post('/api/signup', passport.authenticate('local-signup', {
 		successRedirect : '/profile', // redirect to the secure profile section
-		failureRedirect : '/signup', // redirect back to the signup page if there is an error
+		failureRedirect : '/producteurs', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
 	
@@ -117,11 +117,6 @@
 		res.sendfile('./public/views/index.html');
 	});
 	
-	app.get('*', function(req, res) {
-		res.status(404)        // HTTP status 404: NotFound
-		.send('Not found');
-		//res.sendfile('./public/views/index.html');
-	});
 }
 	function isLoggedIn(req, res, next) {
 		// if user is authenticated in the session, carry on 
