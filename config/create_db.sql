@@ -90,7 +90,7 @@ CREATE TABLE ref_user (
   mobile VARCHAR(45) NULL,
   nom VARCHAR(45) NULL,
   prenom VARCHAR(45) NULL,
-  password VARCHAR(45) NULL,
+  password VARCHAR(100) NULL,
   date_modification DATETIME NULL,
   PRIMARY KEY (id_user),
   UNIQUE INDEX email_UNIQUE (email ASC),
