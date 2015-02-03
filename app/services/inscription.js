@@ -2,7 +2,7 @@ module.exports = function() {
 		var Inscription={};
 		Inscription.checkEmailAvailable = function(email,callback){
 			if(email){
-				global.mysqlPool.query("select * from users where username = " + global.mysqlPool.escape(email), function(err, rows) {
+				global.mysqlPool.query("select * from ref_user where email = " + global.mysqlPool.escape(email), function(err, rows) {
 							if (err){
 								return callback(err);
 							}

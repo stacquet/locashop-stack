@@ -45,7 +45,7 @@
 
 	app.post('/api/inscription/checkEmailAvailable', function(req, res, next) {
 		console.log(req.body.email);
-		Inscription.checkEmailAvailable(req.body.email, function(data){
+		modelServices.Inscription.checkEmailAvailable(req.body.email, function(data){
 			res.send({"checkEmailAvailable" : data});
 		});
 	});	
@@ -112,9 +112,15 @@
 	app.get('/search-box', function(req, res) {
 		res.sendfile('./public/views/search-box.html');
 	});
-	
+	// page d'accueil
 	app.get('*', function(req, res) {
 		res.sendfile('./public/views/index.html');
+	});
+	
+	app.get('*', function(req, res) {
+		res.status(404)        // HTTP status 404: NotFound
+		.send('Not found');
+		//res.sendfile('./public/views/index.html');
 	});
 }
 	function isLoggedIn(req, res, next) {

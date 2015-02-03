@@ -16,7 +16,8 @@ module.exports = function(passport) {
 	});
 	// used to deserialize the user
 	passport.deserializeUser(function(id, done) {
-		global.mysqlPool.query("select * from users where id = "+ id, function(err, rows){
+		global.mysqlPool.query("select * from ref_user where id_user = "+ id, function(err, rows){
+			req.flash('signupMessage', 'Cet email est déjà pris !');
 			done(err, rows[0]);
 		});
 	});
@@ -36,12 +37,12 @@ module.exports = function(passport) {
 		function(req, email, password, done) {
 			// find a user whose email is the same as the forms email
 			// we are checking to see if the user trying to login already exists
-			global.mysqlPool.query("select * from users where username = " + 
+			global.mysqlPool.query("select * from ref_user where email = " + 
 				global.mysqlPool.escape(email), function(err, rows) {
 				if (err)
 					return done(err);
 				if (rows.length) {
-					return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+					return done(null, false, req.flash('signupMessage', 'Cet email est déjà pris !'));
 				} else {
 				// if there is no user with that username
 				// create the user
@@ -49,9 +50,12 @@ module.exports = function(passport) {
 						username: email,
 						password: bcrypt.hashSync(password, null, null) // use the generateHash function in our user model
 					};
-					var insertQuery = "INSERT INTO users ( username, password ) values (" + 
-						global.mysqlPool.escape(newUserMysql.username) + "," + mysqlPool.escape(newUserMysql.password) + ")";
+					var insertQuery = "INSERT INTO ref_user ( email, password, id_profil ) values (" + 
+						global.mysqlPool.escape(newUserMysql.username) + "," + global.mysqlPool.escape(newUserMysql.password) + ",'P_CONSOMMATEUR')";
 							global.mysqlPool.query(insertQuery,function(err, rows) {
+						if(err) 
+							//return done(null, false, req.flash('signupMessage', 'Erreur interne à l\' inscription'));
+							return done(err);
 						newUserMysql.id = rows.insertId;
 						return done(null, newUserMysql);
 					});
@@ -74,7 +78,7 @@ module.exports = function(passport) {
 		},
 		function(req, email, password, done) { // callback with email and password from our form
 			console.log('trying to authenticate');
-			global.mysqlPool.query("select * from users where username = "+ 
+			global.mysqlPool.query("select * from ref_user where email = "+ 
 				global.mysqlPool.escape(email),function(err, rows){
 				if (err)
 					return done(err);
