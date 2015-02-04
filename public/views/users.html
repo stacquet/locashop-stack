@@ -2,17 +2,17 @@
 	<thead>
 		<tr>
 			<th>ID</th>
-			<th>USERNAME</th>
+			<th>EMAIL</th>
 			<th>PASSWORD</th>
 			<th>ROLE</th>
 		</tr>
     </thead>
     <tbody>
 		<tr ng-repeat="user in usersList">
-			<td>{{user.id}}</td>
-			<td>{{user.username}}</td>
+			<td>{{user.id_user}}</td>
+			<td>{{user.email}}</td>
 			<td>{{user.password}}</td>
-			<td>{{user.role}}</td>
+			<td>{{user.id_role}}</td>
 			<td><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="suppressionUtilisateur($index,user.id)"></span>
 		</tr>
     </tbody>

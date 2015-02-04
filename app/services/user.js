@@ -1,7 +1,7 @@
 module.exports = function(){
 	var User = {};
 	User.getUsersList = function(callback){
-				global.mysqlPool.query("select * from users ", function(err, rows) {
+				global.mysqlPool.query("select * from ref_user ", function(err, rows) {
 							if (err){
 								return callback(err);
 							}
@@ -10,7 +10,7 @@ module.exports = function(){
 		};
 		
 	User.delete = function(idUser,callback){
-				global.mysqlPool.query("delete from users where id='"+idUser+"'", function(err, rows) {
+				global.mysqlPool.query("delete from ref_user where id='"+idUser+"'", function(err, rows) {
 						if(err){
 							return callback(err);
 						}

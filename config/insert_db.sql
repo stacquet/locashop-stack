@@ -11,4 +11,17 @@ ON DUPLICATE KEY UPDATE
 	date_modif=VALUES(date_modif),
 	user_modif=VALUES(user_modif);
 
+INSERT INTO ref_user (id_user,id_profil,id_adresse,email,mobile,nom,prenom,password,date_modification)
+VALUES 
+	(1,'P_CONSOMMATEUR',NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$Uqh0QVK7GYuZ25hm5/jEceg/rrG1Gfgkr2uVTwtNlRDp1VGyjWAa6',NULL)
+ON DUPLICATE KEY UPDATE
+	id_profil=VALUES(id_profil),
+	id_adresse=VALUES(id_adresse),
+	email=VALUES(email),
+	mobile=VALUES(mobile),
+	nom=VALUES(nom),
+	prenom=VALUES(prenom),
+	password=VALUES(password),
+	date_modification=VALUES(date_modification)
+;
 COMMIT;
