@@ -8,7 +8,12 @@ angular.module('UserCtrl', [])
 	
 	$scope.suppressionUtilisateur = function(idIndex,idUser){
 		User.suppressionUtilisateur(idUser,function(data){
-			$scope.usersList.splice(idIndex,1);
+			if(data.statut){
+				$scope.usersList.splice(idIndex,1);
+			}
+			else{
+				$scope.loginMessages=data.loginMessages;
+			}
 		});
 	};
 	

@@ -5,3 +5,6 @@
 .spacer-right{
 	margin-right:10px;
 }
+.pointeur{
+	cursor: pointer;
+}

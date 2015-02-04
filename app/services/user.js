@@ -10,9 +10,9 @@ module.exports = function(){
 		};
 		
 	User.delete = function(idUser,callback){
-				global.mysqlPool.query("delete from ref_user where id='"+idUser+"'", function(err, rows) {
+				global.mysqlPool.query("delete from ref_user where id_user='"+idUser+"'", function(err, rows) {
 						if(err){
-							return callback(err);
+							return callback(null,err);
 						}
 						return callback(rows);
 				});
@@ -32,4 +32,4 @@ module.exports = function(){
 	
 	return User;
 		
-};
+};

@@ -94,10 +94,18 @@
 	
 	app.post('/api/auth/users/delete',modelServices.User.isLoggedIn, function(req, res) {
 		if(req.body.idUser !== undefined){
-			User.delete(req.body.idUser,function(data,err){
-				res.send(data);
+			modelServices.User.delete(req.body.idUser,function(data,err){
+				if(err){
+					console.log('erreur à la requete !');
+					req.flash('loginMessages', 'Erreur à la suppression...');
+					res.send({'statut' : false, 'loginMessages' : req.flash('loginMessages')});
+				}
+				else{
+				res.send({'statut' : true});
+				}
 			});
 		}
+		//res.send({'statut' : false, 'loginMessages' : 'stop'});
 	});
 	
 	// =====================================
@@ -129,3 +137,4 @@
 		// if they aren't redirect them to the home page
 		res.redirect('/login');
 	};
+

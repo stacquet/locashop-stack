@@ -45,7 +45,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 					$location.path('/user/'+data.user.id);
 				}
 				else{
-				$scope.loginMessages=data.loginMessages;
+					$scope.loginMessages=data.loginMessages;
 				}
 			});
 		}
@@ -56,6 +56,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 			if(statut){
 				$rootScope.userInfo=data.user;
 				$rootScope.isLoggedIn=true;
+				$location.path('/users');
 			}
 			else{
 				$scope.loginMessages=data.loginMessages;

@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS panier_details;
+DROP TABLE IF EXISTS panier;
+DROP TABLE IF EXISTS producteur_catalogue_details;
+DROP TABLE IF EXISTS producteur_catalogue;
+DROP TABLE IF EXISTS ref_user;
+DROP TABLE IF EXISTS rel_conditionnement_produit;
+DROP TABLE IF EXISTS ref_produit;
+DROP TABLE IF EXISTS ref_produit_sous_famille;
+DROP TABLE IF EXISTS ref_profil;
+DROP TABLE IF EXISTS ref_conditionnement;
+DROP TABLE IF EXISTS ref_produit_famille;
+DROP TABLE IF EXISTS ref_adresse;
+
 CREATE TABLE ref_adresse (
   id_adresse INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(45) NULL,

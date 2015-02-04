@@ -55,6 +55,9 @@
 			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
 				<li><a href="/auth/validationAdresse">Validation d'adresse</a></li>
 			</ul>
+			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
+				<li><a href="/users">Admin</a></li>
+			</ul>
 			<ul class="nav navbar-nav navbar-right spacer-right">
 				<li ng-show="$root.isLoggedIn" class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfo.email}} <span class="caret"></span></a>

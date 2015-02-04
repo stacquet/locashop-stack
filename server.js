@@ -16,7 +16,7 @@ global.winston 		= require('winston');
 console.log(database.dbConfig.host);
 // configuration ===========================================
 winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
-winston.remove(winston.transports.Console);
+//winston.remove(winston.transports.Console);
 winston.log('info','Hello distributed log files!');
 // config files
 global.mysqlPool  = mysql.createPool({
