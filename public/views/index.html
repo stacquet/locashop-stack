@@ -44,17 +44,19 @@
 		<!-- HEADER -->
 		<nav class="navbar navbar-inverse">
 			<ul class="nav navbar-nav">
-				<li><a href="/producteurs">Producteurs</a></li>
-			</ul>
+				<li><a href="/magasin">Le magasin</a></li>
+			</ul>			
 			<ul class="nav navbar-nav">
-				<li><a href="/consommateurs">Consommateurs</a></li>
+				<li><a href="/producteurs">Nos producteurs</a></li>
 			</ul>
-			 <ul ng-show="!$root.isLoggedIn" class="nav navbar-nav">
-				<li><a href="/auth/inscription">Inscription</a></li>
+			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
+				<li><a href="/livraisons">Livraisons dans l'heure</a></li>
 			</ul>
+<!--
 			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
 				<li><a href="/auth/validationAdresse">Validation d'adresse</a></li>
 			</ul>
+-->
 			<ul class="nav navbar-nav">
 				<li ng-show="$root.isLoggedIn" class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin<span class="caret"></span></a>
@@ -65,6 +67,7 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right spacer-right">
+				<li ng-show="!$root.isLoggedIn"><a href="/auth/inscription">Inscription</a></li>
 				<li ng-show="$root.isLoggedIn" class="dropdown">
 				  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfo.email}} <span class="caret"></span></a>
 				  <ul class="dropdown-menu" role="menu">
@@ -78,6 +81,7 @@
 				</li>
 			</ul>
 		</nav>		
+					
 
 		<!-- ANGULAR DYNAMIC CONTENT -->
 		<div ng-view></div>

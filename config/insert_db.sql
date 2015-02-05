@@ -1,5 +1,18 @@
 START TRANSACTION;
 
+DELETE FROM panier_details;
+DELETE FROM panier;
+DELETE FROM producteur_catalogue_details;
+DELETE FROM producteur_catalogue;
+DELETE FROM ref_user;
+DELETE FROM rel_conditionnement_produit;
+DELETE FROM ref_produit;
+DELETE FROM ref_produit_sous_famille;
+DELETE FROM ref_profil;
+DELETE FROM ref_conditionnement;
+DELETE FROM ref_produit_famille;
+DELETE FROM ref_adresse;
+
 INSERT INTO ref_profil (id_profil, lib_profil, date_modif, user_modif) 
 VALUES 
 	('P_ROOT', 'Administrateur technique', NULL, NULL),

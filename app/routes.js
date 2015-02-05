@@ -53,10 +53,6 @@
 	// SIGNUP ==============================
 	// =====================================
 	// show the signup form
-	app.get('/api/signup', function(req, res) {
-		// render the page and pass in any flash data if it exists
-		res.sendfile('./public/views/index.html');
-	});
 	// process the signup form
 	app.post('/api/signup', passport.authenticate('local-signup', {
 		successRedirect : '/profile', // redirect to the secure profile section
