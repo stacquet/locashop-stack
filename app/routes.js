@@ -76,6 +76,29 @@
 	});
 	
 	// =====================================
+    // FACEBOOK ROUTES =====================
+    // =====================================
+    // route for facebook authentication and login
+    app.get('/auth/facebook', 
+		passport.authenticate('facebook', { display: 'touch' },{ scope : 'email' })
+	);
+
+    // handle the callback after facebook has authenticated the user
+    app.get('/auth/facebook/callback',
+        /*passport.authenticate('facebook', {
+            successRedirect : '/users',
+            failureRedirect : '/'
+        })
+		function(req, res) {
+		console.log("facebook ok");
+			res.sendfile('./public/views/index.html');
+	}*/
+		passport.authenticate('facebook', { failureRedirect: '/login' }),
+		function(req, res) {
+			res.redirect('/');
+		});
+	
+	// =====================================
 	// ADMIN SECTION =========================
 	// =====================================
 	// 

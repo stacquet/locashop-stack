@@ -1,7 +1,11 @@
 // config/passport.js
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var bcrypt = require('bcrypt-nodejs');
+var configAuth = require('./auth');
+
+var User = require('../app/services/user');
 
 module.exports = function(passport) {
 // =========================================================================
@@ -92,4 +96,77 @@ module.exports = function(passport) {
 				});
 		})
 	);
+	
+	// =========================================================================
+    // FACEBOOK ================================================================
+    // =========================================================================
+    passport.use('facebook',new FacebookStrategy({
+
+        // pull in our app id and secret from our auth.js file
+        clientID        : configAuth.facebookAuth.clientID,
+        clientSecret    : configAuth.facebookAuth.clientSecret,
+        callbackURL     : configAuth.facebookAuth.callbackURL
+
+    },
+
+    // facebook will send back the token and profile
+    function(token, refreshToken, profile, done) {
+		console.log('authenticating with facebook '+profile);
+        // asynchronous
+        process.nextTick(function() {
+
+            // find the user in the database based on their facebook id
+            global.mysqlPool.query("select * from ref_user where id_facebook = "+ 
+				global.mysqlPool.escape(profile.id),function(err, rows){
+
+                // if there is an error, stop everything and return that
+                // ie an error connecting to the database
+                if (err)
+                    return done(err);
+
+                // if the user is found, then log them in
+                if (user) {
+                    return done(null, user); // user found, return that user
+                } else {
+                    // if there is no user found with that facebook id, create them
+					var newUserMysql = {
+						email: email,
+						id_facebook : profile.id,
+						prenom : profile.name.givenName,
+						nom : profile.name.familyName,
+						token : token
+					};
+					var insertQuery = "INSERT INTO ref_user ( email, id_facebook, id_profil,prenom,nom,token ) values (" + 
+						global.mysqlPool.escape(newUserMysql.email) + "," + global.mysqlPool.escape(newUserMysql.id_facebook) + ",'P_CONSOMMATEUR',"+global.mysqlPool.escape(newUserMysql.prenom)
+						+","+global.mysqlPool.escape(newUserMysql.nom)+","+global.mysqlPool.escape(newUserMysql.token)+")";
+						console.log(insertQuery);
+							global.mysqlPool.query(insertQuery,function(err, rows) {
+						if(err) 
+							//return done(null, false, req.flash('signupMessage', 'Erreur interne à l\' inscription'));
+							return done(err);
+						newUserMysql.id_user = rows.insertId;
+						return done(null, newUserMysql);
+					});
+                    var newUser            = new User();
+
+                    // set all of the facebook information in our user model
+                    newUser.facebook.id    = profile.id; // set the users facebook id                   
+                    newUser.facebook.token = token; // we will save the token that facebook provides to the user                    
+                    newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                    newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
+
+                    // save our user to the database
+                    newUser.save(function(err) {
+                        if (err)
+                            throw err;
+
+                        // if successful, return the new user
+                        return done(null, newUser);
+                    });
+                }
+
+            });
+        });
+
+    }));
 };

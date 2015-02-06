@@ -4,7 +4,7 @@
 	<div class="col-sm-6 col-sm-offset-3">
 	<!-- PAGE HEADER -->
 		<div class="page-header"><h1>Votre inscription</h1></div>
-	   
+		<p><h3><small>Nous vous enverrons un email pour valider votre inscription, vous pourrez ensuite compléter votre profil :</small></h3></p>
 		<!-- FORM -->
 		<!-- pass in the variable if our form is valid or invalid -->
 		<form name="userForm" novalidate ng-controller="AuthentificationController" ng-submit="submitForm(userForm.$valid)"> 
@@ -46,7 +46,10 @@
 			<div class="alert alert-danger" ng-show="(loginMessages.length > 0)">
 				<p ng-repeat="loginMessage in loginMessages">{{loginMessage}}</p>
 			</div>
-			<button type="submit" class="btn btn-primary spacer"  ng-disabled="!passwordEquals || userForm.email.$invalid || !emailAvailable">Submit</button>		
+			<button type="submit" class="btn btn-primary spacer"  ng-disabled="!passwordEquals || userForm.email.$invalid || !emailAvailable">Submit</button>			
 		</form>
+		<p>Login or Register with:</p>
+        <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
+
 	</div>
 </div>

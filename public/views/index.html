@@ -10,6 +10,7 @@
 	rel='stylesheet' type='text/css'>
     <!-- CSS -->
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
     <link rel="stylesheet" href="css/style.css"> <!-- custom styles -->
 	<link href="libs/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
 
@@ -44,14 +45,11 @@
 		<!-- HEADER -->
 		<nav class="navbar navbar-inverse">
 			<ul class="nav navbar-nav">
+				<li><a href="/"><span class="glyphicon glyphicon-home"></span></a></li>
 				<li><a href="/magasin">Le magasin</a></li>
-			</ul>			
-			<ul class="nav navbar-nav">
 				<li><a href="/producteurs">Nos producteurs</a></li>
-			</ul>
-			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
-				<li><a href="/livraisons">Livraisons dans l'heure</a></li>
-			</ul>
+				<li ng-show="$root.isLoggedIn"><a href="/livraisons">Livraisons dans l'heure</a></li>
+			</ul>				
 <!--
 			<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
 				<li><a href="/auth/validationAdresse">Validation d'adresse</a></li>

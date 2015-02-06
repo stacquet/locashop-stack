@@ -99,6 +99,8 @@ CREATE TABLE ref_user (
   id_user INT NOT NULL AUTO_INCREMENT,
   id_profil VARCHAR(45) NOT NULL,
   id_adresse INT NULL,
+  id_facebook VARCHAR(100) NULL,
+  token VARCHAR(100) NULL,
   email VARCHAR(200) NOT NULL,
   email_valide TINYINT NULL,
   mobile VARCHAR(45) NULL,
