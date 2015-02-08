@@ -45,9 +45,6 @@
 					templateUrl: 'views/auth/validationEmail.html',
 					controller: 'AuthentificationController'
 				})
-				.otherwise({
-					redirectTo: '/auth/facebook'
-				});
 				/*.validationAdresse('/user/validationAdresse', {
 					templateUrl: 'views/validationAdresse.html',
 					controller: 'SearchBoxController'
