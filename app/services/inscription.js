@@ -1,6 +1,5 @@
-module.exports = function() {
-		var Inscription={};
-		Inscription.checkEmailAvailable = function(email,callback){
+module.exports =  {
+		checkEmailAvailable : function(email,callback){
 			if(email){
 				global.mysqlPool.query("select * from ref_user where email = " + global.mysqlPool.escape(email), function(err, rows) {
 							if (err){
@@ -17,8 +16,6 @@ module.exports = function() {
 			else{
 				return callback(false);
 			}
-		};
+		}
 
-		return Inscription;
-
-};
+}

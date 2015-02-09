@@ -1,24 +1,23 @@
-module.exports = function(){
-	var User = {};
-	User.getUsersList = function(callback){
-				global.mysqlPool.query("select * from ref_user ", function(err, rows) {
-							if (err){
-								return callback(err);
-							}
-							return callback(rows);
-				});
-		};
+var UserDao = require('../dao/UserDao');
+module.exports = {
+
+	getUsersList : function(callback){
+		UserDao.getUsers(function(err,users){
+			if (err)	return callback(err);
+			return callback(null,users);
+		});			
+	},
 		
-	User.delete = function(idUser,callback){
+	delete : function(idUser,callback){
 				global.mysqlPool.query("delete from ref_user where id_user='"+idUser+"'", function(err, rows) {
 						if(err){
 							return callback(null,err);
 						}
 						return callback(rows);
 				});
-		};
+	},
 		
-	User.isLoggedIn = function(req, res, next) {
+	isLoggedIn : function(req, res, next) {
 		// if user is authenticated in the session, carry on 
 		if (req.isAuthenticated()){
 			console.log('identifie !');
@@ -28,8 +27,6 @@ module.exports = function(){
 
 		// if they aren't redirect them to the home page
 		res.redirect('/login');
-	};
-	
-	return User;
+	}
 		
-};
+}

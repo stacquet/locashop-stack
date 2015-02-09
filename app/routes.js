@@ -104,7 +104,7 @@
 	// 
 	app.get('/api/auth/users', modelServices.User.isLoggedIn, function(req, res) {
 		if(req.user) console.log("role "+req.user.role);
-		modelServices.User.getUsersList(function(data,err){
+		modelServices.User.getUsersList(function(err,data){
 			if(err) global.winston.log('error',err);
 				console.log(data);
 				res.send(data);
@@ -156,4 +156,4 @@
 		// if they aren't redirect them to the home page
 		res.redirect('/login');
 	};
-
+

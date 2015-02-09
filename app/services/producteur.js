@@ -1,12 +1,8 @@
 
-module.exports = function(){
-	producteurSchema={};
+module.exports = {
 
-	producteurSchema.findById = function(id,callback){
+	findById : function(id,callback){
 		global.winston.log('info', 'producteurSchema.findById');
 		callback({name : 'moi'});
-	};
-	return producteurSchema;
-};
-// create the model for users and expose it to our app
-//module.exports =  producteurSchema;
+	}
+}
