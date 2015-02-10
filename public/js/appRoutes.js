@@ -41,14 +41,7 @@
 					templateUrl: 'views/producteurs.html',
 					controller: 'ProducteurController'
 				})
-				.when('/user/validationEmail', {
-					templateUrl: 'views/auth/validationEmail.html',
-					controller: 'AuthentificationController'
-				})
-				/*.validationAdresse('/user/validationAdresse', {
-					templateUrl: 'views/validationAdresse.html',
-					controller: 'SearchBoxController'
-				})*/
+				
 				;
 
 			$locationProvider.html5Mode(true);
