@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
 
     <title>Starter Node and Angular</title>
@@ -42,44 +42,6 @@
 </head>
 <body ng-app="locashopApp" ng-controller="AuthentificationController">
 	<div class="container">
-
-		<!-- HEADER
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<ul class="nav navbar-nav">
-					<li><a href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-					<li><a href="/magasin">Le magasin</a></li>
-					<li><a href="/producteurs">Nos producteurs</a></li>
-					<li ng-show="$root.isLoggedIn"><a href="/livraisons">Livraisons dans l'heure</a></li>
-				</ul>				
-				<ul ng-show="$root.isLoggedIn" class="nav navbar-nav">
-					<li><a href="/auth/validationAdresse">Validation d'adresse</a></li>
-				</ul>
-				<ul class="nav navbar-nav">
-					<li ng-show="$root.isLoggedIn" class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin<span class="caret"></span></a>
-					  <ul class="dropdown-menu" role="menu">
-						<li><a href="/profils">Gestion des profils</a></li>
-						<li><a href="/users">Gestion des utilisateurs</a></li>
-					  </ul>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right spacer-right">
-					<li ng-show="!$root.isLoggedIn"><a href="/auth/inscription">Inscription</a></li>
-					<li ng-show="$root.isLoggedIn" class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfo.email}} <span class="caret"></span></a>
-					  <ul class="dropdown-menu" role="menu">
-						<li><a href="/user/producteur">Mon espace producteur</a></li>
-						<li><a ng-href="/user/profil/{{$root.userInfo.id_user}}">Mon profil</a></li>
-						<li><a ng-click="logout()" href="/">Logout</a></li>
-					  </ul>
-					</li>
-					<li ng-show="!$root.isLoggedIn">
-						<a href="/auth/login">Login</a>
-					</li>
-				</ul>
-			</div>
-		</nav>	-->	
 		
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
@@ -99,6 +61,7 @@
 			  <ul class="nav navbar-nav">
 				<li><a href="/magasin" data-toggle="collapse" data-target=".navbar-collapse">Le magasin <!-- <span class="sr-only">(current)</span> --></a></li>
 				<li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Nos producteurs</a></li>
+				<li><a href="/user/profil" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
 				<li ng-show="!$root.isLoggedIn"><a href="/auth/inscription" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>

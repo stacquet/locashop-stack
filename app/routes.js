@@ -128,15 +128,9 @@
 		res.sendfile('./public/views/search-box.html');
 	});
 
-
-	app.get('/', function(req, res) {
-		console.log('page d\'accueil');
-		res.sendfile('./public/views/index.html');
-	});
 	// page d'accueil
 	app.get('*', function(req, res) {
-
-		res.redirect('/');
+		res.sendfile('./public/views/index.html');
 	});
 	
 }

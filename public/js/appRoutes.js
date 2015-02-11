@@ -45,7 +45,10 @@
 					templateUrl: 'views/auth/validationEmail.html',
 					controller: 'AuthentificationController'
 				})
-				
+				.when('/user/profil', {
+					templateUrl: '/views/user/profil.html',
+					controller: 'ProfilController'
+				})
 				;
 
 				
