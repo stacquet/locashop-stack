@@ -36,7 +36,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	};
 	
 	$scope.submitForm = function(isValid) {
-	// check to make sure the form is completely valid
+	// On s'assure que le formulaire est valide
 		if (isValid) {
 			Authentification.validate($scope.user,function(statut,data){
 				if(statut){
@@ -52,7 +52,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	};
 	
 	$scope.login = function(){
-		Authentification.login($scope.email,$scope.password,function(statut,data){
+		Authentification.login($scope.user.email,$scope.user.password,function(statut,data){
 			if(statut){
 				$rootScope.userInfo=data.user;
 				$rootScope.isLoggedIn=true;

@@ -86,11 +86,11 @@ module.exports = function(passport) {
 				if (err)
 					return done(err);
 				if (!rows.length) {
-					return done(null, false, req.flash('loginMessage', 'Nous ne connaissons pas votre email !')); // req.flash is the way to set flashdata using connect-flash
+					return done(null, false, req.flash('loginMessage', 'Email ou mot de passe incorrect')); // req.flash is the way to set flashdata using connect-flash
 				}
 				// if the user is found but the password is wrong
 				if (!bcrypt.compareSync(password, rows[0].password))
-					return done(null, false, req.flash('loginMessage', 'Le mot de passe est incorrect !')); // create the loginMessage and save it to session as flashdata
+					return done(null, false, req.flash('loginMessage', 'Email ou mot de passe incorrect')); // create the loginMessage and save it to session as flashdata
 					// all is well, return successful user
 					return done(null, rows[0]);
 				});

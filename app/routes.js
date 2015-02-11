@@ -15,7 +15,6 @@
     // route to handle all angular request	
 	
 	app.post('/api/login/userInfo', function(req, res) {
-			console.log(req.user);
 			res.send(req.user);
 	});
 	
