@@ -44,7 +44,6 @@
 	});
 
 	app.post('/api/inscription/checkEmailAvailable', function(req, res, next) {
-		console.log(req.body.email);
 		modelServices.Inscription.checkEmailAvailable(req.body.email, function(data){
 			res.send({"checkEmailAvailable" : data});
 		});
@@ -80,23 +79,15 @@
     // =====================================
     // route for facebook authentication and login
     app.get('/auth/facebook', 
-		passport.authenticate('facebook', { display: 'touch' },{ scope : 'email' })
+		passport.authenticate('facebook',{ scope : 'email' })
 	);
 
     // handle the callback after facebook has authenticated the user
     app.get('/auth/facebook/callback',
-        /*passport.authenticate('facebook', {
+        passport.authenticate('facebook', {
             successRedirect : '/users',
             failureRedirect : '/'
-        })
-		function(req, res) {
-		console.log("facebook ok");
-			res.sendfile('./public/views/index.html');
-	}*/
-		passport.authenticate('facebook', { failureRedirect: '/login' }),
-		function(req, res) {
-			res.redirect('/');
-		});
+        }));
 	
 	// =====================================
 	// ADMIN SECTION =========================
@@ -106,7 +97,6 @@
 		if(req.user) console.log("role "+req.user.role);
 		modelServices.User.getUsersList(function(err,data){
 			if(err) global.winston.log('error',err);
-				console.log(data);
 				res.send(data);
 			});
 	});
@@ -132,28 +122,23 @@
 	// =====================================
 	app.get('/api/logout', function(req, res) {
 		req.logout();
-		console.log('déconnexion');
 		res.send({status : "ok"});
 		});
 		
 	app.get('/search-box', function(req, res) {
 		res.sendfile('./public/views/search-box.html');
 	});
+
+
+	app.get('/', function(req, res) {
+		console.log('page d\'accueil');
+		res.sendfile('./public/views/index.html');
+	});
 	// page d'accueil
 	app.get('*', function(req, res) {
-		res.sendfile('./public/views/index.html');
+
+		res.redirect('/');
 	});
 	
 }
-	function isLoggedIn(req, res, next) {
-		// if user is authenticated in the session, carry on 
-		if (req.isAuthenticated()){
-			console.log('identifie !');
-			return next();
-		}
-		console.log('non identifie !');
-
-		// if they aren't redirect them to the home page
-		res.redirect('/login');
-	};
 

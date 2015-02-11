@@ -45,7 +45,10 @@
 					templateUrl: 'views/auth/validationEmail.html',
 					controller: 'AuthentificationController'
 				})
+				
 				;
+
+				
 
 			$locationProvider.html5Mode(true);
 

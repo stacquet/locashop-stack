@@ -18,12 +18,32 @@
 	
 	<!-- <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
 	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script> -->
+	<script type="text/javascript">
+	 if (window.location.hash && window.location.hash === "#_=_") {
+		  // If you are not using Modernizr, then the alternative is:
+		  //   `if (window.history && history.replaceState) {`
+		  if (Modernizr.history) {
+		    window.history.replaceState("", document.title, window.location.pathname);
+		  } else {
+		    // Prevent scrolling by storing the page's current scroll offset
+		    var scroll = {
+		      top: document.body.scrollTop,
+		      left: document.body.scrollLeft
+		    };
+		    window.location.hash = "";
+		    // Restore the scroll offset, should be flicker free
+		    document.body.scrollTop = scroll.top;
+		    document.body.scrollLeft = scroll.left;
+		  }
+		}
+	</script>
 	<script src="libs/jquery/dist/jquery.min.js"></script>	 
     <script src="libs/angular/angular.min.js"></script>
     <script src="libs/angular-route/angular-route.min.js"></script>
 	<script src='libs/lodash/dist/lodash.js'></script>
 	<script src='libs/angular-google-maps/dist/angular-google-maps.js'></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
+	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- ANGULAR CUSTOM -->
     <script src="js/controllers/MainCtrl.js"></script>
     <script src="js/controllers/ProducteurCtrl.js"></script>
