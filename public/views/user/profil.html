@@ -1,7 +1,7 @@
   <div class="row">
-	<div class="col-md-6 ">
+	   <div class="col-md-6 ">
         <form class="form-horizontal encadrement_leger" name="information_personnelle">
-			<legend>Mes informations personnelles</legend>
+			 <legend>Mes informations personnelles</legend>
           <div class="form-group">
             <label for="email" class=" col-xs-2 control-label">Email</label>
             <div class="col-xs-10">
@@ -38,11 +38,9 @@
             </div>
           </div>
         </form>
-	</div>
-	<div class="visible-xs spacer"> </div>
-	<div class="col-md-6">
+       <div class="spacer"> </div>
         <form class="form-horizontal encadrement_leger" name="information_professionnelle">
-			<legend>Mes informations professionnelles</legend>
+      <legend>Mes informations professionnelles</legend>
           <div class="form-group">
             <label for="email" class="col-xs-2 control-label">Email</label>
             <div class="col-xs-10">
@@ -75,9 +73,45 @@
           </div>
           <div class="form-group">
             <div class="col-xs-offset-2 ">
-			  <a href="#" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>
+        <a href="#" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>
             </div>
           </div>
         </form>
-	</div>
   </div>
+  <div class="col-md-6">
+    <form class="form-horizontal">
+      <!-- Form Name -->
+      <legend>Présentation</legend>
+
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="textarea">La ferme</label>
+        <div class="col-md-9">                     
+          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="textarea">Les produits</label>
+        <div class="col-md-9">                     
+          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="textarea">Les méthodes d'élaboration</label>
+        <div class="col-md-9">                     
+          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">Les photos de votre exploitation</label>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputFile">Ajouter une photo</label>
+        <input type="file" id="exampleInputFile">
+      </div>
+    </form>
+
+  </div>
+</div>

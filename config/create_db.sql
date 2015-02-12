@@ -26,6 +26,14 @@ CREATE TABLE ref_adresse (
   PRIMARY KEY (id_adresse))
 ENGINE = InnoDB;
 
+CREATE TABLE media (
+  id_media INT NOT NULL,
+  uuid VARCHAR(100) NULL,
+  titre VARCHAR(45) NULL,
+  description VARCHAR(512) NULL,
+  dossier_physique VARCHAR(512) NULL,
+  PRIMARY KEY (id_media));
+
 CREATE TABLE ref_produit_famille (
   id_produit_famille INT NOT NULL AUTO_INCREMENT,
   lib_produit_famille VARCHAR(100) NULL,
