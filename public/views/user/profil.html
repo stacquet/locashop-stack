@@ -1,108 +1,93 @@
   <div class="row">
 	   <div class="col-md-6 ">
         <form class="form-horizontal encadrement_leger" name="information_personnelle">
-			 <legend>Mes informations personnelles</legend>
+			   <legend>Mes informations personnelles</legend>
           <div class="form-group">
             <label for="email" class=" col-xs-2 control-label">Email</label>
             <div class="col-xs-10">
-              <input type="email" class="form-control " id="email" placeholder="Email">
+              <input type="email" class="form-control" id="email" ng-model="profil.email" placeholder="Email">
             </div>
           </div>
           <div class="form-group">
             <label for="text" class="col-xs-2 control-label">Nom</label>
             <div class="col-xs-10">
-              <input type="text" class="form-control" id="nom" placeholder="Nom">
+              <input type="text" class="form-control" id="nom" ng-model="profil.nom" placeholder="Nom">
             </div>
           </div>
           <div class="form-group">
             <label for="prenom" class="col-xs-2 control-label">Prénom</label>
             <div class=" col-xs-10">
-              <input type="text" class="form-control" id="prenom" placeholder="Prénom">
+              <input type="text" class="form-control" id="prenom" ng-model="profil.prenom" placeholder="Prénom">
             </div>
           </div>
           <div class="form-group">
             <label for="mobile" class="col-xs-2 control-label">Mobile</label>
             <div class=" col-xs-10">
-              <input type="text" class="form-control" id="mobile" placeholder="Téléphone Mobile">
+              <input type="text" class="form-control" id="mobile" ng-model="profil.mobile" placeholder="Téléphone Mobile">
             </div>
           </div>
           <div class="form-group">
             <label for="fixe" class="col-xs-2 control-label">Fixe</label>
             <div class=" col-xs-10">
-              <input type="text" class="form-control" id="fixe" placeholder="Téléphone Fixe">
+              <input type="text" class="form-control" id="fixe" ng-model="profil.fixe" placeholder="Téléphone Fixe">
             </div>
           </div>
+          <div ng-controller="SearchBoxController">
+        
+              <div class="form-group" >
+                  <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
+                  <div class=" col-xs-10" id="searchBoxParent" ng-model="profil.adresse"></div>
+              </div>
+              <div>
+                <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"
+                bounds="map.bounds" events="map.events" options="map.options"
+                pan="true"  control="map.control">
+                  <ui-gmap-search-box options="searchbox.options" template="searchbox.template" events="searchbox.events" parentdiv="searchbox.parentdiv"></ui-gmap-search-box>
+                  <ui-gmap-markers idkey="map.idkey" models="map.markers" coords="'self'" icon="'icon'"
+                    click="'onClicked'">
+                  </ui-gmap-markers>
+                  <ui-gmap-window coords="selected" idkey="selected.place_id" templateurl="selected.templateurl"
+                    templateparameter="selected.templateparameter" options="selected.options"
+                    closeClick='selected.closeClick()' ng-cloak>
+                  </ui-gmap-window>
+                </ui-gmap-google-map>
+              </div>
+          </div>
+          <div class="spacer"></div>
           <div class="form-group">
             <div class="col-xs-offset-2 ">
-			  <a href="#" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>
+			        <a href="#" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>
             </div>
           </div>
         </form>
-       <div class="spacer"> </div>
-        <form class="form-horizontal encadrement_leger" name="information_professionnelle">
-      <legend>Mes informations professionnelles</legend>
-          <div class="form-group">
-            <label for="email" class="col-xs-2 control-label">Email</label>
-            <div class="col-xs-10">
-              <input type="email" class="form-control" id="email" placeholder="Email">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="text" class="col-xs-2 control-label">Nom</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="nom" placeholder="Nom">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="prenom" class="col-xs-2 control-label">Prénom</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="prenom" placeholder="Prénom">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="mobile" class="col-xs-2 control-label">Mobile</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="mobile" placeholder="Téléphone Mobile">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="fixe" class="col-xs-2 control-label">Fixe</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="fixe" placeholder="Téléphone Fixe">
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-offset-2 ">
-        <a href="#" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>
-            </div>
-          </div>
-        </form>
-  </div>
-  <div class="col-md-6">
-    <form class="form-horizontal">
-      <!-- Form Name -->
-      <legend>Présentation</legend>
-
-      <!-- Textarea -->
-      <div class="form-group">
-        <label class="col-md-3 control-label" for="textarea">La ferme</label>
-        <div class="col-md-9">                     
-          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
-        </div>
       </div>
+    <div class="col-md-6">
+      <form class="form-horizontal encadrement_leger" action="/media/upload" enctype="multipart/form-data" method="post">
+        <!-- Form Name -->
+        <legend>Présentation</legend>
 
-      <!-- Textarea -->
-      <div class="form-group">
-        <label class="col-md-3 control-label" for="textarea">Les produits</label>
-        <div class="col-md-9">                     
-          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="textarea">La ferme</label>
+          <div class="col-md-9">                     
+            <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="col-md-3 control-label" for="textarea">Les méthodes d'élaboration</label>
-        <div class="col-md-9">                     
-          <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="textarea">Les produits</label>
+          <div class="col-md-9">                     
+            <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+          </div>
         </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="textarea">Les méthodes d'élaboration</label>
+          <div class="col-md-9">                     
+            <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
+          </div>
+        </div>
+<<<<<<< HEAD
       </div>
       <div class="form-group">
         <label for="exampleInputFile">Les photos de votre exploitation</label>
@@ -120,3 +105,21 @@
 
   </div>
 </div>
+=======
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="exampleInputFile">Mes photos</label>
+          <div class="col-md-9">                     
+            <input type="file" name="upload" multiple="multiple">
+          </div>
+        </div>   
+        <div class="form-group">
+          <div class="col-xs-offset-2 ">  
+            <input type="submit" class="btn btn-sm btn-success" value="sauver">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <pre>{{profil}}</pre>
+    </div>
+>>>>>>> 91af53ce96def23e59ced4d137bc400669f1cd43

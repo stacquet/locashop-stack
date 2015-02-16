@@ -87,6 +87,7 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
+							console.log(places);
 							var marker = {
 								id:i,
 								place_id: place.place_id,
