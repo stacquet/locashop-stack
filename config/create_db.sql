@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS panier_details;
 DROP TABLE IF EXISTS panier;
 DROP TABLE IF EXISTS producteur_catalogue_details;
 DROP TABLE IF EXISTS producteur_catalogue;
+DROP TABLE IF EXISTS media_user;
+DROP TABLE IF EXISTS media;
 DROP TABLE IF EXISTS ref_user;
 DROP TABLE IF EXISTS rel_conditionnement_produit;
 DROP TABLE IF EXISTS ref_produit;
@@ -31,7 +33,7 @@ CREATE TABLE media (
   uuid VARCHAR(100) NULL,
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
-  dossier_physique VARCHAR(512) NULL,
+  chemin_physique VARCHAR(512) NULL,
   PRIMARY KEY (id_media));
 
 CREATE TABLE ref_produit_famille (
@@ -133,6 +135,43 @@ CREATE TABLE ref_user (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE media_user (
+  id_media INT NOT NULL,
+  id_user INT NOT NULL,
+  PRIMARY KEY (id_media,id_user),
+  INDEX fk_media_user_id_user_idx (id_user ASC),
+  CONSTRAINT fk_media_user_id_user
+    FOREIGN KEY (id_user)
+    REFERENCES ref_user (id_user)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  INDEX fk_media_user_id_media_idx (id_media ASC),
+  CONSTRAINT fk_media_user_id_media
+    FOREIGN KEY (id_media)
+    REFERENCES media (id_media)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    )
+ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table producteur_infos
+-- -----------------------------------------------------
+CREATE TABLE producteur_infos (
+  id_user INT NOT NULL,
+  id_adresse_livraison INT NOT NULL,
+  presentation_ferme TEXT NULL,
+  presentation_produits TEXT NULL,
+  presentation_methode TEXT NULL,
+  date_modif DATETIME NULL,
+  user_modif INT NULL,
+  PRIMARY KEY (id_user),
+  INDEX fk_producteur_infos_id_user_idx (id_user ASC),
+  CONSTRAINT fk_producteur_infos_id_user
+    FOREIGN KEY (id_user)
+    REFERENCES ref_user (id_user)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table producteur_catalogue

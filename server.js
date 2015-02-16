@@ -72,35 +72,3 @@ console.log('Magic happens on port ' + port);
 
 // expose app           
 exports = module.exports = app;                         
-
-var liste = [];
-for(var i=0;i<500000;i++){
-	liste.push(i);
-}
-
-var UserDao = require('./app/dao/UserDao');
-
-async.eachSeries(liste, function(item,callback){
-
-	// Perform operation on file here. 
-  if(item%100000===0) console.log('Processing item ' + item);
-  	UserDao.getUserById(item,function(err,rows){
-	 	if(err){
-	 		callback(err);
-	 	}
-	 	else{
-		 	//console.log('File processed');
-		    callback();
-		}
-  	}); 
-  
-}, function(err){
-    // if any of the file processing produced an error, err would equal that error 
-    if( err ) {
-      // One of the iterations produced an error. 
-      // All processing will now stop. 
-      console.log('fail at index '+err);
-    } else {
-      console.log('All have been processed successfully');
-    }
-});
