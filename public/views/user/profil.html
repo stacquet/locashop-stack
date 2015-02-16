@@ -87,39 +87,20 @@
             <textarea class="form-control" id="textarea" name="textarea" placeholder="Entrez du texte" rows="5"></textarea>
           </div>
         </div>
-<<<<<<< HEAD
       </div>
       <div class="form-group">
         <label for="exampleInputFile">Les photos de votre exploitation</label>
-      </div>
-      <div class="form-group">
-        <label for="exampleInputFile">Ajouter une photo</label>
-        <input type="file" id="exampleInputFile">
+		<tr ng-repeat="photo in profil.presentation.photos">
+			<img src="{{photo}}" class="img-responsive" alt="Responsive image">
+		</tr>
       </div>
     </form>
-	<form action="/upload" enctype="multipart/form-data" method="post">Add a title: 
+	<form action="/media/upload" enctype="multipart/form-data" method="post">Add a title: 
 		<input name="title" type="text" /><br><br>
 		<input multiple="multiple" name="upload" type="file" /><br><br>
-		<input type="submit" value="Upload" />
+		<input type="submit" value="Sauver" />
 	</form>
-
   </div>
-</div>
-=======
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="exampleInputFile">Mes photos</label>
-          <div class="col-md-9">                     
-            <input type="file" name="upload" multiple="multiple">
-          </div>
-        </div>   
-        <div class="form-group">
-          <div class="col-xs-offset-2 ">  
-            <input type="submit" class="btn btn-sm btn-success" value="sauver">
-          </div>
-        </div>
-      </form>
-    </div>
     <div class="row">
       <pre>{{profil}}</pre>
     </div>
->>>>>>> 91af53ce96def23e59ced4d137bc400669f1cd43

@@ -1,5 +1,5 @@
 // public/js/controllers/ProfilCtrl.js
-angular.module('ProfilCtrl', ['flow'])
+angular.module('ProfilCtrl', [])
 .controller('ProfilController', function($scope) {
 
     $scope.profil={
@@ -13,7 +13,9 @@ angular.module('ProfilCtrl', ['flow'])
     		la_ferme : '',
     		les_produits : '',
     		les_methodes :'',
-    		photos : ''
+    		photos : []
     	}
     }
+	
+	
 });

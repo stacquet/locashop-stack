@@ -1,7 +1,7 @@
 module.exports = {
 
 	/* Retourne la liste de tous les utilisateurs sans filtres */
-	getProfils : function(callback){
+	getUsers : function(callback){
 		global.mysqlPool.query("select * from ref_user ", function(err, rows) {
 			if (err)	return callback(err);
 			return callback(null,rows);
@@ -9,7 +9,7 @@ module.exports = {
 	},
 
 	/* Retourne un user par son id */
-	getProfilById : function(id,callback){
+	getUserById : function(id,callback){
 		if(typeof(id) == "number"){
 			var myQuery = "select * from ref_user where id_user="+id;
 			//console.log(myQuery);
