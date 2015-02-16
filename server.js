@@ -12,6 +12,7 @@ var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
+var orm  			= require("orm");
 global.winston 		= require('winston');
 
 console.log(database.dbConfig.host);
