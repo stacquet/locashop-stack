@@ -11,11 +11,7 @@ var cookieParser 	= require('cookie-parser');
 var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
-<<<<<<< HEAD
-
-=======
 var async			= require('async');
->>>>>>> 91af53ce96def23e59ced4d137bc400669f1cd43
 global.winston 		= require('winston');
 
 console.log(database.dbConfig.host);

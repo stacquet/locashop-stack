@@ -130,36 +130,6 @@
 	app.get('/search-box', function(req, res) {
 		res.sendfile('./public/views/search-box.html');
 	});
-
-<<<<<<< HEAD
-	
-	app.post('/upload', function (req, res){
-  var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files) {
-    res.writeHead(200, {'content-type': 'text/plain'});
-    res.write('received upload:\n\n');
-    res.end(util.inspect({fields: fields, files: files}));
-  });
-
-  form.on('end', function(fields, files) {
-    /* Temporary location of our uploaded file */
-    var temp_path = this.openedFiles[0].path;
-    /* The file name of the uploaded file */
-    var file_name = this.openedFiles[0].name;
-    /* Location where we want to copy the uploaded file */
-    var new_location = 'uploads/';
-
-    fs.copy(temp_path, new_location + file_name, function(err) {  
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("success!")
-      }
-    });
-  });
-});
-=======
-
 	// upload d'image de profil
 	app.post('/media/upload', function(req, res) {
 	  console.log('photo à recevoir');
@@ -186,7 +156,6 @@
         });
     });
     });
->>>>>>> 91af53ce96def23e59ced4d137bc400669f1cd43
 	// page d'accueil
 	app.get('*', function(req, res) {
 		res.sendfile('./public/views/index.html');
