@@ -12,7 +12,9 @@ var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
-var orm  			= require("orm");
+var orm  			= require('orm');
+var models   		= require('./app/models/');
+
 global.winston 		= require('winston');
 
 console.log(database.dbConfig.host);
@@ -27,6 +29,19 @@ global.mysqlPool  = mysql.createPool({
    password : database.dbConfig.password,
    database : database.dbConfig.database
  });
+ 
+ //connect orm to database
+ /*orm.connect('mysql://root:root@localhost/locashop', function(err, db) {
+  if (err) return console.error('Connection error: ' + err);
+
+  db.load("./app/models", function (err) {
+    // loaded! 
+    var User = db.models.user;
+	console.log('user model chargé');
+});
+  // connected
+  // ...
+});*/
 // set our port
 var port = process.env.PORT || 3000; 
   
@@ -51,10 +66,12 @@ app.use(cookieParser()); // read cookies (needed for auth)
  //app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ secret: 'thisisI' ,
+app.use(session({ 
+	secret: 'thisisI' ,
 	cookie : {
 		maxAge: 2*3600*1000 // see below
-	  }})); // session secret
+	  }
+	})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -62,6 +79,18 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'));
 require('./config/passport')(passport); // pass passport for configuration
+// import des modeles dans app
+app.use(function (req, res, next) {
+      models(function (err, db) {
+        if (err) return next(err);
+
+        req.models = db.models;
+        req.db     = db;
+
+        return next();
+      });
+    });
+	
 // routes ==================================================
 require('./app/routes')(app,passport); // configure our routes
 // start app ===============================================

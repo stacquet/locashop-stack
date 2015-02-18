@@ -4,7 +4,7 @@ DELETE FROM panier_details;
 DELETE FROM panier;
 DELETE FROM producteur_catalogue_details;
 DELETE FROM producteur_catalogue;
-DELETE FROM ref_user;
+DELETE FROM user;
 DELETE FROM rel_conditionnement_produit;
 DELETE FROM ref_produit;
 DELETE FROM ref_produit_sous_famille;
@@ -24,7 +24,7 @@ ON DUPLICATE KEY UPDATE
 	date_modif=VALUES(date_modif),
 	user_modif=VALUES(user_modif);
 
-INSERT INTO ref_user (id_user,id_profil,id_adresse,email,mobile,nom,prenom,password,date_modification)
+INSERT INTO user (id_user,id_profil,id_adresse,email,mobile,nom,prenom,password,date_modification)
 VALUES 
 	(1,'P_CONSOMMATEUR',NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$Uqh0QVK7GYuZ25hm5/jEceg/rrG1Gfgkr2uVTwtNlRDp1VGyjWAa6',NULL)
 ON DUPLICATE KEY UPDATE
@@ -37,4 +37,22 @@ ON DUPLICATE KEY UPDATE
 	password=VALUES(password),
 	date_modification=VALUES(date_modification)
 ;
+
+INSERT INTO user_profil_producteur
+(id_user,
+id_adresse_livraison,
+presentation_ferme,
+presentation_produits,
+presentation_methode,
+date_modif,
+user_modif)
+VALUES
+(1,
+null,
+'presentation_ferme',
+'presentation_produits',
+'presentation_methode',
+null,
+null);
+
 COMMIT;

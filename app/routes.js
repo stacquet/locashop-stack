@@ -1,6 +1,7 @@
 ﻿	module.exports = function(app,passport) {
 	var formidable 		= require('formidable');
 	var modelServices = require('./services/modelServices')();
+	var models  = require('./models');
 	var formidable = require('formidable');
 	var util = require('util');
 	var fs   = require('fs-extra');
@@ -95,12 +96,30 @@
 	// ADMIN SECTION =========================
 	// =====================================
 	// 
-	app.get('/api/auth/users', modelServices.User.isLoggedIn, function(req, res) {
+	app.get('/api/auth/users',  function(req, res) {
 		if(req.user) console.log("role "+req.user.role);
-		modelServices.User.getUsersList(function(err,data){
+		/*modelServices.User.getUsersList(function(err,data){
 			if(err) global.winston.log('error',err);
 				res.send(data);
 			});
+			*/
+			/*req.models.user.find({email : 'sylvain.tacquet@gmail.com'},function(err,user){
+			//req.models.profil_producteur.find({id_user : 1},function(err,user){
+			if(err) console.log(err);
+			console.log('user : '+user);
+			user[0].getProfil_producteur(function(err,profil_producteur){
+				console.log('profil producteur : '+profil_producteur);	
+				res.send(profil_producteur);
+			});			
+			});*/
+		models.User.findAll({
+			include: [ models.Task ]
+		  }).then(function(users) {
+			res.render('index', {
+			  title: 'Express',
+			  users: users
+			});
+		  });
 	});
 	
 	app.post('/api/auth/users/delete',modelServices.User.isLoggedIn, function(req, res) {

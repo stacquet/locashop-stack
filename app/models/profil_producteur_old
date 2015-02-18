@@ -1,0 +1,11 @@
+// le modele profil producteur
+module.exports = function (orm, db) {
+    var ProfilProducteur =	db.models.user.extendsTo('profil_producteur', {
+        presentation_ferme : {type : 'text'},
+		presentation_produits : {type : 'text'},
+		presentation_methode : {type : 'text'}
+    },
+	{
+		collection : 'producteur_infos'
+	});
+};

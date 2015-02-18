@@ -3,8 +3,9 @@ DROP TABLE IF EXISTS panier;
 DROP TABLE IF EXISTS producteur_catalogue_details;
 DROP TABLE IF EXISTS producteur_catalogue;
 DROP TABLE IF EXISTS media_user;
+DROP TABLE IF EXISTS user_profil_producteur;
 DROP TABLE IF EXISTS media;
-DROP TABLE IF EXISTS ref_user;
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS rel_conditionnement_produit;
 DROP TABLE IF EXISTS ref_produit;
 DROP TABLE IF EXISTS ref_produit_sous_famille;
@@ -105,7 +106,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table ref_user
 -- -----------------------------------------------------
-CREATE TABLE ref_user (
+CREATE TABLE user (
   id_user INT NOT NULL AUTO_INCREMENT,
   id_profil VARCHAR(45) NOT NULL,
   id_adresse INT NULL,
@@ -142,7 +143,7 @@ CREATE TABLE media_user (
   INDEX fk_media_user_id_user_idx (id_user ASC),
   CONSTRAINT fk_media_user_id_user
     FOREIGN KEY (id_user)
-    REFERENCES ref_user (id_user)
+    REFERENCES user (id_user)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   INDEX fk_media_user_id_media_idx (id_media ASC),
@@ -156,9 +157,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table producteur_infos
 -- -----------------------------------------------------
-CREATE TABLE producteur_infos (
+CREATE TABLE user_profil_producteur (
   id_user INT NOT NULL,
-  id_adresse_livraison INT NOT NULL,
+  id_adresse_livraison INT NULL,
   presentation_ferme TEXT NULL,
   presentation_produits TEXT NULL,
   presentation_methode TEXT NULL,
@@ -168,7 +169,7 @@ CREATE TABLE producteur_infos (
   INDEX fk_producteur_infos_id_user_idx (id_user ASC),
   CONSTRAINT fk_producteur_infos_id_user
     FOREIGN KEY (id_user)
-    REFERENCES ref_user (id_user)
+    REFERENCES user (id_user)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -186,7 +187,7 @@ CREATE TABLE producteur_catalogue (
   INDEX fk_producteur_catalogue_ref_user1_idx (id_user ASC),
   CONSTRAINT fk_producteur_catalogue_ref_user1
     FOREIGN KEY (id_user)
-    REFERENCES ref_user (id_user)
+    REFERENCES user (id_user)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -230,7 +231,7 @@ CREATE TABLE panier (
   INDEX fk_panier_ref_user1_idx (id_user ASC),
   CONSTRAINT fk_panier_ref_user1
     FOREIGN KEY (id_user)
-    REFERENCES ref_user (id_user)
+    REFERENCES user (id_user)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
