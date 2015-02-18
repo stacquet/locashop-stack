@@ -4,8 +4,9 @@ var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var bcrypt = require('bcrypt-nodejs');
 var configAuth = require('./auth');
+var models   		= require('../app/models/');
 
-var User = require('../app/services/user');
+//var User = require('../app/services/user');
 
 module.exports = function(passport) {
 // =========================================================================
@@ -19,9 +20,13 @@ module.exports = function(passport) {
 	});
 	// used to deserialize the user
 	passport.deserializeUser(function(id, done) {
-		global.mysqlPool.query("select * from ref_user where id_user = "+ id, function(err, rows){
+
+		models.User.find({where : {id_user : id }}).then(function(user){
+			done(null, user);			
+		})
+		/*global.mysqlPool.query("select * from ref_user where id_user = "+ id, function(err, rows){
 			done(err, rows[0]);
-		});
+		});*/
 	});
 	// =========================================================================
 	// LOCAL SIGNUP ============================================================
@@ -39,32 +44,25 @@ module.exports = function(passport) {
 		function(req, email, password, done) {
 			// find a user whose email is the same as the forms email
 			// we are checking to see if the user trying to login already exists
-			global.mysqlPool.query("select * from ref_user where email = " + 
-				global.mysqlPool.escape(email), function(err, rows) {
-				if (err)
-					return done(err);
-				if (rows.length) {
-					console.log('mail déjà pris');
+			models.User.find({where : {email : email }}).then(function(user){
+				if(user !==null)
 					return done(null, false, req.flash('signupMessage', 'Cet email est déjà pris !'));
-				} else {
 				// if there is no user with that username
 				// create the user
-					var newUserMysql = {
+					models.User.build({
 						email: email,
-						password: bcrypt.hashSync(password, null, null) // use the generateHash function in our user model
-					};
-					var insertQuery = "INSERT INTO ref_user ( email, password, id_profil ) values (" + 
-						global.mysqlPool.escape(newUserMysql.email) + "," + global.mysqlPool.escape(newUserMysql.password) + ",'P_CONSOMMATEUR')";
-							global.mysqlPool.query(insertQuery,function(err, rows) {
-						if(err) 
-							//return done(null, false, req.flash('signupMessage', 'Erreur interne à l\' inscription'));
-							return done(err);
-						newUserMysql.id_user = rows.insertId;
-						return done(null, newUserMysql);
+						password: bcrypt.hashSync(password, null, null),
+						id_profil : req.id_profil 
+						// use the generateHash function in our user model
+					}).save().then(function(user){
+						//var newUser = user.reload();
+						return done(null, user.dataValues);
+					}).catch(function(err){
+						return done(err);
 					});
-				}
-			});
-		})
+
+				});
+			})
 	);
 	// =========================================================================
 	// LOCAL LOGIN =============================================================
@@ -80,19 +78,14 @@ module.exports = function(passport) {
 			passReqToCallback : true // allows us to pass back the entire request to the callback
 		},
 		function(req, email, password, done) { // callback with email and password from our form
-			console.log('trying to authenticate');
-			global.mysqlPool.query("select * from ref_user where email = "+ 
-				global.mysqlPool.escape(email),function(err, rows){
-				if (err)
-					return done(err);
-				if (!rows.length) {
-					return done(null, false, req.flash('loginMessage', 'Email ou mot de passe incorrect')); // req.flash is the way to set flashdata using connect-flash
-				}
-				// if the user is found but the password is wrong
-				if (!bcrypt.compareSync(password, rows[0].password))
+			//console.log('trying to authenticate');
+			models.User.find({where : {email : email }}).then(function(user){
+				if (user==null || (!bcrypt.compareSync(password, user.password)))
 					return done(null, false, req.flash('loginMessage', 'Email ou mot de passe incorrect')); // create the loginMessage and save it to session as flashdata
 					// all is well, return successful user
-					return done(null, rows[0]);
+					return done(null, user);
+				}).catch(function(err){
+					return done(null, false, req.flash('loginMessage', 'Erreur interne à la connexion'));
 				});
 		})
 	);
@@ -115,39 +108,25 @@ module.exports = function(passport) {
         process.nextTick(function() {
 
             // find the user in the database based on their facebook id
-            global.mysqlPool.query("select * from ref_user where id_facebook = "+ 
-				global.mysqlPool.escape(profile.id),function(err, rows){
-
-                // if there is an error, stop everything and return that
-                // ie an error connecting to the database
-                if (err)
-                    return done(err);
+            models.User.find({where : {id_facebook : profile.id }}).then(function(user){
 
                 // if the user is found, then log them in
-                if (rows.length>0) {
-                    return done(null, rows[0]); // user found, return that user
-                } else {
+                if (user!==null)
+                    return done(null, user); // user found, return that user
                     // if there is no user found with that facebook id, create them
-					var newUserMysql = {
+					models.User.build({
 						email: profile.emails[0].value,
 						id_facebook : profile.id,
 						prenom : profile.name.givenName,
 						nom : profile.name.familyName,
-						token : token
-					};
-					var insertQuery = "INSERT INTO ref_user ( email, id_facebook, id_profil,prenom,nom,token ) values (" + 
-						global.mysqlPool.escape(newUserMysql.email) + "," + global.mysqlPool.escape(newUserMysql.id_facebook) + ",'P_CONSOMMATEUR',"+global.mysqlPool.escape(newUserMysql.prenom)
-						+","+global.mysqlPool.escape(newUserMysql.nom)+","+global.mysqlPool.escape(newUserMysql.token)+")";
-						console.log(insertQuery);
-							global.mysqlPool.query(insertQuery,function(err, rows) {
-						if(err) 
-							//return done(null, false, req.flash('signupMessage', 'Erreur interne à l\' inscription'));
-							return done(err);
-						newUserMysql.id_user = rows.insertId;
-						return done(null, newUserMysql);
+						token : token,
+						id_profil : 'P_CONSOMMATEUR'
+						// use the generateHash function in our user model
+					}).save().then(function(user){
+						return done(null, user.dataValues);
+					}).catch(function(err){
+						return done(err);
 					});
-                }
-
             });
         });
 

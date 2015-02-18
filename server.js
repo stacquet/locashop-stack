@@ -6,30 +6,20 @@ var app           	= express();
 var bodyParser    	= require('body-parser');
 var methodOverride	= require('method-override');
 var mysql 			= require('mysql');
-var database		= require('./config/database');
 var cookieParser 	= require('cookie-parser');
 var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
-var orm  			= require('orm');
-var models   		= require('./app/models/');
+//var orm  			= require('orm');
 
 global.winston 		= require('winston');
 
-console.log(database.dbConfig.host);
 // configuration ===========================================
 winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
 //winston.remove(winston.transports.Console);
 winston.log('info','Hello distributed log files!');
 // config files
-global.mysqlPool  = mysql.createPool({
-   host     : database.dbConfig.host,
-   user     : database.dbConfig.user,
-   password : database.dbConfig.password,
-   database : database.dbConfig.database
- });
- 
  //connect orm to database
  /*orm.connect('mysql://root:root@localhost/locashop', function(err, db) {
   if (err) return console.error('Connection error: ' + err);
@@ -79,7 +69,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'));
 require('./config/passport')(passport); // pass passport for configuration
-// import des modeles dans app
+/* import des modeles dans app
 app.use(function (req, res, next) {
       models(function (err, db) {
         if (err) return next(err);
@@ -90,6 +80,7 @@ app.use(function (req, res, next) {
         return next();
       });
     });
+*/
 	
 // routes ==================================================
 require('./app/routes')(app,passport); // configure our routes

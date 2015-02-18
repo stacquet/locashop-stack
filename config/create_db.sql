@@ -1,19 +1,6 @@
-DROP TABLE IF EXISTS panier_details;
-DROP TABLE IF EXISTS panier;
-DROP TABLE IF EXISTS producteur_catalogue_details;
-DROP TABLE IF EXISTS producteur_catalogue;
-DROP TABLE IF EXISTS media_user;
-DROP TABLE IF EXISTS user_profil_producteur;
-DROP TABLE IF EXISTS media;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS rel_conditionnement_produit;
-DROP TABLE IF EXISTS ref_produit;
-DROP TABLE IF EXISTS ref_produit_sous_famille;
-DROP TABLE IF EXISTS ref_profil;
-DROP TABLE IF EXISTS ref_conditionnement;
-DROP TABLE IF EXISTS ref_produit_famille;
-DROP TABLE IF EXISTS ref_adresse;
-
+DROP DATABASE IF EXISTS locashop;
+CREATE DATABASE locashop  CHARACTER SET utf8;
+USE locashop;
 CREATE TABLE ref_adresse (
   id_adresse INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(45) NULL,
@@ -119,7 +106,7 @@ CREATE TABLE user (
   nom VARCHAR(45) NULL,
   prenom VARCHAR(45) NULL,
   password VARCHAR(100) NULL,
-  date_modification DATETIME NULL,
+  date_modif DATETIME NULL,
   PRIMARY KEY (id_user),
   UNIQUE INDEX email_UNIQUE (email ASC),
   INDEX fk_ref_user_ref_profil1_idx (id_profil ASC),
@@ -157,22 +144,35 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table producteur_infos
 -- -----------------------------------------------------
-CREATE TABLE user_profil_producteur (
-  id_user INT NOT NULL,
+CREATE TABLE ferme (
+  id_ferme INT NOT NULL AUTO_INCREMENT,
   id_adresse_livraison INT NULL,
   presentation_ferme TEXT NULL,
   presentation_produits TEXT NULL,
   presentation_methode TEXT NULL,
   date_modif DATETIME NULL,
   user_modif INT NULL,
-  PRIMARY KEY (id_user),
-  INDEX fk_producteur_infos_id_user_idx (id_user ASC),
-  CONSTRAINT fk_producteur_infos_id_user
+  PRIMARY KEY (id_ferme))
+ENGINE = InnoDB;
+
+CREATE TABLE ferme_user (
+  id_ferme INT NOT NULL,
+  id_user INT NOT NULL,
+  date_modif DATETIME NULL,
+  user_modif INT NULL,
+  PRIMARY KEY (id_ferme, id_user),
+  INDEX fk_ferme_id_user_idx (id_user ASC),
+  CONSTRAINT fk_ferme_id_ferme
+    FOREIGN KEY (id_ferme)
+    REFERENCES ferme (id_ferme)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_ferme_id_user
     FOREIGN KEY (id_user)
     REFERENCES user (id_user)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
+
 
 -- -----------------------------------------------------
 -- Table producteur_catalogue
