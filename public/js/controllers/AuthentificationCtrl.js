@@ -56,7 +56,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 			if(statut){
 				$rootScope.userInfos=data.user;
 				$rootScope.isLoggedIn=true;
-				$location.path('/users');
+				$location.path('/');
 			}
 			else{
 				$scope.loginMessages=data.loginMessages;

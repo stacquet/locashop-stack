@@ -18,7 +18,7 @@
 				<input type="password" class="form-control" ng-model="user.password" id="password">
 			</div>
 
-			<button type="submit" ng-click="login()" ng-disabled="!userForm.$valid" class="btn btn-warning btn-lg">Login</button>
+			<button id="loginButton" type="submit" ng-click="login()" ng-disabled="!userForm.$valid" class="btn btn-warning btn-lg">Login</button>
 		</form>
     <p class="spacer">Pas encore de compte ? <a href="/auth/inscription">Inscrivez-vous !</a></p>
     <p>Ou retournez à l'<a href="/">accueil </a></p>
