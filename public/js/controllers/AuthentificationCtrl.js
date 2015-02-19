@@ -41,7 +41,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 			Authentification.validate($scope.user,function(statut,data){
 				if(statut){
 					$rootScope.isLoggedIn=true;
-					$rootScope.userInfo=data.user;
+					$rootScope.userInfos=data.user;
 					$location.path('/user/emailValidation');
 				}
 				else{
@@ -54,7 +54,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	$scope.login = function(){
 		Authentification.login($scope.user.email,$scope.user.password,function(statut,data){
 			if(statut){
-				$rootScope.userInfo=data.user;
+				$rootScope.userInfos=data.user;
 				$rootScope.isLoggedIn=true;
 				$location.path('/users');
 			}
@@ -64,9 +64,9 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 		});
 	};
 	if($rootScope.firstConnection){
-		Authentification.userInfo(function(data){
+		Authentification.userInfos(function(data){
 				if(data != ""){
-					$rootScope.userInfo=data;
+					$rootScope.userInfos=data;
 					$rootScope.isLoggedIn=true;
 				}
 				$rootScope.firstConnection=false;
@@ -76,7 +76,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	$scope.logout = function(){
 		Authentification.logout(function(data){
 			if(data.status="ok"){
-				$rootScope.userInfo=null;
+				$rootScope.userInfos=null;
 				$rootScope.isLoggedIn=false;
 				}
 			$location.path('/');

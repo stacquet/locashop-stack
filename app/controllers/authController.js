@@ -1,12 +1,52 @@
+var passport	= require('passport');
+var models   	= require('../models/');
 
 module.exports = {
-  list: function (req, res, next) {
-    
-      res.send({ items: items });
+	login: function (req, res, next) {
+		passport.authenticate('local-login', function(err, user, info) {
+			if (err) { return next(err); }
+			if (!user) { return res.send({'statut' : false, 'loginMessages' : req.flash('loginMessage')}); }
+			req.logIn(user, function(err) {
+			  if (err) { return next(err); }
+				res.send({'statut' : true, 'user' : req.user});
+			});
+		})(req, res, next);
 
-  },
-  create: function (req, res, next) {
-  
-      res.send(200, message.serialize());
-  }
+	},
+	userInfos : function(req,res,next){
+		res.send(req.user);
+	},
+	logout: function (req, res, next) {
+		req.logout();
+		res.send({status : "ok"});
+	},
+	checkEmailAvailable : function(req, res, next) {
+		models.User.find({where : {email : req.body.email }})
+			.then(function(user){
+			res.send({"checkEmailAvailable" : (user!==null?false:true)});
+		})
+			.catch(function(err){
+			res.send({"checkEmailAvailable" : false});
+		});
+	},
+	signup : function(req, res, next) {
+		req.id_profil='P_CONSOMMATEUR';
+		passport.authenticate('local-signup', function(err, user, info) {
+			if (err) { return next(err); }
+			if (!user) { return res.send({'statut' : false, 'loginMessages' : req.flash('loginMessage')}); }
+			req.logIn(user, function(err) {
+			  if (err) { return next(err); }
+				return res.send({'statut' : true, 'user' : user});
+			});
+		})(req, res, next);
+	},
+	facebook : function(req,res,next){
+		passport.authenticate('facebook',{ scope : 'email' });
+	},
+	facebook_callback : function(req,res,next){
+		passport.authenticate('facebook', {
+            successRedirect : '/users',
+            failureRedirect : '/'
+        });
+	}
 };

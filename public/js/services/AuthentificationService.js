@@ -11,7 +11,7 @@ angular.module('AuthentificationService', []).factory('Authentification', ['$htt
 		},
         // call to get all nerds
         validate : function(data, callback) {
-            return $http.post('/api/auth/inscription/validate',data)
+            return $http.post('/api/local-signup',data)
 						.success(function(data, status, headers, config) {
 							if(data.statut==false){
 								return callback(false,data);
@@ -22,8 +22,8 @@ angular.module('AuthentificationService', []).factory('Authentification', ['$htt
 						});
         },
 		
-		userInfo : function(callback){
-			return $http.post('/api/login/userInfo')
+		userInfos : function(callback){
+			return $http.get('/api/login/userInfos')
 				.success(function(data, status, headers, config) {
 							return callback(data);
 						});
