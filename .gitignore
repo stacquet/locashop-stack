@@ -3,3 +3,4 @@ storage/
 public/libs/
 logs/locashop.log
 npm-debug.log
+.bowerrc
