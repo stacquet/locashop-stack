@@ -17,6 +17,7 @@ module.exports = {
 		res.send(req.user);
 	},
 	logout: function (req, res, next) {
+		console.log('logout user : '+req.user);
 		req.logout();
 		res.send({status : "ok"});
 	},

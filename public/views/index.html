@@ -53,7 +53,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			  </button>
-			  <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span></a>
+			  <a id="homeLink" class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span></a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -66,13 +66,13 @@
 				<li ng-show="!$root.isLoggedIn"><a href="/auth/inscription" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
-					<li ng-show="$root.isLoggedIn" class="dropdown">
+					<li id="menuAutenticated" ng-show="$root.isLoggedIn" class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfos.email}} <span class="caret"></span></a>
 					  <ul class="dropdown-menu" role="menu">
 						<li><a href="/user/producteur" data-toggle="collapse" data-target=".navbar-collapse">Mon espace producteur</a></li>
 						<li><a ng-href="/user/profil/{{$root.userInfos.id_user}} data-toggle="collapse" data-target=".navbar-collapse"">Mon profil</a></li>
 						<li class="divider"></li>
-						<li><a ng-click="logout()" href="/" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
+						<li><a id="logoutLink" ng-click="logout()" href="/" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
 					  </ul>
 					</li>
 					<li ng-show="!$root.isLoggedIn">
