@@ -5,3 +5,4 @@ logs/locashop.log
 npm-debug.log
 .bowerrc
 test/selenium/test.log
+log.log
