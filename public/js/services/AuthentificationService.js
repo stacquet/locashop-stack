@@ -21,6 +21,13 @@ angular.module('AuthentificationService', []).factory('Authentification', ['$htt
 							}
 						});
         },
+
+        emailVerification : function(data,callback){
+        	return $http.get('/api/emailVerification')
+        				.success(function(data, status, headers, config) {
+        					return callback(null,data);
+        				});
+        },
 		
 		userInfos : function(callback){
 			return $http.get('/api/login/userInfos')

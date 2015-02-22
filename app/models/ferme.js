@@ -16,12 +16,15 @@ module.exports = function(sequelize, Sequelize) {
   },
   {
     timestamps: false,
-    tableName : 'ferme'/*,
+    tableName : 'ferme',
     classMethods: {
       associate: function(models) {
-        Ferme.belongsToMany(models.User, {through: 'ferme_user'});
+        Ferme.belongsToMany(models.User, {
+          through: 'ferme_user',
+          foreignKey: 'id_ferme'
+        });
       }
-    }*/
+    }
   });
 
   return Ferme;

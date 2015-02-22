@@ -6,8 +6,6 @@ var bcrypt = require('bcrypt-nodejs');
 var configAuth = require('./auth');
 var models   		= require('../app/models/');
 
-//var User = require('../app/services/user');
-
 module.exports = function(passport) {
 // =========================================================================
 // passport session setup ==================================================
@@ -20,9 +18,9 @@ module.exports = function(passport) {
 	});
 	// used to deserialize the user
 	passport.deserializeUser(function(id, done) {
-
+		console.log('deserializing user');
 		models.User.find({where : {id_user : id }}).then(function(user){
-			done(null, user);			
+			done(null, user.values);			
 		})
 		/*global.mysqlPool.query("select * from ref_user where id_user = "+ id, function(err, rows){
 			done(err, rows[0]);

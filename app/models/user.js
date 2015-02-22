@@ -25,7 +25,10 @@ module.exports = function(sequelize, Sequelize) {
     tableName : 'user',
     classMethods: {
       associate: function(models) {
-        User.belongsToMany(models.Ferme, {through: 'ferme_user'});
+        User.belongsToMany(models.Ferme, {
+          through: 'ferme_user',
+          foreignKey: 'id_user'
+        });
       }
     }
   });

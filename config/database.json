@@ -2,8 +2,11 @@
 	"development":
 	{
 		"host": "localhost",
-		"user": "root",
-		"password": "root",
-		"database": "locashop"
+		"user": "locashop",
+		"password": "locashop",
+		"database": "locashop",
+		"mailService" : "gmail",
+		"mailUser"	: "locashop.stack",
+		"mailPassword" : "L0c@5hOp5!CaK"
 	}
 }

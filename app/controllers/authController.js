@@ -36,18 +36,20 @@ module.exports = {
 			if (err) { return next(err); }
 			if (!user) { return res.send({'statut' : false, 'loginMessages' : req.flash('loginMessage')}); }
 			req.logIn(user, function(err) {
-			  if (err) { return next(err); }
-				return res.send({'statut' : true, 'user' : user});
+				if (err) { return next(err); }
+
+				//return res.send({'statut' : true, 'user' : user});
+				return res.redirect('/user/emailVerification');
 			});
 		})(req, res, next);
 	},
 	facebook : function(req,res,next){
-		passport.authenticate('facebook',{ scope : 'email' });
+		passport.authenticate('facebook',{ scope : 'email' })(req, res, next);
 	},
 	facebook_callback : function(req,res,next){
 		passport.authenticate('facebook', {
-            successRedirect : '/users',
+            successRedirect : '/',
             failureRedirect : '/'
-        });
+        })(req, res, next);
 	}
 };

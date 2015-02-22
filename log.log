@@ -1,0 +1,88 @@
+22 Feb 20:45:20 - [33m[nodemon] v1.3.5[39m
+22 Feb 20:45:20 - [33m[nodemon] to restart at any time, enter `rs`[39m
+22 Feb 20:45:20 - [33m[nodemon] watching: *.*[39m
+22 Feb 20:45:20 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'sylvain.tacquet@gmail.com' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+Executing (default): INSERT INTO `user` (`id_user`,`id_profil`,`email`,`password`) VALUES (DEFAULT,'P_CONSOMMATEUR','tacou_st@hotmail.com','$2a$10$SLqTvbZvmxRKMK0wic/5q.WC6uqsKLbOP7W.zj4WIdsYXzROKUG1C');
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+logout user : [object Object]
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'sylvain.tacquet@gmail.coms' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'sylvain.tacquet@gmail.coms' LIMIT 1;
+Executing (default): INSERT INTO `user` (`id_user`,`id_profil`,`email`,`password`) VALUES (DEFAULT,'P_CONSOMMATEUR','sylvain.tacquet@gmail.coms','$2a$10$5AxN9ObPI5yWneUbZxmA8Os8MLbiT5VYAXaDpsL1Yb7coi83uWDJG');
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 3;
+22 Feb 21:06:39 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:06:39 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+22 Feb 21:09:25 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:09:25 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+22 Feb 21:09:50 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:09:50 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:09:50 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+22 Feb 21:10:10 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:10:10 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'sylvain.tacquet@gmail.comd' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'sylvain.tacquet@gmail.comd' LIMIT 1;
+Executing (default): INSERT INTO `user` (`id_user`,`id_profil`,`email`,`password`) VALUES (DEFAULT,'P_CONSOMMATEUR','sylvain.tacquet@gmail.comd','$2a$10$o.8rpNHmuUFOMChHH31onudLA6Iy0cT1wJjcAeHnQATvpshwEJb4O');
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 4;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 4;
+{ to: 'sylvain.tacquet@gmail.comd',
+  subject: 'Please confirm your Email account',
+  html: 'Hello,<br> Please Click on the link to verify your email.<br><a href=http://localhost:3000/verify?id=59>Click here to verify</a>' }
+[Error: Unsupported configuration, downgrade Nodemailer to v0.7.1 or see the migration guide https://github.com/andris9/Nodemailer#migration-guide]
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 4;
+22 Feb 21:14:10 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:14:11 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+logout user : undefined
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`email` = 'tacou_st@hotmail.com' LIMIT 1;
+Executing (default): INSERT INTO `user` (`id_user`,`id_profil`,`email`,`password`) VALUES (DEFAULT,'P_CONSOMMATEUR','tacou_st@hotmail.com','$2a$10$PAzteMs0s2WF8xTydZSaB.JjkXqkxh5RIksjczx7m6GpfxmSryZe6');
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+NaN
+{ to: 'tacou_st@hotmail.com',
+  subject: 'Please confirm your Email account',
+  html: 'Hello,<br> Please Click on the link to verify your email.<br><a href=http://localhost:3000/verify?id=149>Click here to verify</a>' }
+[Error: Unsupported configuration, downgrade Nodemailer to v0.7.1 or see the migration guide https://github.com/andris9/Nodemailer#migration-guide]
+deserializing user
+Executing (default): SELECT `id_user`, `id_profil`, `id_adresse`, `id_facebook`, `token`, `email`, `email_valide`, `mobile`, `mobile_valide`, `nom`, `prenom`, `password`, `date_modif` FROM `user` AS `User` WHERE `User`.`id_user` = 2;
+22 Feb 21:17:26 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:17:26 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+22 Feb 21:17:27 - [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+22 Feb 21:18:01 - [32m[nodemon] restarting due to changes...[39m
+22 Feb 21:18:01 - [32m[nodemon] starting `node server.js`[39m
+info: Hello distributed log files!
+Magic happens on port 3000
+Terminer le programme de commandes (O/N)ÿ? 

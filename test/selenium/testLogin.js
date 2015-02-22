@@ -1,19 +1,16 @@
 var request = require('request');
 describe('angularjs homepage', function() {
-	var firstNumber = element(by.model('first'));
-	var secondNumber = element(by.model('second'));
+
 	var loginLink = element(by.id('loginLink'));
 	var baseUrl = 'http://localhost:3000';
 
 	browser.get(baseUrl);
 	
 	afterEach(function() {
-		console.log('rafraichissement de l\'interface');		
 		element(by.id('menuAutenticated')).isDisplayed().then(function(isDisplayed){
 			if(isDisplayed){
 				element(by.id('menuAutenticated')).click();
 				element(by.id('logoutLink')).click();
-				console.log('logout');
 			}
 			else{
 				element(by.id('homeLink')).click();

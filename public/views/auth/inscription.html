@@ -31,7 +31,6 @@
 				<input type="password" name="passwordBis" class="form-control" ng-model="user.passwordBis" ng-blur="checkPasswordEqual()">
 				<p ng-show="!passwordEquals" class="help-block">Les mots de passe ne correspondent pas</p>			
 			</div>
-			<!--
 				<div class="form-group" >
 				<label>Etes-vous : </label>
 				<div class="checkbox">
@@ -42,12 +41,12 @@
 					  <input type="checkbox"> Consommateur
 					</label>
 				 </div>
-			</div> -->
+			</div>
 			<!-- SUBMIT BUTTON -->
 			<div class="alert alert-danger" ng-show="(loginMessages.length > 0)">
 				<p ng-repeat="loginMessage in loginMessages">{{loginMessage}}</p>
 			</div>
-			<button type="submit" class="btn btn-primary spacer"  ng-disabled="!passwordEquals || userForm.email.$invalid || !emailAvailable">Valider</button>			
+			<button id="inscriptionButton" type="submit" class="btn btn-primary spacer"  ng-disabled="!passwordEquals || userForm.email.$invalid || !emailAvailable">Valider</button>			
 		</form>
 		<div class=".spacer">
 			<p>Inscrivez-vous ou identifiez-vous avec Facebook :</p>

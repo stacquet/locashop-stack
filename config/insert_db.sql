@@ -17,23 +17,12 @@ VALUES
 ;
 
 INSERT INTO ferme
-(id_ferme,
-id_adresse_livraison,
-presentation_ferme,
-presentation_produits,
-presentation_methode,
-date_modif,
-user_modif)
+(id_ferme,id_adresse_livraison,presentation_ferme,presentation_produits,presentation_methode,date_modif,user_modif)
 VALUES
-(1,
-null,
-'presentation_ferme',
-'presentation_produits',
-'presentation_methode',
-null,
-null);
+(1,null,'presentation_ferme','presentation_produits','presentation_methode',null,null);
 
 INSERT INTO ferme_user(id_ferme,id_user,date_modif)
-VALUES (1,1,now());
+VALUES 
+(1,1,now());
 
 COMMIT;
