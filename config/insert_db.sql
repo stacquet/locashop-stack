@@ -5,11 +5,7 @@ VALUES
 	('P_ROOT', 'Administrateur technique', NULL, NULL),
 	('P_CONSOMMATEUR', 'Profil consommateur', NULL, NULL),
 	('P_PRODUCTEUR', 'Profil producteur', NULL, NULL),
-	('P_ADMIN', 'Administrateur fonctionnel', NULL, NULL)
-ON DUPLICATE KEY UPDATE
-	lib_profil=VALUES(lib_profil),
-	date_modif=VALUES(date_modif),
-	user_modif=VALUES(user_modif);
+	('P_ADMIN', 'Administrateur fonctionnel', NULL, NULL);
 
 INSERT INTO user (id_user,id_profil,id_adresse,email,mobile,nom,prenom,password,date_modif)
 VALUES 

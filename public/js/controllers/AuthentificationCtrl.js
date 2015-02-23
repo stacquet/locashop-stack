@@ -7,7 +7,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
         libraries: 'weather,geometry,visualization,places'
     });
 })
-.controller('AuthentificationController', function($scope,$rootScope,$location,Authentification) {
+.controller('AuthentificationController', function($scope,$rootScope,$location,Authentification,notifier) {
 
 	// boolean qui contrôle l'appel au cookie pour le premier accès à l'appli
 	$rootScope.firstConnection=true;
@@ -22,6 +22,7 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	$scope.checkPasswordEqual = function(){
 		if($scope.user.password !== $scope.user.passwordBis){
 			$scope.passwordEquals=false;
+			notifier.notify('password différents');
 			}
 		else{
 			$scope.passwordEquals=true;

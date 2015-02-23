@@ -5,5 +5,4 @@ module.exports = {
 	model 		: require('./modelController'),
 	user		: require('./userController'),
  	mail		: require('./mailController')
- 
 };

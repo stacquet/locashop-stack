@@ -11,6 +11,7 @@ var session      	= require('express-session');
 var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
+var acl				= require('./app/controllers/aclController');
 
 global.winston 		= require('winston');
 
@@ -39,6 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('X-HTTP-Method-Override')); 
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/favicon.ico'));
 app.use(cookieParser()); // read cookies (needed for auth)
  //app.use(bodyParser()); // get information from html forms
 
@@ -53,9 +55,9 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-
 require('./config/passport')(passport); // pass passport for configuration
-	
+
+app.use(acl.acl);	
 // routes ==================================================
 require('./app/routes')(app,passport); // configure our routes
 // start app ===============================================

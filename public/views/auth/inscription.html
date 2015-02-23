@@ -20,7 +20,7 @@
 			<!-- PASSWORD -->
 			<div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
 				<label>Mot de passe</label>
-				<input type="password" name="password" class="form-control" ng-model="user.password"  ng-minlength="6" ng-maxlength="20" ng-blur="checkPasswordEqual()">
+				<input type="password" name="password" class="form-control" ng-model="user.password"  ng-minlength="6" ng-maxlength="20">
 				<p ng-show="userForm.password.$error.minlength" class="help-block">Le mot de passe est trop court ( 6 caractères minimum)</p>
 				<p ng-show="userForm.password.$error.maxlength" class="help-block">Le mot de passe est trop long ( 20 caractères maximum)</p>		
 			</div>
