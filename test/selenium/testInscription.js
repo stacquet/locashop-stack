@@ -23,7 +23,7 @@ describe('Page de profil', function() {
 	it('enter a valid email + password should lead to email validation', function() {
 		inscriptionLink.click();
 		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/auth/inscription');
-		element(by.model('user.email')).sendKeys('toto@gmail.com');
+		element(by.model('user.email')).sendKeys('sylvain.tacquet@gmail.com');
 		element(by.model('user.password')).sendKeys('tagisy6');
 		element(by.model('user.passwordBis')).sendKeys('tagisy6');
 		element(by.id('inscriptionButton')).click();

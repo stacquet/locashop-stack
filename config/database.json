@@ -5,8 +5,8 @@
 		"user": "locashop",
 		"password": "locashop",
 		"database": "locashop",
-		"mailService" : "gmail",
-		"mailUser"	: "locashop.stack",
-		"mailPassword" : "L0c@5hOp5!CaK"
+		"mailService" : "sendgrid",
+		"mailUser"	: "sylvain.tacquet",
+		"mailPassword" : "Charlotte1"
 	}
 }

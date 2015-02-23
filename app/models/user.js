@@ -13,11 +13,13 @@ module.exports = function(sequelize, Sequelize) {
     token : Sequelize.STRING(500),
     email : Sequelize.STRING,
     email_valide : Sequelize.INTEGER,
+	email_verification_token : Sequelize.STRING,
     mobile : Sequelize.STRING,
     mobile_valide : Sequelize.INTEGER,
     nom : Sequelize.STRING,
     prenom : Sequelize.STRING,
     password : Sequelize.STRING,
+	password_change_token : Sequelize.STRING,
     date_modif : Sequelize.DATE
   },
   {
