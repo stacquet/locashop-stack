@@ -1,5 +1,5 @@
 // public/js/services/NerdService.js
-angular.module('AuthentificationService', []).factory('Authentification', ['$http', function($http) {
+angular.module('AuthentificationService', []).factory('Authentification', ['$http','$q', function($http,$q) {
 
     return {
 	
@@ -10,16 +10,17 @@ angular.module('AuthentificationService', []).factory('Authentification', ['$htt
 						});
 		},
         // call to get all nerds
-        validate : function(data, callback) {
-            return $http.post('/api/local-signup',data)
-						.success(function(data, status, headers, config) {
-							if(data.statut==false){
-								return callback(false,data);
-							}
-							else{
-								return callback(true,data);
-							}
-						});
+        validate : function(data) {
+			var deferred = $q.defer();
+            $http.post('/api/local-signup',data)
+					.success(function(data, status, headers, config) {
+							deferred.resolve(data);
+					})
+					.error(function(data, status, headers, config) {
+							deferred.reject(data);
+					});
+			return deferred.promise;
+
         },
 
         emailVerification : function(data,callback){

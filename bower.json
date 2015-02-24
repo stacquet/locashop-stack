@@ -9,6 +9,7 @@
     "angular": "latest",
     "angular-route": "latest",
     "angular-notifier": "latest",
+	"angular-busy": "latest",
     "ng-flow": "latest"
   },
   "resolutions": {

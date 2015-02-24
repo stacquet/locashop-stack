@@ -36,24 +36,32 @@ angular.module('AuthentificationCtrl', ['uiGmapgoogle-maps'])
 	
 	};
 	
-	$scope.submitForm = function(isValid) {
-	// On s'assure que le formulaire est valide
-		if (isValid) {
-			Authentification.validate($scope.user,function(statut,data){
-				if(statut){
-					$rootScope.isLoggedIn=true;
-					$rootScope.userInfos=data.user;
-					Authentification.emailVerification($rootScope.userInfos,function(err,data){
-						if(err) console.log('erreur technique');
-						$location.path('/user/emailVerification');
-					});
-					//
-				}
-				else{
-					$scope.loginMessages=data.loginMessages;
-				}
-			});
-		}
+	$scope.submitForm = function() {
+
+		$scope.promise = Authentification.validate($scope.user)
+							.then(function(success){
+							}
+							,function(err){
+							});
+							
+		/*Authentification.validate($scope.user,function(statut,data){
+			if(statut){
+				$rootScope.isLoggedIn=true;
+				$rootScope.userInfos=data.user;
+				Authentification.emailVerification($rootScope.userInfos,function(err,data){
+					if(err){ 
+						notifier.notify({template : 'erreur interne',type:'error'});
+					}
+					else{
+						$location.path('/');
+					}
+				});
+				//
+			}
+			else{
+				$scope.loginMessages=data.loginMessages;
+			}
+		});*/
 	};
 	
 	$scope.login = function(){
