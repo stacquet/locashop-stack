@@ -22,13 +22,15 @@ module.exports = {
 		res.send({status : "ok"});
 	},
 	checkEmailAvailable : function(req, res, next) {
-		models.User.find({where : {email : req.body.email }})
-			.then(function(user){
-			res.send({"checkEmailAvailable" : (user!==null?false:true)});
-		})
-			.catch(function(err){
-			res.send({"checkEmailAvailable" : false});
-		});
+		setTimeout(function() {
+			models.User.find({where : {email : req.body.email }})
+				.then(function(user){
+				res.send({"checkEmailAvailable" : (user!==null?false:true)});
+			})
+				.catch(function(err){
+				res.send({"checkEmailAvailable" : false});
+			});
+		}, 1000);
 	},
 	signup : function(req, res, next) {
 		req.id_profil='P_CONSOMMATEUR';
