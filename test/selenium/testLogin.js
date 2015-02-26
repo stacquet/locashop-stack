@@ -16,12 +16,12 @@ describe('angularjs homepage', function() {
 				element(by.id('homeLink')).click();
 			}
 		});
-		//browser.sleep(1000);
+		browser.sleep(1000);
 	});
     
 	it('click on login should lead to login page', function() {
 		loginLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/auth/login');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/login');
 	});
 	it('enter an wrong login email should let login button disabled', function() {
 		loginLink.click();

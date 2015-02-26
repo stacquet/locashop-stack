@@ -1,11 +1,12 @@
 var passport	= require('passport');
 var models   	= require('../models/');
+var HttpStatus	= require('http-status-codes');
 
 module.exports = {
 	login: function (req, res, next) {
 		passport.authenticate('local-login', function(err, user, info) {
 			if (err) { return next(err); }
-			if (!user) { return res.send({'statut' : false, 'loginMessages' : req.flash('loginMessage')}); }
+			if (!user) { return res.status(HttpStatus.NOT_FOUND).send({'messages' : req.flash('loginMessage')}); }
 			req.logIn(user, function(err) {
 			  if (err) { return next(err); }
 				res.send({'statut' : true, 'user' : req.user});
@@ -14,7 +15,14 @@ module.exports = {
 
 	},
 	userInfos : function(req,res,next){
-		res.send(req.user);
+		setTimeout(function(){
+			if(req.isAuthenticated()){
+				res.send(req.user);
+			}
+			else{
+				res.status(HttpStatus.NOT_FOUND).send();
+			}
+		},30);
 	},
 	logout: function (req, res, next) {
 		console.log('logout user : '+req.user);
@@ -22,7 +30,6 @@ module.exports = {
 		res.send({status : "ok"});
 	},
 	checkEmailAvailable : function(req, res, next) {
-		setTimeout(function() {
 			models.User.find({where : {email : req.body.email }})
 				.then(function(user){
 				res.send({"checkEmailAvailable" : (user!==null?false:true)});
@@ -30,7 +37,6 @@ module.exports = {
 				.catch(function(err){
 				res.send({"checkEmailAvailable" : false});
 			});
-		}, 1000);
 	},
 	signup : function(req, res, next) {
 		req.id_profil='P_CONSOMMATEUR';

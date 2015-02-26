@@ -1,20 +1,20 @@
 ﻿<link href="css/search-box.css" rel="stylesheet" type="text/css">
 <div class="container">
-	<div cg-busy="vm.checkEmailAvailable.promise"  class="col-sm-6 col-sm-offset-3">
+	<div cg-busy="{promise:vm.busy,message:vm.loadingMessage}"  class="col-sm-6 col-sm-offset-3">
 	<!-- PAGE HEADER -->
 		<div class="page-header"><h1>Votre inscription</h1></div>
 		<p><h3><small>Nous vous enverrons un email pour valider votre inscription, vous pourrez ensuite compléter votre profil :</small></h3></p>
 			
 				<!-- FORM -->
 				<!-- pass in the variable if our form is valid or invalid -->
-				<form name="userForm" novalidate  ng-submit="vm.submitForm()"> 
+				<form name="userForm" novalidate  ng-submit="vm.localSignup()"> 
 					<!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 					<!-- EMAIL -->
-					<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+					<div class="form-group" ng-class="{ 'has-error' : !userForm.email.$pristine && (userForm.email.$invalid || !vm.emailAvailable), 'has-success' :vm.emailAvailable && !userForm.email.$pristine }">
 						<label>Email</label>
-						<input type="email" name="email" class="form-control" ng-model="vm.user.email" ng-blur="vm.checkEmailAvailable()">
+						<input type="email" name="email" class="form-control" ng-model="vm.user.email" ng-blur="vm.checkEmailAvailable()"> 
 						<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Le format du mail est invalide.</p>
-						<p ng-show="!vm.emailAvailable" class="help-block">Cet email est déjà utilisé.</p>
+						<p ng-show="!userForm.email.$pristine && !vm.emailAvailable" class="help-block">Cet email est déjà utilisé.</p>
 					</div>
 					
 					<!-- PASSWORD -->
@@ -46,7 +46,7 @@
 					<div class="alert alert-danger" ng-show="(loginMessages.length > 0)">
 						<p ng-repeat="loginMessage in loginMessages">{{loginMessage}}</p>
 					</div>
-					<button id="inscriptionButton" type="submit" class="btn btn-primary spacer"  ng-disabled="!vm.passwordEquals || userForm.email.$invalid || !vm.emailAvailable">Valider</button>			
+					<button id="inscriptionButton" type="submit" class="btn btn-primary spacer"  ng-disabled="!vm.passwordEquals || userForm.email.$invalid || userForm.email.$pristine || !vm.emailAvailable">Valider</button>			
 				</form>
 		<div class=".spacer">
 			<p>Inscrivez-vous ou identifiez-vous avec Facebook :</p>

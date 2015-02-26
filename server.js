@@ -13,6 +13,7 @@ var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
 var acl				= require('./app/controllers/aclController');
+var slowness				= require('./app/util/slowness');
 
 global.winston 		= require('winston');
 
@@ -58,7 +59,10 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 require('./config/passport')(passport); // pass passport for configuration
 
+// controles des accès aux modules de l'application en fonction du profil
 app.use(acl.acl);	
+
+//app.use(slowness.slow);
 // routes ==================================================
 require('./app/routes')(app,passport); // configure our routes
 // start app ===============================================

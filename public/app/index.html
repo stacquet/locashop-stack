@@ -35,14 +35,16 @@
     <script src="app/appRoutes.js"></script>
     <script src="app/app.js"></script>
 	
-    <script src="app/auth/AuthentificationService.js"></script>
-    <script src="app/auth/AuthentificationController.js"></script>
+	<script src="app/home/homeController.js"></script>
+    <script src="app/home/homeService.js"></script>	
+	<script src="app/inscription/inscriptionController.js"></script>
+    <script src="app/inscription/inscriptionService.js"></script>
 
 
 
 </head>
-<body ng-app="locashopApp" ng-controller="AuthentificationController">
-	<div class="container">
+<body ng-app="locashopApp" ng-controller="homeController as vm">
+	<div cg-busy="vm.busy" class="container">
 		
 		<nav class="navbar navbar-default">
 		  <!-- <div class="container-fluid">
@@ -64,7 +66,7 @@
 				<li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Nos producteurs</a></li>
 				<li><a href="/user/profil" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
-				<li ng-show="!$root.isLoggedIn"><a href="/auth/inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
+				<li ng-show="!$root.isLoggedIn"><a href="/inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
 					<li id="menuAutenticated" ng-show="$root.isLoggedIn" class="dropdown">
@@ -73,11 +75,11 @@
 						<li><a href="/user/producteur" data-toggle="collapse" data-target=".navbar-collapse">Mon espace producteur</a></li>
 						<li><a ng-href="/user/profil/{{$root.userInfos.id_user}} data-toggle="collapse" data-target=".navbar-collapse"">Mon profil</a></li>
 						<li class="divider"></li>
-						<li><a id="logoutLink" ng-click="logout()" href="/" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
+						<li><a id="logoutLink" ng-click="vm.logout()" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
 					  </ul>
 					</li>
 					<li ng-show="!$root.isLoggedIn">
-						<a id="loginLink" href="/auth/login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
+						<a id="loginLink" href="/login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
 					</li>
 			  </ul>
 			</div><!-- /.navbar-collapse -->

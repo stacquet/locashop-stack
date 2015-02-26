@@ -4,8 +4,8 @@
 
     <h1><span class="fa fa-sign-in"></span> Login</h1>
 		<form cg-busy="vm.login.promise" name="userForm" novalidate>
-			<div class="alert alert-danger" ng-show="(vm.loginMessages.length > 0)">
-				<p ng-repeat="loginMessage in vm.loginMessages">{{loginMessage}}</p>
+			<div class="alert alert-danger" ng-show="(vm.messages.length > 0)">
+				<p ng-repeat="message in vm.messages">{{message}}</p>
 			</div>
 
 			<div class="form-group">

@@ -8,14 +8,13 @@
 				.when('/', {
 					templateUrl: 'app/home/home.html'
 				})
-				.when('/auth/inscription', {
-					templateUrl: 'app/auth/inscription.html',
-					controller:	'AuthentificationController as vm'
+				.when('/inscription', {
+					templateUrl: 'app/inscription/inscription.html',
+					controller:	'inscriptionController as vm'
 				})
 				
-				.when('/auth/login', {
-					templateUrl: 'app/auth/login.html',
-					controller:	'AuthentificationController as vm'
+				.when('/login', {
+					templateUrl: 'app/home/login.html'
 				})
 				;
 

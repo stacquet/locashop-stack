@@ -1,3 +1,4 @@
-angular.module('locashopApp', 
+angular
+	.module('locashopApp', 
 	['uiGmapgoogle-maps', 'llNotifier','cgBusy',
-	'ngRoute','appRoutes']);
+	'ngRoute','appRoutes'])

@@ -22,7 +22,7 @@ module.exports = {
 					}, function(err, json) {
 						if (err) { 
 							console.log(err);
-							return res.send(err); 
+							res.send(500,err); 
 						}
 						else{
 							console.log(json);
@@ -31,10 +31,11 @@ module.exports = {
 					});
 				}).catch(function(err){
 					console.log(err);
-					return res.send(err); 
+					res.send(500,err); 
 			});
 			}).catch(function(err){
 				console.log(err);
+				res.send(500,err); 
 		});	
 	},
 	
