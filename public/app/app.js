@@ -1,4 +1,4 @@
 angular
 	.module('locashopApp', 
 	['uiGmapgoogle-maps', 'llNotifier','cgBusy',
-	'ngRoute','appRoutes'])
+	'ngRoute','appRoutes','ValidationAdresseCtrl','ui.tinymce'])

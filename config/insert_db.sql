@@ -5,11 +5,15 @@ VALUES
 	('P_ROOT', 'Administrateur technique', NULL, NULL),
 	('P_CONSOMMATEUR', 'Profil consommateur', NULL, NULL),
 	('P_PRODUCTEUR', 'Profil producteur', NULL, NULL),
-	('P_ADMIN', 'Administrateur fonctionnel', NULL, NULL);
+	('P_ADMIN', 'Administrateur fonctionnel', NULL, NULL)
+ON DUPLICATE KEY UPDATE
+	lib_profil=VALUES(lib_profil),
+	date_modif=VALUES(date_modif),
+	user_modif=VALUES(user_modif);
 
 INSERT INTO user (id_user,id_profil,id_adresse,email,mobile,nom,prenom,password,date_modif)
 VALUES 
-	(1,'P_CONSOMMATEUR',NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$Uqh0QVK7GYuZ25hm5/jEceg/rrG1Gfgkr2uVTwtNlRDp1VGyjWAa6',NULL)
+	(1,'P_CONSOMMATEUR',NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$z/0YmnwaAjmkhnNUU1pZPeWO5NvbqnOBMPnBcVgeDJpd8RGKsEkTS',NULL)
 ;
 
 INSERT INTO ferme

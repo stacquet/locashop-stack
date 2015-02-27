@@ -6,6 +6,7 @@ describe('Page de profil', function() {
 	var baseUrl = 'http://localhost:3000';
 
 	browser.get(baseUrl);
+	browser.waitForAngular();
 	
 	afterEach(function() {
 		element(by.id('menuAutenticated')).isDisplayed().then(function(isDisplayed){
@@ -20,14 +21,23 @@ describe('Page de profil', function() {
 		//browser.sleep(1000);
 	});
     
-	it('enter a valid email + password should lead to email validation', function() {
+	it('enter an email that exists should lead to error message', function() {
 		inscriptionLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/auth/inscription');
-		element(by.model('user.email')).sendKeys('sylvain.tacquet@gmail.com');
-		element(by.model('user.password')).sendKeys('tagisy6');
-		element(by.model('user.passwordBis')).sendKeys('tagisy6');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/inscription/inscription');
+		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.comd');
+		element(by.model('vm.user.password')).sendKeys('tatata');
+		element(by.model('vm.user.passwordBis')).sendKeys('tatata');
 		element(by.id('inscriptionButton')).click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/user/emailValidation');
-
+		expect($('[ng-show="!vm.emailAvailable && vm.formSubmitted"]').isDisplayed()).toBeTruthy();
+	});
+	
+	it('enter 2 != password should lead to error message', function() {
+		inscriptionLink.click();
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/inscription/inscription');
+		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.comd');
+		element(by.model('vm.user.password')).sendKeys('tatata');
+		element(by.model('vm.user.passwordBis')).sendKeys('tatatat');
+		element(by.id('inscriptionButton')).click();
+		expect($('[ng-show="vm.formSubmitted && !vm.passwordEquals"]').isDisplayed()).toBeTruthy();
 	});
 });

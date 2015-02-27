@@ -7,29 +7,32 @@
 			
 				<!-- FORM -->
 				<!-- pass in the variable if our form is valid or invalid -->
-				<form name="userForm" novalidate  ng-submit="vm.localSignup()"> 
+				<form name="vm.userForm" novalidate  ng-submit="vm.localSignup()"> 
 					<!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 					<!-- EMAIL -->
-					<div class="form-group" ng-class="{ 'has-error' : !userForm.email.$pristine && (userForm.email.$invalid || !vm.emailAvailable), 'has-success' :vm.emailAvailable && !userForm.email.$pristine }">
+					<div class="form-group" ng-class="{ 'has-error' : vm.formSubmitted && (vm.userForm.email.$invalid || !vm.emailAvailable) }">
 						<label>Email</label>
-						<input type="email" name="email" class="form-control" ng-model="vm.user.email" ng-blur="vm.checkEmailAvailable()"> 
-						<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Le format du mail est invalide.</p>
-						<p ng-show="!userForm.email.$pristine && !vm.emailAvailable" class="help-block">Cet email est déjà utilisé.</p>
+						<input type="email" name="email" class="form-control" ng-model="vm.user.email" required> 
+						<p ng-show="vm.userForm.email.$error.required && vm.formSubmitted" class="help-block">Entrez un email</p>
+						<p ng-show="vm.userForm.email.$invalid && vm.formSubmitted" class="help-block">Le format du mail est invalide.</p>
+						<p ng-show="!vm.emailAvailable && vm.formSubmitted" class="help-block">Cet email est déjà utilisé.</p>
 					</div>
 					
 					<!-- PASSWORD -->
-					<div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
+					<div class="form-group" ng-class="{ 'has-error' : vm.userForm.password.$invalid && vm.formSubmitted }">
 						<label>Mot de passe</label>
-						<input type="password" name="password" class="form-control" ng-model="vm.user.password"  ng-minlength="6" ng-maxlength="20">
-						<p ng-show="userForm.password.$error.minlength" class="help-block">Le mot de passe est trop court ( 6 caractères minimum)</p>
-						<p ng-show="userForm.password.$error.maxlength" class="help-block">Le mot de passe est trop long ( 20 caractères maximum)</p>		
+						<input type="password" name="password" class="form-control" ng-model="vm.user.password"  ng-minlength="6" ng-maxlength="20" required >
+						<p ng-show="vm.userForm.password.$error.required && vm.formSubmitted" class="help-block">Mot de passe obligatoire</p>
+						<p ng-show="vm.userForm.password.$error.minlength && vm.formSubmitted" class="help-block">Le mot de passe est trop court ( 6 caractères minimum)</p>
+						<p ng-show="vm.userForm.password.$error.maxlength && vm.formSubmitted" class="help-block">Le mot de passe est trop long ( 20 caractères maximum)</p>		
 					</div>
 					
 					<!-- PASSWORD BIS -->
 					<div class="form-group" >
 						<label>Répétez le mot de passe</label>
-						<input type="password" name="passwordBis" class="form-control" ng-model="vm.user.passwordBis" ng-blur="vm.checkPasswordEqual()">
-						<p ng-show="!vm.passwordEquals" class="help-block">Les mots de passe ne correspondent pas</p>			
+						<input type="password" name="passwordBis" class="form-control" ng-model="vm.user.passwordBis" required>
+						<p ng-show="vm.formSubmitted && vm.userForm.passwordBis.$error.required " class="help-block">Champ obligatoire</p>			
+						<p ng-show="vm.formSubmitted && !vm.passwordEquals" class="help-block">Les mots de passe ne correspondent pas</p>			
 					</div>
 					<div class="form-group" >
 						<label>Etes-vous : </label>
@@ -46,7 +49,7 @@
 					<div class="alert alert-danger" ng-show="(loginMessages.length > 0)">
 						<p ng-repeat="loginMessage in loginMessages">{{loginMessage}}</p>
 					</div>
-					<button id="inscriptionButton" type="submit" class="btn btn-primary spacer"  ng-disabled="!vm.passwordEquals || userForm.email.$invalid || userForm.email.$pristine || !vm.emailAvailable">Valider</button>			
+					<button id="inscriptionButton" type="submit" class="btn btn-primary spacer" >Valider</button>			
 				</form>
 		<div class=".spacer">
 			<p>Inscrivez-vous ou identifiez-vous avec Facebook :</p>

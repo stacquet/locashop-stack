@@ -30,6 +30,8 @@
 	<script src="libs/angular-xeditable/dist/js/xeditable.js"></script>
 	<script src="libs/angular-animate/angular-animate.js"></script>
  	<script src="libs/angular-busy/dist/angular-busy.js"></script>
+	<script src="libs/tinymce/tinymce.min.js"></script>
+	<script src="libs/angular-ui-tinymce/src/tinymce.js"></script>
    <!-- ANGULAR CUSTOM -->
    
     <script src="dist/built.js"></script>
@@ -58,9 +60,9 @@
 			  <ul class="nav navbar-nav">
 				<li><a href="/magasin" data-toggle="collapse" data-target=".navbar-collapse">Le magasin <!-- <span class="sr-only">(current)</span> --></a></li>
 				<li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Nos producteurs</a></li>
-				<li><a href="/user/profil" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
+				<li><a href="/ferme/ferme" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Ferme</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
-				<li ng-show="!$root.isLoggedIn"><a href="/inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
+				<li ng-show="!$root.isLoggedIn"><a href="/inscription/inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
 					<li id="menuAutenticated" ng-show="$root.isLoggedIn" class="dropdown">
@@ -73,7 +75,7 @@
 					  </ul>
 					</li>
 					<li ng-show="!$root.isLoggedIn">
-						<a id="loginLink" href="/login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
+						<a id="loginLink" href="/home/login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
 					</li>
 			  </ul>
 			</div><!-- /.navbar-collapse -->

@@ -8,16 +8,17 @@
 				.when('/', {
 					templateUrl: 'app/home/home.html'
 				})
-				.when('/inscription', {
+				.when('/inscription/inscription', {
 					templateUrl: 'app/inscription/inscription.html',
 					controller:	'inscriptionController as vm'
 				})
-				
-				.when('/login', {
+				.when('/home/login', {
 					templateUrl: 'app/home/login.html'
 				})
+				.when('/ferme/ferme', {
+					templateUrl: 'app/ferme/ferme.html'
+				})
 				;
-
 				
 
 			$locationProvider.html5Mode(true);

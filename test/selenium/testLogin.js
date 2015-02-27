@@ -1,10 +1,11 @@
 var request = require('request');
-describe('angularjs homepage', function() {
+describe('login test suite', function() {
 
 	var loginLink = element(by.id('loginLink'));
 	var baseUrl = 'http://localhost:3000';
 
 	browser.get(baseUrl);
+	browser.waitForAngular();
 	
 	afterEach(function() {
 		element(by.id('menuAutenticated')).isDisplayed().then(function(isDisplayed){
@@ -21,7 +22,7 @@ describe('angularjs homepage', function() {
     
 	it('click on login should lead to login page', function() {
 		loginLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/login');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/home/login');
 	});
 	it('enter an wrong login email should let login button disabled', function() {
 		loginLink.click();
@@ -34,7 +35,7 @@ describe('angularjs homepage', function() {
 		element(by.model('vm.user.email')).clear();
 		element(by.model('vm.user.password')).clear();
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.com');
-		element(by.model('vm.user.password')).sendKeys('tagisy6');
+		element(by.model('vm.user.password')).sendKeys('tatata');
 		expect(element(by.id('loginButton')).getWebElement().isEnabled()).toBe(true);
 	});
 	
@@ -43,12 +44,13 @@ describe('angularjs homepage', function() {
 		element(by.model('vm.user.email')).clear();
 		element(by.model('vm.user.password')).clear();
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.com');
-		element(by.model('vm.user.password')).sendKeys('tagisy6');
+		element(by.model('vm.user.password')).sendKeys('tatata');
 		element(by.id('loginButton')).click();
 		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/');
 	});
 
 	it('enter a wrong login and password and click login should show error message', function() {
+		browser.waitForAngular();
 		loginLink.click();
 		element(by.model('vm.user.email')).clear();
 		element(by.model('vm.user.password')).clear();

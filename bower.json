@@ -10,7 +10,8 @@
     "angular-route": "latest",
     "angular-notifier": "latest",
 	"angular-busy": "latest",
-    "ng-flow": "latest"
+    "ng-flow": "latest",
+	"angular-ui-tinymce": "latest"
   },
   "resolutions": {
     "angular": "1.3.13"

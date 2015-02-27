@@ -18,15 +18,15 @@
 		return service;
 			
 		function userInfos(){
-			return $http.get('/api/auth/userInfos')
+			return $http.get('/api/home/userInfos')
 		}
 		
 		function logout(){
-			return $http.get('/api/auth/logout');
+			return $http.get('/api/home/logout');
 		}
 		
 		function login(email,password){
-			return $http.post('/api/auth/login',{'email':email,'password':password});
+			return $http.post('/api/home/login',{'email':email,'password':password});
 		}
     }       
 })();

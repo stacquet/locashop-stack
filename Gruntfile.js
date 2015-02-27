@@ -19,12 +19,24 @@ module.exports = function(grunt) {
         src: ['public/app/*.js','public/app/**/*.js'], // la source
         dest: 'public/dist/built_min.js' // la destination finale
       }
-    }
+    },
+	watch: {
+		scripts: {
+			files: ['public/app/*.js','public/app/**/*.js'],
+			tasks: ['concat', 'uglify'],
+			options: {
+				spawn: false,
+			},
+		} 
+	}
 
   })
 
   grunt.loadNpmTasks('grunt-contrib-concat'); // Voilà l'ajout.
   grunt.loadNpmTasks('grunt-contrib-uglify'); // Voilà l'ajout.
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
+
 
   grunt.registerTask('dev', ['concat:dist'])
   grunt.registerTask('dist', ['uglify:dist'])

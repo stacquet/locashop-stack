@@ -28,11 +28,11 @@
 		}
 
         function localSignup(data) {
-            return $http.post('/api/auth/localSignup',data)
+            return $http.post('/api/inscription/localSignup',data)
         }
 
         function emailVerification(){
-        	return $http.get('/api/auth/emailVerification')
+        	return $http.get('/api/inscription/emailVerification')
         }
     }       
 })();
