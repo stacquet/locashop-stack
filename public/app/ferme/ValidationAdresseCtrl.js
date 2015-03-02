@@ -1,4 +1,5 @@
-angular.module("ValidationAdresseCtrl", ['uiGmapgoogle-maps'])
+
+angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 	GoogleMapApi.configure({
 	// key: 'your api key',
@@ -7,13 +8,29 @@ angular.module("ValidationAdresseCtrl", ['uiGmapgoogle-maps'])
 	});
 }])
 .run(['$templateCache', function ($templateCache) {
-$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-$templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">{{place.name}}</div>');
+	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
+	$templateCache.put('window.tpl.html', 
+		'<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">'+
+		'	{{place.name}}'+
+		'	<div class="form-group">'+
+		'            <div class="col-xs-offset-2 ">'+
+		'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
+		'           </div>'+
+		'         </div>'+
+		'</div>');
 }])
-.controller('WindowCtrl', function ($scope) {
+.controller('WindowCtrl', function ($scope, fermeService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
-	$scope.place = param;
+		$scope.place = param;
+	}
+	$scope.saveAdresse = function(){
+		console.log($scope.place);
+		var adresse = $scope.place.geometry.location;
+		fermeService.saveAdresse(adresse)
+			.success(function(data, status, headers, config){
+				console.log(data);
+			});
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'
@@ -87,7 +104,6 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
-							console.log(places);
 							var marker = {
 								id:i,
 								place_id: place.place_id,
@@ -111,7 +127,7 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 							southwest: {
 								latitude: bounds.getSouthWest().lat(),
 								longitude: bounds.getSouthWest().lng()
-							}
+							} 
 						}
 						$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
@@ -123,9 +139,10 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 							marker.onClicked = function() {
 								$scope.selected.options.visible = false;
 								$scope.selected = marker;
+								console.log(marker);
 								$scope.selected.options.visible = true;
 							};
-						});
+						}); 
 						$scope.map.markers = newMarkers;
 						//$scope.searchbox.options.visible = false;
 					}

@@ -16,7 +16,7 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['public/app/*.js','public/app/**/*.js'], // la source
+        src: ['public/app/ferme/fermeService.js','public/app/ferme/validationAdresseCtrl.js','public/app/*.js','public/app/**/*.js'], // la source
         dest: 'public/dist/built_min.js' // la destination finale
       }
     },

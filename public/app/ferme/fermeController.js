@@ -5,40 +5,32 @@
         .module('locashopApp')
         .controller('fermeController', fermeController);
 
-    fermeController.$inject = ['$location','notifier','fermeService'];
+    fermeController.$inject = ['$location','notifier','fermeService','ferme'];
 
-	function fermeController($location,notifier,fermeService){
+	function fermeController($location,notifier,fermeService,ferme){
 	
 		var vm = this;	
-		
-		vm.userProfil={
-			email : '',
-			nom : '',
-			prenom : '',
-			mobile : '',
-			fixe : '',
-			adresse : '',
-			presentation : {
-				la_ferme : '',
-				les_produits : '',
-				les_methodes :'',
-				photos : []
-			}
-		}
+
+		vm.userProfil=ferme.data;
 		vm.saveProfil=saveProfil;
-		vm.init=init;
-		
+
+		vm.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+
 	   function saveProfil(){
 			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
 				.success(function(data, status, headers, config){
-					vm.saveOk=true;
-				});
-		}
-		function init(){
-			vm.busy = fermeService.getProfil()
-				.success(function(data, status, headers, config){
-					vm.userProfil=data;
+					notifier.notify({template : 'Sauvegarde OK'});
+				})
+				.error(function(data, status, headers, config){
+					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
 				});
 		}
 	}
+
+
 })();

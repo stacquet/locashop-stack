@@ -1,7 +1,7 @@
 angular
 	.module('locashopApp', 
-	['uiGmapgoogle-maps', 'llNotifier','cgBusy',
-	'ngRoute','appRoutes','ValidationAdresseCtrl','ui.tinymce']);// public/js/appRoutes.js
+	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ckeditor',
+	'ngRoute','appRoutes','validationAdresseCtrl']);// public/js/appRoutes.js
     angular.module('appRoutes', []).
 		config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
@@ -19,7 +19,13 @@ angular
 					templateUrl: 'app/home/login.html'
 				})
 				.when('/ferme/ferme', {
-					templateUrl: 'app/ferme/ferme.html'
+					templateUrl: 'app/ferme/ferme.html',
+					controller : 'fermeController as vm',
+					resolve : {
+						ferme : function(fermeService){
+							return fermeService.getProfil();
+						}
+					}
 				})
 				;
 				
@@ -28,7 +34,77 @@ angular
 
 }]);
 
-;angular.module("ValidationAdresseCtrl", ['uiGmapgoogle-maps'])
+;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('fermeController', fermeController);
+
+    fermeController.$inject = ['$location','notifier','fermeService','ferme'];
+
+	function fermeController($location,notifier,fermeService,ferme){
+	
+		var vm = this;	
+
+		vm.userProfil=ferme.data;
+		vm.saveProfil=saveProfil;
+
+		vm.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+
+	   function saveProfil(){
+			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
+				.success(function(data, status, headers, config){
+					notifier.notify({template : 'Sauvegarde OK'});
+				})
+				.error(function(data, status, headers, config){
+					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+				});
+		}
+	}
+
+
+})();
+;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('fermeService', fermeService);
+	
+	fermeService.$inject=['$http'];
+
+    function fermeService($http){
+		
+		var service = {
+			getProfil 	: getProfil,
+			saveProfil	: saveProfil,
+			saveAdresse	: saveAdresse
+		};
+		
+		return service;
+	
+		function getProfil(){
+			return $http.get('/api/ferme');
+		}
+
+        function saveProfil(data) {
+            return $http.post('/api/user/profil/save',data);
+        }
+
+        function saveAdresse(data) {
+            return $http.post('/api/user/adresse/save',data);
+        }
+
+    }       
+})();
+;
+angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 	GoogleMapApi.configure({
 	// key: 'your api key',
@@ -37,13 +113,29 @@ angular
 	});
 }])
 .run(['$templateCache', function ($templateCache) {
-$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-$templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">{{place.name}}</div>');
+	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
+	$templateCache.put('window.tpl.html', 
+		'<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">'+
+		'	{{place.name}}'+
+		'	<div class="form-group">'+
+		'            <div class="col-xs-offset-2 ">'+
+		'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
+		'           </div>'+
+		'         </div>'+
+		'</div>');
 }])
-.controller('WindowCtrl', function ($scope) {
+.controller('WindowCtrl', function ($scope, fermeService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
-	$scope.place = param;
+		$scope.place = param;
+	}
+	$scope.saveAdresse = function(){
+		console.log($scope.place);
+		var adresse = $scope.place.geometry.location;
+		fermeService.saveAdresse(adresse)
+			.success(function(data, status, headers, config){
+				console.log(data);
+			});
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'
@@ -117,7 +209,6 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
-							console.log(places);
 							var marker = {
 								id:i,
 								place_id: place.place_id,
@@ -141,7 +232,7 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 							southwest: {
 								latitude: bounds.getSouthWest().lat(),
 								longitude: bounds.getSouthWest().lng()
-							}
+							} 
 						}
 						$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
@@ -153,9 +244,10 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 							marker.onClicked = function() {
 								$scope.selected.options.visible = false;
 								$scope.selected = marker;
+								console.log(marker);
 								$scope.selected.options.visible = true;
 							};
-						});
+						}); 
 						$scope.map.markers = newMarkers;
 						//$scope.searchbox.options.visible = false;
 					}
@@ -164,77 +256,6 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 		});
 	}
 ]);;(function () {
-    'use strict';
-
-    angular
-        .module('locashopApp')
-        .controller('fermeController', fermeController);
-
-    fermeController.$inject = ['$location','notifier','fermeService'];
-
-	function fermeController($location,notifier,fermeService){
-	
-		var vm = this;	
-		
-		vm.userProfil={
-			email : '',
-			nom : '',
-			prenom : '',
-			mobile : '',
-			fixe : '',
-			adresse : '',
-			presentation : {
-				la_ferme : '',
-				les_produits : '',
-				les_methodes :'',
-				photos : []
-			}
-		}
-		vm.saveProfil=saveProfil;
-		vm.init=init;
-		
-	   function saveProfil(){
-			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
-				.success(function(data, status, headers, config){
-					vm.saveOk=true;
-				});
-		}
-		function init(){
-			vm.busy = fermeService.getProfil()
-				.success(function(data, status, headers, config){
-					vm.userProfil=data;
-				});
-		}
-	}
-})();
-;(function () {
-    'use strict';
-	
-	angular	
-		.module('locashopApp')
-		.factory('fermeService', fermeService);
-	
-	fermeService.$inject=['$http'];
-
-    function fermeService($http){
-		
-		var service = {
-			getProfil 	: getProfil,
-			saveProfil	: saveProfil
-		};
-		
-		return service;
-	
-		function getProfil(){
-			return $http.get('/api/user/profil',{'email':email});
-		}
-
-        function saveProfil(data) {
-            return $http.post('/api/user/profil/save',data);
-        }
-    }       
-})();
-;(function () {
     'use strict';
 
     angular
@@ -317,40 +338,7 @@ $templateCache.put('window.tpl.html', '<div ng-controller="WindowCtrl" ng-init="
 		}
     }       
 })();
-;// dépriecé, ne sers plus
-(function(){
-	angular	
-		.module('locashopApp')
-		.directive('emailAvailable', emailAvailable);
-			
-		emailAvailable.$inject=['$http','$timeout'];
-			
-		function emailAvailable($http,$timeout){
-		
-			var directive = {
-				checking : null,
-				require : 'ngModel',
-				link : link		
-			}
-		
-			return directive;
-			
-			function link(scope, ele, attrs, c) {
-			  scope.$watch(attrs.ngModel, function() {
-				/*if (typeof checking == undefined) {
-					checking = */$timeout(function(){
-						$http.post('/api/inscription/checkEmailAvailable',{'email':attrs.emailAvailable})
-							.success(function(data, status, headers, config) {
-								c.$setValidity('emailAvailable', data.checkEmailAvailable);
-							})
-							.error(function(data, status, headers, config) {
-							});
-					},500);
-				//}
-			  });
-			}
-	  }
-})();;(function () {
+;(function () {
     'use strict';
 
     angular

@@ -16,7 +16,13 @@
 					templateUrl: 'app/home/login.html'
 				})
 				.when('/ferme/ferme', {
-					templateUrl: 'app/ferme/ferme.html'
+					templateUrl: 'app/ferme/ferme.html',
+					controller : 'fermeController as vm',
+					resolve : {
+						ferme : function(fermeService){
+							return fermeService.getProfil();
+						}
+					}
 				})
 				;
 				

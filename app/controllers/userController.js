@@ -14,7 +14,7 @@ module.exports = {
 				});
 			}
 			else{
-				res.send(404);
+				res.send();
 			}
 	},
 	save: function (req, res, next) {
@@ -26,11 +26,14 @@ module.exports = {
 						where:	{id_user : req.user.id_user},
 						include: [models.Ferme]
 					}).then(function(user){
-						console.log('user avant modif : '+JSON.stringify(user.values));
 						user.set(req.body.userProfil);
-						console.log('user avant sauvegarde : '+JSON.stringify(user.values));
-						user.save().then(function(){
-							console.log('save ok  for '+JSON.stringify(user.values));
+						user.Fermes[0].save().then(function(){
+							user.getFermes().then(function(fermes){
+								fermes[0].save().then(function(){
+								});
+							}).catch(function(err){
+								console.log(err);
+							});
 							res.send(user);
 						}).catch(function(err){
 							console.log(err);
