@@ -61,7 +61,7 @@ require('./config/passport')(passport); // pass passport for configuration
 
 // controles des accès aux modules de l'application en fonction du profil
 app.use(acl.acl);	
-
+// ralentissement volontaire pour mettre en avant l'asynchrone
 app.use(slowness.slow);
 // routes ==================================================
 require('./app/routes')(app,passport); // configure our routes
