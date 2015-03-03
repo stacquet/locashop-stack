@@ -41,14 +41,15 @@ angular
         .module('locashopApp')
         .controller('fermeController', fermeController);
 
-    fermeController.$inject = ['$location','notifier','fermeService','ferme'];
+    fermeController.$inject = ['$location','notifier','fermeService','mapsService','ferme'];
 
-	function fermeController($location,notifier,fermeService,ferme){
+	function fermeController($location,notifier,fermeService,mapsService,ferme){
 	
 		var vm = this;	
 
 		vm.userProfil=ferme.data;
 		vm.saveProfil=saveProfil;
+		vm.checkAdresse=checkAdresse;
 
 		vm.options = {
 		    language: 'en',
@@ -56,7 +57,11 @@ angular
 		    entities: false
 		  };
 
-
+		function checkAdresse(){
+			vm.userProfil.adresse = mapsService.getPosition();
+			console.log(vm.userProfil.adresse);
+			console.log(mapsService.getPosition());
+		}
 	   function saveProfil(){
 			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
 				.success(function(data, status, headers, config){
@@ -103,6 +108,34 @@ angular
 
     }       
 })();
+;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('mapsService',mapsService);
+	
+	//fermeService.$inject=['$http'];
+
+    function mapsService(){
+		
+		var service ={
+			position 		: {},
+			getPosition 	: getPosition,
+			setPosition		: setPosition
+		};
+		
+		return service;
+	
+		function getPosition(){
+			return service.position;
+		}
+
+        function setPosition(data) {
+            service.position = data;
+        }
+    }       
+})();
 ;
 angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
@@ -124,7 +157,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		'         </div>'+
 		'</div>');
 }])
-.controller('WindowCtrl', function ($scope, fermeService) {
+.controller('WindowCtrl', function ($scope, fermeService,mapsService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
 		$scope.place = param;
@@ -132,10 +165,10 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 	$scope.saveAdresse = function(){
 		console.log($scope.place);
 		var adresse = $scope.place.geometry.location;
-		fermeService.saveAdresse(adresse)
-			.success(function(data, status, headers, config){
+		mapsService.setPosition(adresse);
+			/*.success(function(data, status, headers, config){
 				console.log(data);
-			});
+			});*/
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'

@@ -19,7 +19,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		'         </div>'+
 		'</div>');
 }])
-.controller('WindowCtrl', function ($scope, fermeService) {
+.controller('WindowCtrl', function ($scope, fermeService,mapsService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
 		$scope.place = param;
@@ -27,10 +27,10 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 	$scope.saveAdresse = function(){
 		console.log($scope.place);
 		var adresse = $scope.place.geometry.location;
-		fermeService.saveAdresse(adresse)
-			.success(function(data, status, headers, config){
+		mapsService.setPosition(adresse);
+			/*.success(function(data, status, headers, config){
 				console.log(data);
-			});
+			});*/
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'
