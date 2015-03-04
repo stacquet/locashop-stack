@@ -27,7 +27,7 @@ module.exports = {
 						include: [models.Ferme]
 					}).then(function(user){
 						user.set(req.body.userProfil);
-						user.Fermes[0].save().then(function(){
+						user.save().then(function(){
 							user.getFermes().then(function(fermes){
 								fermes[0].save().then(function(){
 								});
