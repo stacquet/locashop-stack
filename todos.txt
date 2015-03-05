@@ -1,4 +1,3 @@
+splitter profil + ferme
 $resource
-promise
-
-acl
+ui-router
