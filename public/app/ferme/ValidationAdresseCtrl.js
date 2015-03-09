@@ -1,11 +1,11 @@
 
-angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
+angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps']) 
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 	GoogleMapApi.configure({
 	// key: 'your api key',
 	v: '3.16',
 	libraries: 'places'
-	});
+	}); 
 }])
 .run(['$templateCache', function ($templateCache) {
 	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
