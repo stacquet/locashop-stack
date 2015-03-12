@@ -20,12 +20,12 @@ angular
 				})
 				.when('/ferme/ferme', {
 					templateUrl: 'app/ferme/ferme.html',
-					controller : 'fermeController as vm',
+					controller : 'fermeController as vm'/*,
 					resolve : {
 						ferme : function(fermeService){
 							return fermeService.getProfil();
 						}
-					}
+					}*/
 				})
 				;
 				
@@ -41,15 +41,16 @@ angular
         .module('locashopApp')
         .controller('fermeController', fermeController);
 
-    fermeController.$inject = ['$location','notifier','fermeService','mapsService','ferme'];
+    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
 
-	function fermeController($location,notifier,fermeService,mapsService,ferme){
+	function fermeController($location,notifier,fermeService,mapsService){
 	
 		var vm = this;	
 
-		vm.userProfil=ferme.data;
 		vm.saveProfil=saveProfil;
 		vm.checkAdresse=checkAdresse;
+
+		init();
 
 		vm.options = {
 		    language: 'en',
@@ -69,6 +70,13 @@ angular
 				})
 				.error(function(data, status, headers, config){
 					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+				});
+		}
+
+		function init(){
+			vm.busy = fermeService.getProfil()
+				.success(function(data, status, headers, config){
+					vm.userProfil=data;
 				});
 		}
 	}

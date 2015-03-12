@@ -17,12 +17,12 @@
 				})
 				.when('/ferme/ferme', {
 					templateUrl: 'app/ferme/ferme.html',
-					controller : 'fermeController as vm',
+					controller : 'fermeController as vm'/*,
 					resolve : {
 						ferme : function(fermeService){
 							return fermeService.getProfil();
 						}
-					}
+					}*/
 				})
 				;
 				
