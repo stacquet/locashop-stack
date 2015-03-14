@@ -1,24 +1,28 @@
 angular
 	.module('locashopApp', 
-	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ngImgCrop',
-	'ngRoute','appRoutes','validationAdresseCtrl','ui.tinymce']);// public/js/appRoutes.js
-    angular.module('appRoutes', []).
-		config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ngImgCrop','ui.router',
+	'appRoutes','validationAdresseCtrl','ui.tinymce']);// public/js/appRoutes.js
+    angular.module('appRoutes', [] ).
+		config(function($stateProvider, $urlRouterProvider) {
+			// For any unmatched url, send to /
+      		$urlRouterProvider.otherwise('/')
 
-			$routeProvider
-
-				// home page
-				.when('/', {
+			$stateProvider
+    			.state('home', {
+    				url: '/',
 					templateUrl: 'app/home/home.html'
 				})
-				.when('/inscription/inscription', {
+				.state('inscription', {
+					url : '/inscription',
 					templateUrl: 'app/inscription/inscription.html',
 					controller:	'inscriptionController as vm'
 				})
-				.when('/home/login', {
+				.state('login', {
+					url: '/login',
 					templateUrl: 'app/home/login.html'
 				})
-				.when('/ferme/ferme', {
+				.state('ferme', {
+					url : '/ferme',
 					templateUrl: 'app/ferme/ferme.html',
 					controller : 'fermeController as vm'/*,
 					resolve : {
@@ -27,12 +31,22 @@ angular
 						}
 					}*/
 				})
+				.state('profil', {
+					url: '/profil/:id_profil',
+					templateUrl: 'app/profil/profil.html',
+					controller : 'profilController as vm'
+				})
+					.state('profil.infos', {
+						url : '/infos',
+						templateUrl: 'app/profil/profilInfos.html'
+					})
+					.state('profil.coordonnees', {
+						url : '/coordonnees',
+						templateUrl: 'app/profil/profilCoordonnees.html'
+					})
 				;
 				
-
-			$locationProvider.html5Mode(true);
-
-}]);
+});
 
 ;(function () {
     'use strict';
@@ -489,4 +503,53 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
         	return $http.get('/api/inscription/emailVerification')
         }
     }       
+})();
+;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('profilController', profilController);
+
+    profilController.$inject = ['$location','notifier','fermeService','mapsService'];
+
+	function profilController($location,notifier,fermeService,mapsService){
+	
+		var vm = this;	
+
+		vm.saveProfil=saveProfil;
+		vm.checkAdresse=checkAdresse;
+
+		init();
+
+		vm.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+		function checkAdresse(){
+			vm.userProfil.adresse = mapsService.getPosition();
+			console.log(vm.userProfil.adresse);
+			console.log(mapsService.getPosition());
+		}
+	   function saveProfil(){
+			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
+				.success(function(data, status, headers, config){
+					notifier.notify({template : 'Sauvegarde OK'});
+				})
+				.error(function(data, status, headers, config){
+					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+				});
+		}
+
+		function init(){
+			vm.busy = fermeService.getProfil()
+				.success(function(data, status, headers, config){
+					vm.userProfil=data;
+				});
+		}
+	}
+
+
 })();

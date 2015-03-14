@@ -1,21 +1,25 @@
 // public/js/appRoutes.js
-    angular.module('appRoutes', []).
-		config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+    angular.module('appRoutes', [] ).
+		config(function($stateProvider, $urlRouterProvider) {
+			// For any unmatched url, send to /
+      		$urlRouterProvider.otherwise('/')
 
-			$routeProvider
-
-				// home page
-				.when('/', {
+			$stateProvider
+    			.state('home', {
+    				url: '/',
 					templateUrl: 'app/home/home.html'
 				})
-				.when('/inscription/inscription', {
+				.state('inscription', {
+					url : '/inscription',
 					templateUrl: 'app/inscription/inscription.html',
 					controller:	'inscriptionController as vm'
 				})
-				.when('/home/login', {
+				.state('login', {
+					url: '/login',
 					templateUrl: 'app/home/login.html'
 				})
-				.when('/ferme/ferme', {
+				.state('ferme', {
+					url : '/ferme',
 					templateUrl: 'app/ferme/ferme.html',
 					controller : 'fermeController as vm'/*,
 					resolve : {
@@ -24,10 +28,20 @@
 						}
 					}*/
 				})
+				.state('profil', {
+					url: '/profil/:id_profil',
+					templateUrl: 'app/profil/profil.html',
+					controller : 'profilController as vm'
+				})
+					.state('profil.infos', {
+						url : '/infos',
+						templateUrl: 'app/profil/profilInfos.html'
+					})
+					.state('profil.coordonnees', {
+						url : '/coordonnees',
+						templateUrl: 'app/profil/profilCoordonnees.html'
+					})
 				;
 				
-
-			$locationProvider.html5Mode(true);
-
-}]);
+});
 

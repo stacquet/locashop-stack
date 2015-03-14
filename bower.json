@@ -12,6 +12,7 @@
 	"angular-busy": "latest",
     "ng-flow": "latest",
 	"angular-ui-tinymce": "latest",
+  "angular-ui-router": "latest",
 	"ngImgCrop" : "latest"
   },
   "resolutions": {

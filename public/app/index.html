@@ -22,7 +22,7 @@
 	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script> -->
 	<script src="libs/jquery/dist/jquery.min.js"></script>	 
     <script src="libs/angular/angular.min.js"></script>
-    <script src="libs/angular-route/angular-route.min.js"></script>
+    <script src="libs/angular-ui-router/release/angular-ui-router.min.js"></script>
 	<script src='libs/lodash/dist/lodash.js'></script>
 	<script src='libs/angular-google-maps/dist/angular-google-maps.js'></script>
 	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
@@ -54,7 +54,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			  </button>
-			  <a id="homeLink" class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span></a>
+			  <a id="homeLink" class="navbar-brand" ui-sref="home"><span class="glyphicon glyphicon-home"></span></a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -62,22 +62,22 @@
 			  <ul class="nav navbar-nav">
 				<li><a href="/magasin" data-toggle="collapse" data-target=".navbar-collapse">Le magasin <!-- <span class="sr-only">(current)</span> --></a></li>
 				<li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Nos producteurs</a></li>
-				<li><a href="/ferme/ferme" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Ferme</a></li>
+				<li><a ui-sref="ferme" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Ferme</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
-				<li ng-show="!$root.isLoggedIn"><a href="/inscription/inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
+				<li ng-show="!$root.isLoggedIn"><a ui-sref="inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
 					<li id="menuAutenticated" ng-show="$root.isLoggedIn" class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfos.email}} <span class="caret"></span></a>
 					  <ul class="dropdown-menu" role="menu">
 						<li><a href="/user/producteur" data-toggle="collapse" data-target=".navbar-collapse">Mon espace producteur</a></li>
-						<li><a ng-href="/user/profil/{{$root.userInfos.id_user}} data-toggle="collapse" data-target=".navbar-collapse"">Mon profil</a></li>
+						<li><a ui-sref="profil.infos({id_profil : $root.userInfos.id_user})" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
 						<li class="divider"></li>
 						<li><a id="logoutLink" ng-click="vm.logout()" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
 					  </ul>
 					</li>
 					<li ng-show="!$root.isLoggedIn">
-						<a id="loginLink" href="/home/login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
+						<a id="loginLink" ui-sref="login" data-toggle="collapse" data-target=".navbar-collapse">Login</a>
 					</li>
 			  </ul>
 			</div><!-- /.navbar-collapse -->
@@ -85,7 +85,7 @@
 		</nav>		
 
 		<!-- ANGULAR DYNAMIC CONTENT -->
-		<div ng-view></div>
+		<div ui-view></div>
 
 	</div>
 </body>
