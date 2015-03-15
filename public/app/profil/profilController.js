@@ -5,12 +5,14 @@
         .module('locashopApp')
         .controller('profilController', profilController);
 
-    profilController.$inject = ['$location','notifier','fermeService','mapsService'];
+    profilController.$inject = ['$scope','$location','notifier','fermeService','mapsService'];
 
-	function profilController($location,notifier,fermeService,mapsService){
+	function profilController($scope,$location,notifier,fermeService,mapsService){
 	
 		var vm = this;	
 
+		vm.myImage='';
+        vm.myCroppedImage='';
 		vm.saveProfil=saveProfil;
 		vm.checkAdresse=checkAdresse;
 
@@ -43,6 +45,19 @@
 					vm.userProfil=data;
 				});
 		}
+
+		function handleFileSelect(evt) {
+			console.log("handleFileSelect");
+          var file=evt.currentTarget.files[0];
+          var reader = new FileReader();
+          reader.onload = function (evt) {
+            $scope.$apply(function($scope){
+              $scope.myImage=evt.target.result;
+            });
+          };
+          reader.readAsDataURL(file);
+        };
+        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
 	}
 
 
