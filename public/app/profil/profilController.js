@@ -5,16 +5,17 @@
         .module('locashopApp')
         .controller('profilController', profilController);
 
-    profilController.$inject = ['$scope','$location','notifier','fermeService','mapsService'];
+    profilController.$inject = ['$timeout','$scope','$upload','$location','notifier','fermeService','mapsService'];
 
-	function profilController($scope,$location,notifier,fermeService,mapsService){
-	
+	function profilController($timeout,$scope,$upload,$location,notifier,fermeService,mapsService){
 		var vm = this;	
 
 		vm.myImage='';
         vm.myCroppedImage='';
 		vm.saveProfil=saveProfil;
 		vm.checkAdresse=checkAdresse;
+		vm.upload=upload;
+		vm.crop=crop;
 
 		init();
 
@@ -46,18 +47,40 @@
 				});
 		}
 
-		function handleFileSelect(evt) {
-			console.log("handleFileSelect");
-          var file=evt.currentTarget.files[0];
-          var reader = new FileReader();
-          reader.onload = function (evt) {
-            $scope.$apply(function($scope){
-              $scope.myImage=evt.target.result;
-            });
-          };
-          reader.readAsDataURL(file);
-        };
-        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+		function upload(files) {
+	        if (files && files.length) {
+	            for (var i = 0; i < files.length; i++) {
+	                var file = files[i];
+	                $upload.upload({
+	                    url: 'upload/url',
+	                    fields: {'username': $scope.username},
+	                    file: file
+	                }).progress(function (evt) {
+	                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+	                    console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	                }).success(function (data, status, headers, config) {
+	                    console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+	                });
+	            }
+	        }
+	    }
+		function crop(){
+			if(vm.files){
+				console.log(vm.files);
+				var file=vm.files[0];
+	          	var reader = new FileReader();
+	          	reader.onload = function (evt) {
+		            $scope.$apply(function($scope){
+		              vm.myImage=evt.target.result;
+		            });
+		        }
+	        	reader.readAsDataURL(file);
+	        }
+    	}
+    	$scope.$watch('vm.files',function(){
+          console.log('Res image', vm.myImage);
+          vm.crop();
+        });
 	}
 
 

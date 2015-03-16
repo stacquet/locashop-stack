@@ -19,3 +19,12 @@
 .thumbnail>img {
       max-width: 200px; max-height: 150px; line-height: 20px; margin-bottom: 5px;
 }
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width:500px;
+  height:350px;
+}
+.image-arrondie{
+  border-radius:50%;
+}

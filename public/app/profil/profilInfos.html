@@ -31,12 +31,12 @@
               <a ui-sref="profil.coordonnees" id="adresseButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Suivant <span class="glyphicon glyphicon-floppy-save"></span></a>
             </div>
           </div>
-          <div>Select an image file: <input type="file" id="fileInput" /></div>
-            <div class="cropArea">
-              <img-crop image="vm.myImage" result-image="vm.myCroppedImage"></img-crop>
-            </div>
-            <div>Cropped Image:</div>
-            <div><img ng-src="{{vm.myCroppedImage}}" /></div>
-          </div>
+         <div class="btn btn-sm btn-success" ng-file-select ng-model="vm.files">Upload </div>
+         <div class="btn btn-sm btn-success" ng-click="vm.upload()">Valider</div>
         </form>
+        <div class="cropArea">
+              <img-crop image="vm.myImage" result-image="vm.myCroppedImage"></img-crop>
+        </div>
+        <div>Cropped Image:</div>
+        <div><img class="image-arrondie" ng-src="{{vm.myCroppedImage}}" /></div>
 </div>
