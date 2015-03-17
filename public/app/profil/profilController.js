@@ -74,13 +74,14 @@
 		            });
 		        }
 	        	reader.readAsDataURL(file);
+	        	
 	        }
     	}
     	$scope.$watch('vm.files',function(){
           console.log('Res image', vm.myImage);
           vm.crop();
         });
-		
+
 		function dataURItoBlob(dataURI) {
 			var binary = atob(dataURI.split(',')[1]);
 			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -94,3 +95,4 @@
 
 
 })();
+

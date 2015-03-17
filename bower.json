@@ -10,6 +10,7 @@
     "angular-route": "latest",
     "angular-notifier": "latest",
 	  "angular-busy": "latest",
+    "angular-bootstrap": "latest",
     "ng-flow": "latest",
 	  "angular-ui-tinymce": "latest",
     "angular-ui-router": "latest",
