@@ -16,6 +16,7 @@
 		vm.checkAdresse=checkAdresse;
 		vm.upload=upload;
 		vm.crop=crop;
+		vm.dataURItoBlob=dataURItoBlob;
 
 		init();
 
@@ -47,12 +48,12 @@
 				});
 		}
 
-		function upload(files) {
-	        if (files && files.length) {
-	            for (var i = 0; i < files.length; i++) {
-	                var file = files[i];
+		function upload() { 
+			console.log('upload');
+			var file = dataURItoBlob(vm.myCroppedImage);
+			console.log(file);
 	                $upload.upload({
-	                    url: 'upload/url',
+	                    url: 'upload/media',
 	                    fields: {'username': $scope.username},
 	                    file: file
 	                }).progress(function (evt) {
@@ -61,8 +62,6 @@
 	                }).success(function (data, status, headers, config) {
 	                    console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
 	                });
-	            }
-	        }
 	    }
 		function crop(){
 			if(vm.files){
@@ -81,6 +80,16 @@
           console.log('Res image', vm.myImage);
           vm.crop();
         });
+		
+		function dataURItoBlob(dataURI) {
+			var binary = atob(dataURI.split(',')[1]);
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			var array = [];
+			for(var i = 0; i < binary.length; i++) {
+			  array.push(binary.charCodeAt(i));
+			}
+			return new Blob([new Uint8Array(array)], {type: mimeString});
+		  };
 	}
 
 

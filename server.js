@@ -13,7 +13,7 @@ var passport 		= require('passport');
 var flash    		= require('connect-flash');
 var async			= require('async');
 var acl				= require('./app/controllers/aclController');
-var slowness				= require('./app/util/slowness');
+var slowness		= require('./app/util/slowness');
 
 global.winston 		= require('winston');
 

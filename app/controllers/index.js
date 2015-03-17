@@ -4,5 +4,6 @@ module.exports = {
 	home 		: require('./homeController'),
 	model 		: require('./modelController'),
 	user		: require('./userController'),
- 	mail		: require('./mailController')
+ 	mail		: require('./mailController'),
+	upload		: require('./uploadController')
 };
