@@ -17,7 +17,12 @@
 		vm.upload=upload;
 		vm.crop=crop;
 		vm.dataURItoBlob=dataURItoBlob;
+		vm.toggleModal=toggleModal;
 
+		vm.showModal = false;
+		function toggleModal(){
+			vm.showModal = !vm.showModal;
+		};
 		init();
 
 		vm.options = {
@@ -52,7 +57,7 @@
 			console.log('upload');
 			var file = dataURItoBlob(vm.myCroppedImage);
 			console.log(file);
-	                $upload.upload({
+	        $upload.upload({
 	                    url: 'upload/media',
 	                    fields: {'username': $scope.username},
 	                    file: file
@@ -69,8 +74,9 @@
 				var file=vm.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
-		            $scope.$apply(function($scope){
+		            $scope.$apply(function(){
 		              vm.myImage=evt.target.result;
+					  vm.showModal = true;
 		            });
 		        }
 	        	reader.readAsDataURL(file);
