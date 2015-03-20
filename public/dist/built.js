@@ -48,116 +48,6 @@ angular
 				
 });
 
-;(function () {
-    'use strict';
-
-    angular
-        .module('locashopApp')
-        .controller('fermeController', fermeController);
-
-    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
-
-	function fermeController($location,notifier,fermeService,mapsService){
-	
-		var vm = this;	
-
-		vm.saveProfil=saveProfil;
-		vm.checkAdresse=checkAdresse;
-
-		init();
-
-		vm.options = {
-		    language: 'en',
-		    allowedContent: true,
-		    entities: false
-		  };
-
-		function checkAdresse(){
-			vm.userProfil.adresse = mapsService.getPosition();
-			console.log(vm.userProfil.adresse);
-			console.log(mapsService.getPosition());
-		}
-	   function saveProfil(){
-			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
-				.success(function(data, status, headers, config){
-					notifier.notify({template : 'Sauvegarde OK'});
-				})
-				.error(function(data, status, headers, config){
-					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-				});
-		}
-
-		function init(){
-			vm.busy = fermeService.getProfil()
-				.success(function(data, status, headers, config){
-					vm.userProfil=data;
-				});
-		}
-	}
-
-
-})();
-;(function () {
-    'use strict';
-	
-	angular	
-		.module('locashopApp')
-		.factory('fermeService', fermeService);
-	
-	fermeService.$inject=['$http'];
-
-    function fermeService($http){
-		
-		var service = {
-			getProfil 	: getProfil,
-			saveProfil	: saveProfil,
-			saveAdresse	: saveAdresse
-		};
-		
-		return service;
-	
-		function getProfil(){
-			return $http.get('/api/ferme');
-		}
-
-        function saveProfil(data) {
-            return $http.post('/api/user/profil/save',data);
-        }
-
-        function saveAdresse(data) {
-            return $http.post('/api/user/adresse/save',data);
-        }
-
-    }       
-})();
-;(function () {
-    'use strict';
-	
-	angular	
-		.module('locashopApp')
-		.factory('mapsService',mapsService);
-	
-	//fermeService.$inject=['$http'];
-
-    function mapsService(){
-		
-		var service ={
-			position 		: {},
-			getPosition 	: getPosition,
-			setPosition		: setPosition
-		};
-		
-		return service;
-	
-		function getPosition(){
-			return service.position;
-		}
-
-        function setPosition(data) {
-            service.position = data;
-        }
-    }       
-})();
 ;
 angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps']) 
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
@@ -311,6 +201,116 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		});
 	}
 ]);;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('fermeController', fermeController);
+
+    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
+
+	function fermeController($location,notifier,fermeService,mapsService){
+	
+		var vm = this;	
+
+		vm.saveProfil=saveProfil;
+		vm.checkAdresse=checkAdresse;
+
+		init();
+
+		vm.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+		function checkAdresse(){
+			vm.userProfil.adresse = mapsService.getPosition();
+			console.log(vm.userProfil.adresse);
+			console.log(mapsService.getPosition());
+		}
+	   function saveProfil(){
+			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
+				.success(function(data, status, headers, config){
+					notifier.notify({template : 'Sauvegarde OK'});
+				})
+				.error(function(data, status, headers, config){
+					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+				});
+		}
+
+		function init(){
+			vm.busy = fermeService.getProfil()
+				.success(function(data, status, headers, config){
+					vm.userProfil=data;
+				});
+		}
+	}
+
+
+})();
+;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('fermeService', fermeService);
+	
+	fermeService.$inject=['$http'];
+
+    function fermeService($http){
+		
+		var service = {
+			getProfil 	: getProfil,
+			saveProfil	: saveProfil,
+			saveAdresse	: saveAdresse
+		};
+		
+		return service;
+	
+		function getProfil(){
+			return $http.get('/api/ferme');
+		}
+
+        function saveProfil(data) {
+            return $http.post('/api/user/profil/save',data);
+        }
+
+        function saveAdresse(data) {
+            return $http.post('/api/user/adresse/save',data);
+        }
+
+    }       
+})();
+;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('mapsService',mapsService);
+	
+	//fermeService.$inject=['$http'];
+
+    function mapsService(){
+		
+		var service ={
+			position 		: {},
+			getPosition 	: getPosition,
+			setPosition		: setPosition
+		};
+		
+		return service;
+	
+		function getPosition(){
+			return service.position;
+		}
+
+        function setPosition(data) {
+            service.position = data;
+        }
+    }       
+})();
+;(function () {
     'use strict';
 
     angular
@@ -525,7 +525,7 @@ function modal(){
 		  restrict: 'E',
 		  transclude: true,
 		  replace:true,
-		  scope:true,
+		  scope:false,
 		  link: postLink 
 	}
     return directive;
@@ -534,21 +534,26 @@ function modal(){
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){
-		  if(value == true)
+		  if(value == true){
 			$(element).modal('show');
-		  else
+		  }
+		  else{
 			$(element).modal('hide');
+		  }
 		});
 		
 		$(element).on('shown.bs.modal', function(){
-		  scope.$apply(function(){
-			scope.$parent[attrs.visible] = true;
+		  scope.$apply(function(scope){
+			//scope.$parent[attrs.visible] = true;
+			scope.vm['showModal']=true;
+			
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
-		  scope.$apply(function(){
-			scope.$parent[attrs.visible] = false;
+		  scope.$apply(function(scope){
+			//scope.$parent[attrs.visible] = false;
+			scope.vm['showModal']=false;
 		  });
 		});
 		

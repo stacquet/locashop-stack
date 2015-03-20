@@ -19,7 +19,7 @@ function modal(){
 		  restrict: 'E',
 		  transclude: true,
 		  replace:true,
-		  scope:true,
+		  scope:false,
 		  link: postLink 
 	}
     return directive;
@@ -28,21 +28,26 @@ function modal(){
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){
-		  if(value == true)
+		  if(value == true){
 			$(element).modal('show');
-		  else
+		  }
+		  else{
 			$(element).modal('hide');
+		  }
 		});
 		
 		$(element).on('shown.bs.modal', function(){
-		  scope.$apply(function(){
-			scope.$parent[attrs.visible] = true;
+		  scope.$apply(function(scope){
+			//scope.$parent[attrs.visible] = true;
+			scope.vm['showModal']=true;
+			
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
-		  scope.$apply(function(){
-			scope.$parent[attrs.visible] = false;
+		  scope.$apply(function(scope){
+			//scope.$parent[attrs.visible] = false;
+			scope.vm['showModal']=false;
 		  });
 		});
 		
