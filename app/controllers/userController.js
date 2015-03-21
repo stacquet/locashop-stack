@@ -6,7 +6,7 @@ module.exports = {
 				models.User.find(
 					{
 						where:	{id_user : req.user.id_user},
-						include: [models.Ferme]
+						include: [models.Ferme,models.Media]
 					}).then(function(user){
 					res.send(user);
 				}).catch(function(err){

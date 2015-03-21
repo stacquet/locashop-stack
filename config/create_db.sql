@@ -22,6 +22,7 @@ CREATE TABLE media (
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
   chemin_physique VARCHAR(512) NULL,
+  date_modif DATETIME NULL,
   PRIMARY KEY (id_media));
 
 CREATE TABLE ref_produit_famille (
@@ -98,6 +99,7 @@ CREATE TABLE user (
   id_profil VARCHAR(45) NOT NULL,
   statut TINYINT NULL,
   id_adresse INT NULL,
+  id_media INT NULL,
   id_facebook VARCHAR(100) NULL,
   token VARCHAR(500) NULL,
   email VARCHAR(200) NOT NULL,
@@ -114,9 +116,15 @@ CREATE TABLE user (
   UNIQUE INDEX email_UNIQUE (email ASC),
   INDEX fk_ref_user_ref_profil1_idx (id_profil ASC),
   INDEX fk_ref_user_ref_adresse1_idx (id_adresse ASC),
+  INDEX fk_ref_user_media_idx (id_media ASC),
   CONSTRAINT fk_ref_user_ref_profil1
     FOREIGN KEY (id_profil)
     REFERENCES ref_profil (id_profil)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_ref_user_media
+    FOREIGN KEY (id_media)
+    REFERENCES media (id_media)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT fk_ref_user_ref_adresse1
@@ -126,27 +134,6 @@ CREATE TABLE user (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE media_user (
-  id_media INT NOT NULL,
-  id_user INT NOT NULL,
-  PRIMARY KEY (id_media,id_user),
-  INDEX fk_media_user_id_user_idx (id_user ASC),
-  CONSTRAINT fk_media_user_id_user
-    FOREIGN KEY (id_user)
-    REFERENCES user (id_user)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  INDEX fk_media_user_id_media_idx (id_media ASC),
-  CONSTRAINT fk_media_user_id_media
-    FOREIGN KEY (id_media)
-    REFERENCES media (id_media)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    )
-ENGINE = InnoDB;
--- -----------------------------------------------------
--- Table producteur_infos
--- -----------------------------------------------------
 CREATE TABLE ferme (
   id_ferme INT NOT NULL AUTO_INCREMENT,
   id_adresse_livraison INT NULL,
@@ -156,6 +143,25 @@ CREATE TABLE ferme (
   date_modif DATETIME NULL,
   user_modif INT NULL,
   PRIMARY KEY (id_ferme))
+ENGINE = InnoDB;
+
+CREATE TABLE media_ferme (
+  id_media INT NOT NULL,
+  id_ferme INT NOT NULL,
+  PRIMARY KEY (id_media,id_ferme),
+  INDEX fk_media_ferme_id_ferme_idx (id_ferme ASC),
+  CONSTRAINT fk_media_user_id_ferme
+    FOREIGN KEY (id_ferme)
+    REFERENCES ferme (id_ferme)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  INDEX fk_media_ferme_id_media_idx (id_media ASC),
+  CONSTRAINT fk_media_ferme_id_media
+    FOREIGN KEY (id_media)
+    REFERENCES media (id_media)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    )
 ENGINE = InnoDB;
 
 CREATE TABLE ferme_user (

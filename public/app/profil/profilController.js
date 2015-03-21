@@ -5,19 +5,22 @@
         .module('locashopApp')
         .controller('profilController', profilController);
 
-    profilController.$inject = ['$timeout','$scope','$upload','$location','notifier','fermeService','mapsService'];
+    profilController.$inject = ['$timeout','$scope','$upload','$q','notifier','profilService','mapsService'];
 
-	function profilController($timeout,$scope,$upload,$location,notifier,fermeService,mapsService){
+	function profilController($timeout,$scope,$upload,$q,notifier,profilService,mapsService){
 		var vm = this;	
 
-		vm.myImage='';
-        vm.myCroppedImage='';
+		vm.uploadedImage='';
+        vm.croppedImage='';
+        vm.profilImage='';
+        vm.profilImageChanged=false;
 		vm.saveProfil=saveProfil;
 		vm.checkAdresse=checkAdresse;
 		vm.upload=upload;
 		vm.crop=crop;
 		vm.dataURItoBlob=dataURItoBlob;
 		vm.toggleModal=toggleModal;
+		vm.updateProfilImage=updateProfilImage;
 
 		vm.showModal = false;
 		function toggleModal(){
@@ -37,25 +40,43 @@
 			console.log(mapsService.getPosition());
 		}
 	   function saveProfil(){
-			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
-				.success(function(data, status, headers, config){
-					notifier.notify({template : 'Sauvegarde OK'});
-				})
-				.error(function(data, status, headers, config){
-					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-				});
+	   		if(vm.profilImageChanged){
+				vm.busy = upload().then(function(uploadSuccess){
+						profilService.saveProfil({userProfil : vm.userProfil})
+							.success(function(data, status, headers, config){
+							notifier.notify({template : 'Sauvegarde OK'});
+							})
+							.error(function(data, status, headers, config){
+								notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+							});
+						},
+						function(uploadError){
+							notifier.notify({template : uploadError,type:'error'});
+						});
+			}
+			else{
+				vm.busy = profilService.saveProfil({userProfil : vm.userProfil})
+							.success(function(data, status, headers, config){
+							notifier.notify({template : 'Sauvegarde OK'});
+							})
+							.error(function(data, status, headers, config){
+								notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+							});
+			}
+
 		}
 
 		function init(){
-			vm.busy = fermeService.getProfil()
+			vm.busy = profilService.getProfil()
 				.success(function(data, status, headers, config){
 					vm.userProfil=data;
 				});
 		}
 
 		function upload() { 
+			var deferred = $q.defer();
 			console.log('upload');
-			var file = dataURItoBlob(vm.myCroppedImage);
+			var file = dataURItoBlob(vm.profilImage);
 			console.log(file);
 	        $upload.upload({
 	                    url: 'upload/media',
@@ -63,10 +84,14 @@
 	                    file: file
 	                }).progress(function (evt) {
 	                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-	                    console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+	                    deferred.notify('progress: ' + progressPercentage + '% ' + evt.config.file.name);
 	                }).success(function (data, status, headers, config) {
-	                    console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+	                    deferred.resolve('file ' + config.file.name + 'uploaded. Response: ' + data);
+	                }).error(function (data, status, headers, config) {
+	                	console.log('pas bon');
+	                    deferred.reject('error : '+data);
 	                });
+	        return deferred.promise;
 	    }
 		function crop(){
 			if(vm.files){
@@ -75,7 +100,7 @@
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
-		              vm.myImage=evt.target.result;
+		              vm.uploadedImage=evt.target.result;
 					  vm.showModal = true;
 		            });
 		        }
@@ -83,8 +108,12 @@
 	        	
 	        }
     	}
+    	function updateProfilImage(){
+    		vm.profilImage=vm.croppedImage;
+    		vm.profilImageChanged=true;
+    		toggleModal();
+    	}
     	$scope.$watch('vm.files',function(){
-          console.log('Res image', vm.myImage);
           vm.crop();
         });
 

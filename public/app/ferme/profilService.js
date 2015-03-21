@@ -3,11 +3,11 @@
 	
 	angular	
 		.module('locashopApp')
-		.factory('fermeService', fermeService);
+		.factory('profilService', profilService);
 	
-	fermeService.$inject=['$http'];
+	profilService.$inject=['$http'];
 
-    function fermeService($http){
+    function profilService($http){
 		
 		var service = {
 			getProfil 	: getProfil,
@@ -18,7 +18,7 @@
 		return service;
 	
 		function getProfil(){
-			return $http.get('/api/ferme');
+			return $http.get('/api/profil');
 		}
 
         function saveProfil(data) {

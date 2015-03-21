@@ -7,20 +7,21 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey:true
     },
-    id_profil : Sequelize.STRING,
-    id_adresse : Sequelize.INTEGER,
-    id_facebook : Sequelize.STRING,
-    token : Sequelize.STRING(500),
-    email : Sequelize.STRING,
-    email_valide : Sequelize.INTEGER,
-	email_verification_token : Sequelize.STRING,
-    mobile : Sequelize.STRING,
-    mobile_valide : Sequelize.INTEGER,
-    nom : Sequelize.STRING,
-    prenom : Sequelize.STRING,
-    password : Sequelize.STRING,
-	password_change_token : Sequelize.STRING,
-    date_modif : Sequelize.DATE
+    id_profil                 : Sequelize.STRING,
+    id_adresse                : Sequelize.INTEGER,
+    id_media                  : Sequelize.INTEGER,
+    id_facebook               : Sequelize.STRING,
+    token                     : Sequelize.STRING(500),
+    email                     : Sequelize.STRING,
+    email_valide              : Sequelize.INTEGER,
+    email_verification_token  : Sequelize.STRING,
+    mobile                    : Sequelize.STRING,
+    mobile_valide             : Sequelize.INTEGER,
+    nom                       : Sequelize.STRING,
+    prenom                    : Sequelize.STRING,
+    password                  : Sequelize.STRING,
+    password_change_token     : Sequelize.STRING,
+    date_modif                : Sequelize.DATE
   },
   {
     timestamps: false,
@@ -30,6 +31,9 @@ module.exports = function(sequelize, Sequelize) {
         User.belongsToMany(models.Ferme, {
           through: 'ferme_user',
           foreignKey: 'id_user'
+        });
+        User.hasOne(models.Media, {
+          foreignKey: 'id_media'
         });
       }
     }
