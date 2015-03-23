@@ -20,6 +20,7 @@ module.exports = function(grunt) {
         dest: 'public/dist/built_min.js' // la destination finale
       }
     },
+
 	watch: {
 		scripts: {
 			files: ['public/app/*.js','public/app/**/*.js'],
@@ -35,7 +36,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat'); // Voilà l'ajout.
   grunt.loadNpmTasks('grunt-contrib-uglify'); // Voilà l'ajout.
   grunt.loadNpmTasks('grunt-contrib-watch');
-
 
 
   grunt.registerTask('dev', ['concat:dist'])
