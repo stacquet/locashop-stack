@@ -32,7 +32,7 @@ module.exports = function(sequelize, Sequelize) {
           through: 'ferme_user',
           foreignKey: 'id_user'
         });
-        User.hasOne(models.Media, {
+        User.hasOne(models.Gloria, {
           foreignKey: 'id_media'
         });
       }

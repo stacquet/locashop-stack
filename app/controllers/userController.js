@@ -7,7 +7,7 @@ module.exports = {
 				models.User.find(
 					{
 						where:	{id_user : req.user.id_user},
-						include: [models.Ferme,models.Media]
+						include: [models.Ferme,models.Gloria]
 					}).then(function(user){
 					res.send(user);
 				}).catch(function(err){
@@ -25,7 +25,7 @@ module.exports = {
 				models.User.find(
 					{
 						where:	{id_user : req.user.id_user},
-						include: [models.Ferme,models.Media]
+						include: [models.Ferme,models.Gloria]
 					}).then(function(user){
 						user.set(req.body.userProfil);
 						user.save().then(function(){
@@ -33,7 +33,8 @@ module.exports = {
 								fermes[0].save().then(function(){
 								});
 							});*/
-							user.getMedium().then(function(media){
+							console.log(user);
+							user.getMedia().then(function(media){
 								media.save().then(function(){
 								});
 							});

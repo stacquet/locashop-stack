@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function(sequelize, Sequelize) {
-  var Media = sequelize.define("Media", {
+  var Gloria = sequelize.define("Gloria", {
     id_media : { 
       type : Sequelize.INTEGER,
       autoIncrement: true,
@@ -26,5 +26,5 @@ module.exports = function(sequelize, Sequelize) {
     }*/
   });
 
-  return Media;
+  return Gloria;
 };
