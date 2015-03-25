@@ -19,10 +19,14 @@ module.exports = function(sequelize, Sequelize) {
     tableName : 'ferme',
     classMethods: {
       associate: function(models) {
-        Ferme.belongsToMany(models.User, {
+        /*Ferme.belongsToMany(models.User, {
           through: 'ferme_user',
           foreignKey: 'id_ferme'
-        });
+        });*/
+          Ferme.hasMany(models.User,{
+              through: 'ferme_user',
+              foreignKey: 'id_user'
+          })
       }
     }
   });

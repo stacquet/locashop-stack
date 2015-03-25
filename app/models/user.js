@@ -9,7 +9,7 @@ module.exports = function(sequelize, Sequelize) {
     },
     id_profil                 : Sequelize.STRING,
     id_adresse                : Sequelize.INTEGER,
-    id_media                  : Sequelize.INTEGER,
+    id_photo                  : Sequelize.INTEGER,
     id_facebook               : Sequelize.STRING,
     token                     : Sequelize.STRING(500),
     email                     : Sequelize.STRING,
@@ -28,12 +28,12 @@ module.exports = function(sequelize, Sequelize) {
     tableName : 'user',
     classMethods: {
       associate: function(models) {
-        User.belongsToMany(models.Ferme, {
-          through: 'ferme_user',
+        User.belongsTo(models.Ferme,{
+          //through: 'ferme_user',
           foreignKey: 'id_user'
         });
-        User.hasOne(models.Gloria, {
-          foreignKey: 'id_media'
+        User.hasOne(models.Photo, {
+          foreignKey: 'id_user'
         });
       }
     }

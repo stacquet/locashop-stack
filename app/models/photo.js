@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = function(sequelize, Sequelize) {
-  var Gloria = sequelize.define("Gloria", {
-    id_media : { 
+  var Photo = sequelize.define("Photo", {
+    id_photo : { 
       type : Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey:true
@@ -15,7 +15,7 @@ module.exports = function(sequelize, Sequelize) {
   },
   {
     timestamps: false,
-    tableName : 'media',
+    tableName : 'photo',
     /*classMethods: {
       associate: function(models) {
         Ferme.belongsToMany(models.User, {
@@ -26,5 +26,5 @@ module.exports = function(sequelize, Sequelize) {
     }*/
   });
 
-  return Gloria;
+  return Photo;
 };

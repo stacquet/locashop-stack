@@ -83,6 +83,7 @@ module.exports = function(passport) {
 					// all is well, return successful user
 					return done(null, user);
 				}).catch(function(err){
+					console.log(err);
 					return done(null, false, req.flash('loginMessage', 'Erreur interne à la connexion'));
 				});
 		})

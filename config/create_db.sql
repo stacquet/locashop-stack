@@ -16,14 +16,14 @@ CREATE TABLE ref_adresse (
   PRIMARY KEY (id_adresse))
 ENGINE = InnoDB;
 
-CREATE TABLE media (
-  id_media INT NOT NULL,
+CREATE TABLE photo (
+  id_photo INT NOT NULL,
   uuid VARCHAR(100) NULL,
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
   chemin_physique VARCHAR(512) NULL,
   date_modif DATETIME NULL,
-  PRIMARY KEY (id_media));
+  PRIMARY KEY (id_photo));
 
 CREATE TABLE ref_produit_famille (
   id_produit_famille INT NOT NULL AUTO_INCREMENT,
@@ -99,7 +99,7 @@ CREATE TABLE user (
   id_profil VARCHAR(45) NOT NULL,
   statut TINYINT NULL,
   id_adresse INT NULL,
-  id_media INT NULL,
+  id_photo INT NULL,
   id_facebook VARCHAR(100) NULL,
   token VARCHAR(500) NULL,
   email VARCHAR(200) NOT NULL,
@@ -116,15 +116,15 @@ CREATE TABLE user (
   UNIQUE INDEX email_UNIQUE (email ASC),
   INDEX fk_ref_user_ref_profil1_idx (id_profil ASC),
   INDEX fk_ref_user_ref_adresse1_idx (id_adresse ASC),
-  INDEX fk_ref_user_media_idx (id_media ASC),
+  INDEX fk_ref_user_photo_idx (id_photo ASC),
   CONSTRAINT fk_ref_user_ref_profil1
     FOREIGN KEY (id_profil)
     REFERENCES ref_profil (id_profil)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT fk_ref_user_media
-    FOREIGN KEY (id_media)
-    REFERENCES media (id_media)
+  CONSTRAINT fk_ref_user_photo
+    FOREIGN KEY (id_photo)
+    REFERENCES photo (id_photo)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT fk_ref_user_ref_adresse1
@@ -142,45 +142,46 @@ CREATE TABLE ferme (
   presentation_methode TEXT NULL,
   date_modif DATETIME NULL,
   user_modif INT NULL,
-  PRIMARY KEY (id_ferme))
+  PRIMARY KEY (id_ferme))  
 ENGINE = InnoDB;
 
-CREATE TABLE media_ferme (
-  id_media INT NOT NULL,
+CREATE TABLE ferme_user (
+	id_ferme INT NOT NULL,
+    id_user INT NOT NULL,
+    PRIMARY KEY (id_user),
+    INDEX idx_ferme_id_user (id_user ASC),
+    INDEX idx_ferme_id_ferme (id_ferme ASC),
+	CONSTRAINT fk_ferme_user_id_user
+		FOREIGN KEY (id_user)
+		REFERENCES user (id_user)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT fk_ferme_user_id_ferme
+		FOREIGN KEY (id_ferme)
+		REFERENCES ferme (id_ferme)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+CREATE TABLE ferme_photo (
+  id_photo INT NOT NULL,
   id_ferme INT NOT NULL,
-  PRIMARY KEY (id_media,id_ferme),
-  INDEX fk_media_ferme_id_ferme_idx (id_ferme ASC),
-  CONSTRAINT fk_media_user_id_ferme
+  PRIMARY KEY (id_photo),
+  INDEX fk_ferme_photo_id_ferme_idx (id_ferme ASC),
+  CONSTRAINT fk_photo_user_id_ferme
     FOREIGN KEY (id_ferme)
     REFERENCES ferme (id_ferme)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  INDEX fk_media_ferme_id_media_idx (id_media ASC),
-  CONSTRAINT fk_media_ferme_id_media
-    FOREIGN KEY (id_media)
-    REFERENCES media (id_media)
+  INDEX fk_ferme_photo_id_photo_idx (id_photo ASC),
+  CONSTRAINT fk_ferme_photo_id_photo
+    FOREIGN KEY (id_photo)
+    REFERENCES photo (id_photo)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     )
 ENGINE = InnoDB;
-
-CREATE TABLE ferme_user (
-  id_ferme INT NOT NULL,
-  id_user INT NOT NULL,
-  date_modif DATETIME NULL,
-  user_modif INT NULL,
-  PRIMARY KEY (id_ferme, id_user),
-  INDEX fk_ferme_id_user_idx (id_user ASC),
-  CONSTRAINT fk_ferme_id_ferme
-    FOREIGN KEY (id_ferme)
-    REFERENCES ferme (id_ferme)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT fk_ferme_id_user
-    FOREIGN KEY (id_user)
-    REFERENCES user (id_user)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------

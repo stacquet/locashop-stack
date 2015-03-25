@@ -7,7 +7,7 @@ module.exports = {
 				models.User.find(
 					{
 						where:	{id_user : req.user.id_user},
-						include: [models.Ferme,models.Gloria]
+						include: [models.Ferme,models.Photo]
 					}).then(function(user){
 					res.send(user);
 				}).catch(function(err){
@@ -25,7 +25,7 @@ module.exports = {
 				models.User.find(
 					{
 						where:	{id_user : req.user.id_user},
-						include: [models.Ferme,models.Gloria]
+						include: [models.Ferme,models.Photo]
 					}).then(function(user){
 						user.set(req.body.userProfil);
 						user.save().then(function(){

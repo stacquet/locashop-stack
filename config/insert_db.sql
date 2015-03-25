@@ -12,10 +12,10 @@ ON DUPLICATE KEY UPDATE
 	user_modif=VALUES(user_modif);
 
 
-INSERT INTO `media`(`id_media`,`uuid`,`titre`,`description`,`chemin_physique`,`date_modif`)
+INSERT INTO `photo`(`id_photo`,`uuid`,`titre`,`description`,`chemin_physique`,`date_modif`)
 VALUES(1,uuid(),'profil_1','','c:/locashop/storage/',now());
 
-INSERT INTO user (id_user,id_profil,id_media,id_adresse,email,mobile,nom,prenom,password,date_modif)
+INSERT INTO user (id_user,id_profil,id_photo,id_adresse,email,mobile,nom,prenom,password,date_modif)
 VALUES 
 	(1,'P_CONSOMMATEUR',1,NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$z/0YmnwaAjmkhnNUU1pZPeWO5NvbqnOBMPnBcVgeDJpd8RGKsEkTS',NULL)
 ;
@@ -25,8 +25,8 @@ INSERT INTO ferme
 VALUES
 (1,null,'presentation_ferme','presentation_produits','presentation_methode',null,null);
 
-INSERT INTO ferme_user(id_ferme,id_user,date_modif)
-VALUES 
-(1,1,now());
-
+INSERT INTO ferme_user
+(id_ferme,id_user)
+VALUES
+(1,1);
 COMMIT;
