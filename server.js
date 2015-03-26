@@ -15,13 +15,12 @@ var async			= require('async');
 var acl				= require('./app/controllers/aclController');
 var slowness		= require('./app/util/slowness');
 var initDatabase	= require('./app/util/initDatabase');
-
-global.winston 		= require('winston');
+var winston 		= require('winston');
 
 // configuration ===========================================
-global.winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
+winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
 //winston.remove(winston.transports.Console);
-global.winston.log('info','Hello distributed log files!');
+winston.log('info','Hello distributed log files!');
 
 initDatabase.init(function(err,data){
 	console.log('mig terminée');

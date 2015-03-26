@@ -30,11 +30,11 @@ module.exports = function(sequelize, Sequelize) {
       associate: function(models) {
         User.belongsTo(models.Ferme,{
           //through: 'ferme_user',
-          foreignKey: 'id_user'
+          foreignKey: 'id_ferme'
         });
-        User.hasOne(models.Photo, {
-          foreignKey: 'id_user'
-        });
+        User.belongsTo(models.Photo,{
+			foreignKey: 'id_photo'
+		});
       }
     }
   });
