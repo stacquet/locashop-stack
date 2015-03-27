@@ -20,18 +20,17 @@ module.exports = function(sequelize, Sequelize) {
     nom                       : Sequelize.STRING,
     prenom                    : Sequelize.STRING,
     password                  : Sequelize.STRING,
-    password_change_token     : Sequelize.STRING,
-    date_modif                : Sequelize.DATE
-  },
+    password_change_token     : Sequelize.STRING
+	},
   {
-    timestamps: false,
+    timestamps: true,
     tableName : 'user',
     classMethods: {
       associate: function(models) {
-        User.belongsTo(models.Ferme,{
-          //through: 'ferme_user',
+        /*User.belongsTo(models.Ferme,{
+          through: 'ferme_user',
           foreignKey: 'id_ferme'
-        });
+        });*/
         User.belongsTo(models.Photo,{
 			foreignKey: 'id_photo'
 		});

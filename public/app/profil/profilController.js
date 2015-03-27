@@ -80,7 +80,7 @@
 			console.log(file);
 	        $upload.upload({
 	                    url: 'upload/media',
-	                    fields: {'username': $scope.username},
+	                    fields: {'userProfil' : vm.userProfil},
 	                    file: file
 	                }).progress(function (evt) {
 	                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);

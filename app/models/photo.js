@@ -10,20 +10,18 @@ module.exports = function(sequelize, Sequelize) {
     uuid 				: Sequelize.UUID(),
 	titre 				: Sequelize.STRING(45),
 	description 		: Sequelize.STRING(512),
-	chemin_physique		: Sequelize.STRING(512),
-    date_modif 			: Sequelize.DATE
+	chemin_physique		: Sequelize.STRING(512)
   },
   {
-    timestamps: false,
+    timestamps: true,
     tableName : 'photo',
-    /*classMethods: {
+    classMethods: {
       associate: function(models) {
-        Ferme.belongsToMany(models.User, {
-          through: 'ferme_user',
-          foreignKey: 'id_ferme'
+        Photo.hasOne(models.User, {
+          foreignKey: 'id_photo'
         });
       }
-    }*/
+    }
   });
 
   return Photo;

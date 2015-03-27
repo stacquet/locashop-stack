@@ -22,7 +22,8 @@ CREATE TABLE photo (
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
   chemin_physique VARCHAR(512) NULL,
-  date_modif DATETIME NULL,
+  createdAt DATETIME NULL,
+  updatedAt DATETIME NULL,
   PRIMARY KEY (id_photo));
 
 CREATE TABLE ref_produit_famille (
@@ -111,7 +112,8 @@ CREATE TABLE user (
   prenom VARCHAR(45) NULL,
   password VARCHAR(100) NULL,
   password_change_token VARCHAR(200) NULL,
-  date_modif DATETIME NULL,
+  createdAt DATETIME NULL,
+  updatedAt DATETIME NULL,
   PRIMARY KEY (id_user),
   UNIQUE INDEX email_UNIQUE (email ASC),
   INDEX fk_ref_user_ref_profil1_idx (id_profil ASC),
@@ -134,6 +136,17 @@ CREATE TABLE user (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE producteur (
+  id_user INT NOT NULL,
+  PRIMARY KEY (id_user),
+  CONSTRAINT fk_producteur_id_user
+		FOREIGN KEY (id_user)
+		REFERENCES user(id_user)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+  
+
 CREATE TABLE ferme (
   id_ferme INT NOT NULL AUTO_INCREMENT,
   id_adresse_livraison INT NULL,
@@ -145,7 +158,7 @@ CREATE TABLE ferme (
   PRIMARY KEY (id_ferme))  
 ENGINE = InnoDB;
 
-CREATE TABLE ferme_user (
+CREATE TABLE ferme_producteur (
 	id_ferme INT NOT NULL,
     id_user INT NOT NULL,
     PRIMARY KEY (id_user),
@@ -153,7 +166,7 @@ CREATE TABLE ferme_user (
     INDEX idx_ferme_id_ferme (id_ferme ASC),
 	CONSTRAINT fk_ferme_user_id_user
 		FOREIGN KEY (id_user)
-		REFERENCES user (id_user)
+		REFERENCES producteur (id_user)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 	CONSTRAINT fk_ferme_user_id_ferme
