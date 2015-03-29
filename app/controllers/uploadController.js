@@ -8,9 +8,9 @@ module.exports = {
 
 	      var form = new formidable.IncomingForm();
 		  form.parse(req, function(err, fields, files) {
-		      res.writeHead(200, {'content-type': 'text/plain'});
-		      res.write('received upload:\n\n');
-		      res.end(util.inspect({fields: fields, files: files}));
+		      //res.writeHead(200, {'content-type': 'text/plain'});
+		      //res.write('received upload:\n\n');
+		      //res.end(util.inspect({fields: fields, files: files}));
 		  });
 		  form.on('end', function(fields, files) {
 	        /* Temporary location of our uploaded file */
@@ -27,7 +27,7 @@ module.exports = {
 	                console.log("success!")
 	            }
 	        });
-	    });
+	      });
 
 	},
 	userInfos : function(req,res,next){

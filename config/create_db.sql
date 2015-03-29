@@ -17,7 +17,7 @@ CREATE TABLE ref_adresse (
 ENGINE = InnoDB;
 
 CREATE TABLE photo (
-  id_photo INT NOT NULL,
+  id_photo INT NOT NULL AUTO_INCREMENT,
   uuid VARCHAR(100) NULL,
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
@@ -281,3 +281,9 @@ CREATE TABLE panier_details (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE sessions (
+  session_id varchar(255) COLLATE utf8_bin NOT NULL,
+  expires int(11) unsigned NOT NULL,
+  data text COLLATE utf8_bin,
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

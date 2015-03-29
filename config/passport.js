@@ -51,9 +51,7 @@ module.exports = function(passport) {
 						email: email,
 						password: bcrypt.hashSync(password, null, null),
 						id_profil : req.id_profil 
-						// use the generateHash function in our user model
 					}).save().then(function(user){
-						//var newUser = user.reload();
 						return done(null, user.dataValues);
 					}).catch(function(err){
 						return done(err);

@@ -32,8 +32,8 @@ module.exports = function(sequelize, Sequelize) {
           foreignKey: 'id_ferme'
         });*/
         User.belongsTo(models.Photo,{
-			foreignKey: 'id_photo'
-		});
+    			foreignKey: 'id_photo'
+    		});
       }
     }
   });

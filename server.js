@@ -10,6 +10,7 @@ var mysql 			= require('mysql');
 var cookieParser 	= require('cookie-parser');
 var session      	= require('express-session');
 var passport 		= require('passport');
+var SessionStore 	= require('express-mysql-session')
 var flash    		= require('connect-flash');
 var async			= require('async');
 var acl				= require('./app/controllers/aclController');
@@ -17,14 +18,24 @@ var slowness		= require('./app/util/slowness');
 var initDatabase	= require('./app/util/initDatabase');
 var winston 		= require('winston');
 
+var options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'locashop',
+    password: 'locashop',
+    database: 'locashop',
+    createDatabaseTable: true
+}
+var sessionStore = new SessionStore(options);
+
 // configuration ===========================================
-winston.add(winston.transports.File, { filename: 'logs/locashop.log' });
+winston.add(winston.transports.File, { filename: 'logs/locashop.log' ,prettyPrint:true});
 //winston.remove(winston.transports.Console);
 winston.log('info','Hello distributed log files!');
 
-initDatabase.init(function(err,data){
+/*initDatabase.init(function(err,data){
 	console.log('mig terminée');
-});
+});*/
 // set our port
 var port = process.env.PORT || 3000; 
   
@@ -51,11 +62,13 @@ app.use(cookieParser()); // read cookies (needed for auth)
  //app.use(bodyParser()); // get information from html forms
 
 // required for passport
-app.use(session({ 
+app.use(session({
+
 	secret: 'thisisI' ,
 	cookie : {
 		maxAge: 2*3600*1000 // see below
-	  }
+	  },
+	store: sessionStore
 	})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions

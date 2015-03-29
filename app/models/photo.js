@@ -7,10 +7,13 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey:true
     },
-    uuid 				: Sequelize.UUID(),
-	titre 				: Sequelize.STRING(45),
-	description 		: Sequelize.STRING(512),
-	chemin_physique		: Sequelize.STRING(512)
+    uuid 				: {
+      type    : Sequelize.UUID(),
+      defaultValue: Sequelize.UUIDV1
+    },
+	  titre 				: Sequelize.STRING(45),
+	  description 		: Sequelize.STRING(512),
+	  chemin_physique		: Sequelize.STRING(512)
   },
   {
     timestamps: true,
