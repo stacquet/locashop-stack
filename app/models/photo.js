@@ -13,8 +13,9 @@ module.exports = function(sequelize, Sequelize) {
     },
 	  titre 				: Sequelize.STRING(45),
 	  description 		: Sequelize.STRING(512),
-	  chemin_physique		: Sequelize.STRING(512)
-  },
+	  chemin_physique		: Sequelize.STRING(512),
+	  md5			: Sequelize.STRING(256)
+	  },
   {
     timestamps: true,
     tableName : 'photo',

@@ -568,35 +568,12 @@ function modal(){
 			console.log(mapsService.getPosition());
 		}
 	   function saveProfil(){
-	   		/*if(vm.profilImageChanged){
-				vm.busy = upload().then(function(uploadSuccess){
-						profilService.saveProfil({userProfil : vm.userProfil})
-							.success(function(data, status, headers, config){
-							notifier.notify({template : 'Sauvegarde OK'});
-							})
-							.error(function(data, status, headers, config){
-								notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-							});
-						},
-						function(uploadError){
-							notifier.notify({template : uploadError,type:'error'});
-						});
-			}
-			else{
-				vm.busy = profilService.saveProfil({userProfil : vm.userProfil})
-							.success(function(data, status, headers, config){
-							notifier.notify({template : 'Sauvegarde OK'});
-							})
-							.error(function(data, status, headers, config){
-								notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-							});
-			}*/
 			vm.busy = upload().then(function(){
-							notifier.notify({template : 'Sauvegarde OK'});
-						},
-						function(error){
-							notifier.notify({template : error,type:'error'});
-						});
+				notifier.notify({template : 'Sauvegarde OK'});
+				},
+				function(error){
+					notifier.notify({template : error,type:'error'});
+				});
 		}
 
 		function init(){

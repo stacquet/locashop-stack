@@ -4,6 +4,9 @@ var HttpStatus	= require('http-status-codes');
 var winston		= require('winston');
 var formidable 		= require('formidable');
 var fs   = require('fs-extra');
+var crypto = require('crypto');
+
+Promise.promisifyAll(crypto);
 Promise.promisifyAll(fs);
 Promise.promisifyAll(formidable);
 var util = require('util');
@@ -37,17 +40,30 @@ module.exports = {
 					var that = this;
 					var new_location = 'c:/locashop/storage/';
 					models.sequelize.transaction()
+						.then(function (t){
+							this.t=t;   
+							var fd = fs.createReadStream( files[1].file.path);
+							this.md5 = crypto.createHash('md5');
+							hash.setEncoding('hex');
+
+							fd.onAsync('end').then(function() {
+								hash.end();
+								console.log('mon md5 : '+hash.read()); // the desired sha1sum
+							});
+							// read all file and pipe it (write it) to the hash object
+							fd.pipe(hash);
+						})
 						.then(function (t) {
-							winston.log('info','photo : insertion en base');
-							this.t=t;
+							winston.log('info','photo : insertion en base avec le md5 : '+this.md5);
 							return models.Photo.build({
 								titre 				: 'profil_'+that.req_user.id_user,
 								description 		: 'photo de profil du user '+that.req_user.id_user,
-								chemin_physique		: new_location
-							}).save()})
+								chemin_physique		: new_location,
+								md5					: that.md5
+							}).save({transaction:this.t})})
 						.then(function(photo){
 							winston.log('info','photo : copie sur disque dur');
-							this.id_photo=photo.dataValues.id_photo;
+							that.id_photo=photo.dataValues.id_photo;
 							var temp_path = files[1].file.path;
 							/* The file name of the uploaded file */
 							var file_name = photo.dataValues.uuid+".jpg";
@@ -87,14 +103,4 @@ module.exports = {
 						res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 					});*/
 	}
-		 
-		        /*fs.copy(temp_path, new_location + file_name, function(err) {  
-		            if (err) {
-		                console.error(err);
-						res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
-		            } else {
-		                console.log("success!");
-		                res.status(HttpStatus.OK).send();
-			            }
-			        });*/				  
 }
