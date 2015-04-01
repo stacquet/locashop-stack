@@ -1,7 +1,8 @@
 node_modules/
 storage/
 public/libs/
-logs/*
+secret/
+logs/
 npm-debug.log
 .bowerrc
 test/selenium/test.log
