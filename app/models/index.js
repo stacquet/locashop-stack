@@ -6,7 +6,7 @@ var Sequelize = require("sequelize");
 var winston   = require('winston');
 var env       = process.env.NODE_ENV || "development";
 var config    = require(__dirname + '/../../config/database.json')[env];
-var sequelize = new Sequelize(config.database, config.user, config.password, {logging : winston.info});
+var sequelize = new Sequelize(config.database, config.user, config.password, {logging : winston.debug});
 var db        = {};
 
 fs

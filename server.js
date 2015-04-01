@@ -29,10 +29,25 @@ var options = {
 var sessionStore = new SessionStore(options);
 
 // configuration ===========================================
-winston.add(winston.transports.File, { filename: 'logs/locashop.log' ,prettyPrint:true});
+/*var logger = new (winston.Logger)({
+  transports: [
+    new (winston.transports.File)({
+      name: 'info-file',
+      filename: 'logs/locashop.log',
+      level: 'info'
+    }),
+    new (winston.transports.File)({
+      name: 'verbose-file',
+      filename: 'logs/sequelize.log',
+      level: 'verbose'
+    })
+  ]
+});*/
+//winston.add(winston.transports.File, { filename: 'logs/verbose.log' ,prettyPrint:true,level:winston.verbose});
+winston.add(winston.transports.File, { filename: 'logs/debug.log' ,prettyPrint:true});
 //winston.remove(winston.transports.Console);
 winston.log('info','Hello distributed log files!');
-
+winston.level = 'debug';
 /*initDatabase.init(function(err,data){
 	console.log('mig terminée');
 });*/

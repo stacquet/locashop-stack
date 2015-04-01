@@ -1,5 +1,5 @@
 {
   "verbose": true,
-  "watch" : ["app/*","config/*"],
+  "watch" : ["app/*","config/*","server.js"],
   "ignore": ["public/*"]
 }

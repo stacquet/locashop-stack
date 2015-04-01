@@ -12,12 +12,12 @@ ON DUPLICATE KEY UPDATE
 	user_modif=VALUES(user_modif);
 
 
-INSERT INTO `photo`(`id_photo`,`uuid`,`titre`,`description`,`chemin_physique`)
-VALUES(1,uuid(),'profil_1','','c:/locashop/storage/');
+/*INSERT INTO `photo`(`id_photo`,`uuid`,`titre`,`description`,`chemin_physique`)
+VALUES(1,uuid(),'profil_1','','c:/locashop/storage/');*/
 
 INSERT INTO user (id_user,id_profil,id_photo,id_adresse,email,mobile,nom,prenom,password)
 VALUES 
-	(1,'P_PRODUCTEUR',1,NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$z/0YmnwaAjmkhnNUU1pZPeWO5NvbqnOBMPnBcVgeDJpd8RGKsEkTS')
+	(1,'P_PRODUCTEUR',NULL,NULL,'sylvain.tacquet@gmail.com',NULL,NULL,NULL,'$2a$10$z/0YmnwaAjmkhnNUU1pZPeWO5NvbqnOBMPnBcVgeDJpd8RGKsEkTS')
 ;
 
 INSERT INTO producteur (id_user) VALUES (1);
