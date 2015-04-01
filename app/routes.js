@@ -17,5 +17,5 @@ module.exports = function (app,passport) {
 	/*app.get('/api/:model/:id'										, controllers.model.get); */
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.get('*'														, controllers.home.home);
-	app.post('/upload/media'											, controllers.upload.media);
+	app.post('/upload/media'										, controllers.upload.media);
 };
