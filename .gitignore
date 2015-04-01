@@ -1,7 +1,7 @@
 node_modules/
 storage/
 public/libs/
-logs/locashop.log
+logs/*
 npm-debug.log
 .bowerrc
 test/selenium/test.log
