@@ -5,7 +5,7 @@ var async     = require('async')
 var path      = require("path");
 var Sequelize = require("sequelize");
 var env       = process.env.NODE_ENV || "development";
-var config    = require(__dirname + '/../../config/database.json')[env];
+var config    = require(__dirname + '/../../secret/config');
 var sequelize = new Sequelize(config.database, config.user, config.password, {
   dialectOptions: {
     multipleStatements: true

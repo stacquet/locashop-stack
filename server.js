@@ -1,6 +1,7 @@
 // server.js
 
 // modules =================================================
+var env       		= process.env.NODE_ENV || "development";
 var express       	= require('express');
 var favicon			= require('serve-favicon');
 var app           	= express();
@@ -12,51 +13,30 @@ var session      	= require('express-session');
 var passport 		= require('passport');
 var SessionStore 	= require('express-mysql-session')
 var flash    		= require('connect-flash');
-var async			= require('async');
 var acl				= require('./app/controllers/aclController');
 var slowness		= require('./app/util/slowness');
 var initDatabase	= require('./app/util/initDatabase');
-var winston 		= require('winston');
+var config 			= require('./secret/config');
+var logger			= require('./app/util/logger.js');
+
 
 var options = {
-    host: 'localhost',
-    port: 3306,
-    user: 'locashop',
-    password: 'locashop',
-    database: 'locashop',
+    host: config.db_host,
+    port: config.db_port,
+    user: config.db_user,
+    password: config.db_password,
+    database: config.db_database,
     createDatabaseTable: true
 }
 var sessionStore = new SessionStore(options);
 
-// configuration ===========================================
-/*var logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.File)({
-      name: 'info-file',
-      filename: 'logs/locashop.log',
-      level: 'info'
-    }),
-    new (winston.transports.File)({
-      name: 'verbose-file',
-      filename: 'logs/sequelize.log',
-      level: 'verbose'
-    })
-  ]
-});*/
-//winston.add(winston.transports.File, { filename: 'logs/verbose.log' ,prettyPrint:true,level:winston.verbose});
-winston.add(winston.transports.File, { filename: 'logs/debug.log' ,prettyPrint:true});
-//winston.remove(winston.transports.Console);
-winston.log('info','Hello distributed log files!');
-winston.level = 'debug';
+
+logger.log('info','SERVER STARTUP !');
 /*initDatabase.init(function(err,data){
 	console.log('mig terminée');
 });*/
-// set our port
 var port = process.env.PORT || 3000; 
-  
-// connect to our mongoDB database 
-// (uncomment after you enter in your own credentials in config/db.js)
-// mongoose.connect(db.url); 
+
 
 // get all data/stuff of the body (POST) parameters
 // parse application/json 

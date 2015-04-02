@@ -3,10 +3,9 @@
 var fs        = require("fs");
 var path      = require("path");
 var Sequelize = require("sequelize");
-var winston   = require('winston');
-var env       = process.env.NODE_ENV || "development";
-var config    = require(__dirname + '/../../config/database.json')[env];
-var sequelize = new Sequelize(config.database, config.user, config.password, {logging : winston.debug});
+var logger    = require('../util/logger');
+var config    = require('../../secret/config');
+var sequelize = new Sequelize(config.db_database, config.db_user, config.db_password, {logging : logger.debug});
 var db        = {};
 
 fs

@@ -4,8 +4,9 @@ var fs   			= require('fs-extra');
 var HttpStatus		= require('http-status-codes');
 var models   		= require('../models/');
 var Promise 		= require("bluebird");
-var winston			= require('winston');
+var logger			= require('../util/logger');
 var util 			= require('util');
+var config			= require('../../secret/config');
 
 Promise.promisifyAll(crypto);
 Promise.promisifyAll(fs);
@@ -30,8 +31,9 @@ module.exports = {
 	},
 	save: function (req, res, next) {
 		/* Sauvegarde du profil utilisateur : */
+		logger.log('verbose','userController|save|sauvergarde des informations utilisateurs'); 
 		var form = new formidable.IncomingForm();
-		var photo_storage = 'c:/locashop/storage/';
+		var photo_storage = config.photo_storage;
 		var id_photo; // futur id de la photo si upload
 		var id_photo_old; //id de la photo du user avant pour pouvoir la supprimer
 		var id_photo_old_storage;
@@ -41,10 +43,10 @@ module.exports = {
 		var hash; // objet de hashage de la photo
 		var md5; // md5 de la photo
 		var myT; // Transaction MySQL
-		winston.log('debug','userController|save|démarrage de transaction'); 
+		logger.log('debug','userController|save|démarrage de transaction'); 
 		models.sequelize.transaction()
 		.then(function(t){
-			winston.log('debug','userController|save|recherche du user en base'); 
+			logger.log('debug','userController|save|recherche du user en base'); 
 			myT=t;
 			return models.User.find({	where:	{id_user : req.user.id_user},
 				include: [models.Photo]})
@@ -56,7 +58,7 @@ module.exports = {
 				id_photo_old=user.getDataValue('id_photo');
 				id_photo_old_storage=user.dataValues.Photo.dataValues.uuid;
 				}
-				winston.log('debug','userController|save|parse du formulaire'); 
+				logger.log('debug','userController|save|parse du formulaire'); 
 				return form.parseAsync(req);
 			}
 		})
@@ -65,15 +67,15 @@ module.exports = {
 			req_photo=files[1];
 			/* Si une photo est présente à l'upload on l'enregistre en base puis sur disque */
 			if(files[1].file){
-				winston.log('debug','userController|save|photo présente en upload');
-				winston.log('debug','userController|save|calcul du md5');
+				logger.log('debug','userController|save|photo présente en upload');
+				logger.log('debug','userController|save|calcul du md5');
 				var fd = fs.createReadStream( files[1].file.path);
 				hash = crypto.createHash('md5');
 				hash.setEncoding('hex');
 				fd.pipe(hash);
 				return fd.onAsync('end')
 				.then(function() {
-					winston.log('debug','userController|save|insertion de la photo en base');
+					logger.log('debug','userController|save|insertion de la photo en base');
 					hash.end();
 					md5=hash.read();
 					return models.Photo.build({
@@ -83,7 +85,7 @@ module.exports = {
 						md5					: md5
 					}).save({transaction:myT})})
 				.then(function(photo){
-					winston.log('debug','userController|save|copie de la photo sur disque dur');
+					logger.log('debug','userController|save|copie de la photo sur disque dur');
 					id_photo=photo.dataValues.id_photo;
 					var temp_path = files[1].file.path;
 					var file_name = photo.dataValues.uuid+".jpg";
@@ -94,30 +96,35 @@ module.exports = {
 		.then(function(){
 			db_user.set(req_user);
 			if(id_photo) db_user.setDataValue('id_photo',id_photo);
-			winston.log('debug','userController|save|save user in database : ');
+			logger.log('debug','userController|save|save user in database : ');
 			return db_user.save({transaction:myT})
 		})
 		.then(function(){
-			winston.log('debug','userController|save|on retrouve l\'ancienne photo en db');
+			logger.log('debug','userController|save|on retrouve l\'ancienne photo en db');
 			return models.Photo.find({	where:	{id_photo : id_photo_old}})
 		})
 		.then(function(photo){
-			winston.log('debug','userController|save|on supprime l\'ancienne photo en db');
-			return photo.destroy({transaction:myT})
+			if(photo){
+				logger.log('debug','userController|save|on supprime l\'ancienne photo en db');
+				return photo.destroy({transaction:myT})
+				.then(function(){
+					logger.log('debug','userController|save|on supprime l\'ancienne photo du disque');
+					return fs.unlinkAsync(photo_storage+'/'+id_photo_old_storage+'.jpg');
+				})
+			}
+			else{
+				logger.log('debug','userController|save|pas d\'ancienne photo à supprimer');				
+			}
 		})
 		.then(function(){
-			winston.log('debug','userController|save|on supprime l\'ancienne photo du disque');
-			return fs.unlinkAsync(photo_storage+'/'+id_photo_old_storage+'.jpg');
-		})
-		.then(function(){
-			winston.log('debug','user : commit transaction');
+			logger.log('debug','user : commit transaction');
 			myT.commit();
 			res.status(HttpStatus.OK).send()
 		})
-		/*.catch(function(err){
+		.catch(function(err){
 			myT.rollback();
-			winston.log('error','error during user save : '+err);
+			logger.log('error','error during user save : '+err);
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
-		})*/;
+		});
 		}
 	}

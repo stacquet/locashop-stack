@@ -1,7 +1,7 @@
 // config/passport.js
 // load all the things we need
 var bcrypt 				= require('bcrypt-nodejs');
-var configAuth 			= require('./auth');
+var configAuth 			= require('../secret/auth');
 var FacebookStrategy 	= require('passport-facebook').Strategy;
 var LocalStrategy 		= require('passport-local').Strategy;
 var models   			= require('../app/models/');
