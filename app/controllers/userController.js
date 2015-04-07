@@ -34,6 +34,7 @@ module.exports = {
 		logger.log('verbose','userController|save|sauvergarde des informations utilisateurs'); 
 		var form = new formidable.IncomingForm();
 		var photo_storage = config.photo_storage;
+		var chemin_webapp = config.chemin_webapp;
 		var id_photo; // futur id de la photo si upload
 		var id_photo_old; //id de la photo du user avant pour pouvoir la supprimer
 		var id_photo_old_storage;
@@ -82,6 +83,7 @@ module.exports = {
 						titre 				: 'profil_'+req_user.id_user,
 						description 		: 'photo de profil du user '+req_user.id_user,
 						chemin_physique		: photo_storage,
+						chemin_webapp		: chemin_webapp,
 						md5					: md5
 					}).save({transaction:myT})})
 				.then(function(photo){

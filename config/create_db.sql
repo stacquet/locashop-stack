@@ -22,6 +22,7 @@ CREATE TABLE photo (
   titre VARCHAR(45) NULL,
   description VARCHAR(512) NULL,
   chemin_physique VARCHAR(512) NULL,
+  chemin_webapp VARCHAR(512) NULL,
   md5	VARCHAR(256) NULL,
   createdAt DATETIME NULL,
   updatedAt DATETIME NULL,

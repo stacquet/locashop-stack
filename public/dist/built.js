@@ -580,6 +580,7 @@ function modal(){
 			vm.busy = profilService.getProfil()
 				.success(function(data, status, headers, config){
 					vm.userProfil=data;
+					vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
