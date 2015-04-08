@@ -11,10 +11,9 @@ module.exports = function (app,passport) {
 	app.get('/api/home/logout'										, controllers.auth.logout);
 	app.get('/auth/facebook'										, controllers.auth.facebook);
 	app.get('/auth/facebook/callback'								, controllers.auth.facebook_callback); 
-	app.get('/api/profil'											, controllers.user.get); 
-	app.post('/api/user/profil/save'								, controllers.user.save);
+	app.get('/api/profil/:id'										, controllers.user.get); 
+	app.post('/api/profil/:id'										, controllers.user.save); 
 	app.post('/api/user/adresse/save'								, controllers.user.save); 
-	/*app.get('/api/:model/:id'										, controllers.model.get); */
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.get('*'														, controllers.home.home);
 };

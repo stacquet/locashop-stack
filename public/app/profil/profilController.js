@@ -5,9 +5,9 @@
         .module('locashopApp')
         .controller('profilController', profilController);
 
-    profilController.$inject = ['$timeout','$scope','$upload','$q','notifier','profilService','mapsService'];
+    profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
 
-	function profilController($timeout,$scope,$upload,$q,notifier,profilService,mapsService){
+	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
 		var vm = this;	
 
 		vm.uploadedImage='';
@@ -49,10 +49,10 @@
 		}
 
 		function init(){
-			vm.busy = profilService.getProfil()
-				.success(function(data, status, headers, config){
+			vm.busy = profilService.get({id : $stateParams.id_profil}).$promise
+				.then(function(data, status, headers, config){
 					vm.userProfil=data;
-					vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					if(data.Photo) vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
@@ -60,11 +60,10 @@
 			var deferred = $q.defer();
 			var file = vm.profilImageChanged?dataURItoBlob(vm.profilImage):false;
 			var dataForm = 	{
-				url: '/api/user/profil/save',
+				url: '/api/profil/'+$stateParams.id_profil,
 	            fields: {'userProfil' : vm.userProfil},
 	            file: file
 			}
-			console.log(file);
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {

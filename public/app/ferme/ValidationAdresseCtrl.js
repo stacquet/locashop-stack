@@ -19,7 +19,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		'         </div>'+
 		'</div>');
 }])
-.controller('WindowCtrl', function ($scope, fermeService,mapsService) {
+.controller('WindowCtrl', function ($scope, mapsService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
 		$scope.place = param;

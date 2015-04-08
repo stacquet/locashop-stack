@@ -97,7 +97,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table ref_user
 -- -----------------------------------------------------
-CREATE TABLE user (
+CREATE TABLE hab_user (
   id_user INT NOT NULL AUTO_INCREMENT,
   id_profil VARCHAR(45) NOT NULL,
   statut TINYINT NULL,

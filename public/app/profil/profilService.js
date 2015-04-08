@@ -5,11 +5,14 @@
 		.module('locashopApp')
 		.factory('profilService', profilService);
 	
-	profilService.$inject=['$http'];
+	profilService.$inject=['$http','$resource'];
 
-    function profilService($http){
+    function profilService($http,$resource){
 		
-		var service = {
+		var profil = $resource('/api/profil/:id');
+		
+		return profil;
+		/*var service = {
 			getProfil 	: getProfil,
 			saveProfil	: saveProfil,
 			saveAdresse	: saveAdresse
@@ -28,6 +31,6 @@
         function saveAdresse(data) {
             return $http.post('/api/user/adresse/save',data);
         }
-
+		*/
     }       
 })();

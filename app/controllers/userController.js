@@ -1,6 +1,7 @@
 var crypto 			= require('crypto');
 var formidable 		= require('formidable');
 var fs   			= require('fs-extra');
+var path			= require('path');
 var HttpStatus		= require('http-status-codes');
 var models   		= require('../models/');
 var Promise 		= require("bluebird");
@@ -14,26 +15,22 @@ Promise.promisifyAll(formidable);
 
 module.exports = {
 	get: function (req, res, next) {
-		if(req.user !== undefined){
 			models.User.find(
 			{
-				where:	{id_user : req.user.id_user},
+				where:	{id_user : req.params.id},
 				include: [models.Photo]
 			}).then(function(user){
-				res.send(user);
+				res.status(HttpStatus.OK).send(user);
 			}).catch(function(err){
-				console.log(err);
+				logger.log('error','userController|get| '+err);
+				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 			});
-		}
-		else{
-			res.send();
-		}
 	},
 	save: function (req, res, next) {
 		/* Sauvegarde du profil utilisateur : */
 		logger.log('verbose','userController|save|sauvergarde des informations utilisateurs'); 
 		var form = new formidable.IncomingForm();
-		var photo_storage = config.photo_storage;
+		var chemin_physique = config.chemin_physique;
 		var chemin_webapp = config.chemin_webapp;
 		var id_photo; // futur id de la photo si upload
 		var id_photo_old; //id de la photo du user avant pour pouvoir la supprimer
@@ -49,7 +46,7 @@ module.exports = {
 		.then(function(t){
 			logger.log('debug','userController|save|recherche du user en base'); 
 			myT=t;
-			return models.User.find({	where:	{id_user : req.user.id_user},
+			return models.User.find({	where:	{id_user : req.params.id},
 				include: [models.Photo]})
 		})
 		.then(function(user){
@@ -82,7 +79,7 @@ module.exports = {
 					return models.Photo.build({
 						titre 				: 'profil_'+req_user.id_user,
 						description 		: 'photo de profil du user '+req_user.id_user,
-						chemin_physique		: photo_storage,
+						chemin_physique		: chemin_physique,
 						chemin_webapp		: chemin_webapp,
 						md5					: md5
 					}).save({transaction:myT})})
@@ -91,7 +88,7 @@ module.exports = {
 					id_photo=photo.dataValues.id_photo;
 					var temp_path = files[1].file.path;
 					var file_name = photo.dataValues.uuid+".jpg";
-					return fs.copyAsync(temp_path, photo_storage + file_name)
+					return fs.copyAsync(temp_path, path.join(chemin_physique,file_name));
 				})
 			}
 		})			
@@ -102,20 +99,26 @@ module.exports = {
 			return db_user.save({transaction:myT})
 		})
 		.then(function(){
-			logger.log('debug','userController|save|on retrouve l\'ancienne photo en db');
-			return models.Photo.find({	where:	{id_photo : id_photo_old}})
-		})
-		.then(function(photo){
-			if(photo){
-				logger.log('debug','userController|save|on supprime l\'ancienne photo en db');
-				return photo.destroy({transaction:myT})
-				.then(function(){
-					logger.log('debug','userController|save|on supprime l\'ancienne photo du disque');
-					return fs.unlinkAsync(photo_storage+'/'+id_photo_old_storage+'.jpg');
+			if(id_photo){
+				logger.log('debug','userController|save|on retrouve l\'ancienne photo en db');
+				return models.Photo.find({	where:	{id_photo : id_photo_old}})
+				.then(function(photo){
+					if(photo){
+						logger.log('debug','userController|save|on supprime l\'ancienne photo en db');
+						return photo.destroy({transaction:myT})
+						.then(function(){
+							logger.log('debug','userController|save|on recherche l\'ancienne photo sur disque');
+							return fs.ensureFileAsync(path.join(chemin_physique,id_photo_old_storage+'.jpg'));
+						})
+						.then(function(){
+							logger.log('debug','userController|save|on supprime l\'ancienne photo du disque');
+							return fs.unlinkAsync(path.join(chemin_physique,id_photo_old_storage+'.jpg'));
+						})
+					}
+					else{
+						logger.log('debug','userController|save|pas d\'ancienne photo à supprimer');				
+					}
 				})
-			}
-			else{
-				logger.log('debug','userController|save|pas d\'ancienne photo à supprimer');				
 			}
 		})
 		.then(function(){
@@ -125,7 +128,7 @@ module.exports = {
 		})
 		.catch(function(err){
 			myT.rollback();
-			logger.log('error','error during user save : '+err);
+			logger.log('error','error : '+err);
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 		});
 		}

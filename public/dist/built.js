@@ -1,7 +1,7 @@
 angular
 	.module('locashopApp', 
 	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ngImgCrop','ui.router','angularFileUpload',
-	'appRoutes','validationAdresseCtrl','ui.tinymce']);// public/js/appRoutes.js
+	'appRoutes','validationAdresseCtrl','ui.tinymce','ngResource']);// public/js/appRoutes.js
     angular.module('appRoutes', [] ).
 		config(function($stateProvider, $urlRouterProvider) {
 			// For any unmatched url, send to /
@@ -48,83 +48,6 @@ angular
 				
 });
 
-;(function () {
-    'use strict';
-
-    angular
-        .module('locashopApp')
-        .controller('fermeController', fermeController);
-
-    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
-
-	function fermeController($location,notifier,fermeService,mapsService){
-	
-		var vm = this;	
-
-		vm.saveProfil=saveProfil;
-		vm.checkAdresse=checkAdresse;
-
-		init();
-
-		vm.options = {
-		    language: 'en',
-		    allowedContent: true,
-		    entities: false
-		  };
-
-		function checkAdresse(){
-			vm.userProfil.adresse = mapsService.getPosition();
-			console.log(vm.userProfil.adresse);
-			console.log(mapsService.getPosition());
-		}
-	   function saveProfil(){
-			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
-				.success(function(data, status, headers, config){
-					notifier.notify({template : 'Sauvegarde OK'});
-				})
-				.error(function(data, status, headers, config){
-					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-				});
-		}
-
-		function init(){
-			vm.busy = fermeService.getProfil()
-				.success(function(data, status, headers, config){
-					vm.userProfil=data;
-				});
-		}
-	}
-
-
-})();
-;(function () {
-    'use strict';
-	
-	angular	
-		.module('locashopApp')
-		.factory('mapsService',mapsService);
-	
-	//fermeService.$inject=['$http'];
-
-    function mapsService(){
-		
-		var service ={
-			position 		: {},
-			getPosition 	: getPosition,
-			setPosition		: setPosition
-		};
-		
-		return service;
-	
-		function getPosition(){
-			return service.position;
-		}
-
-        function setPosition(data) {
-            service.position = data;
-        }
-    }       
-})();
 ;
 angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps']) 
 .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
@@ -146,7 +69,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		'         </div>'+
 		'</div>');
 }])
-.controller('WindowCtrl', function ($scope, fermeService,mapsService) {
+.controller('WindowCtrl', function ($scope, mapsService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
 		$scope.place = param;
@@ -278,6 +201,83 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 		});
 	}
 ]);;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('fermeController', fermeController);
+
+    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
+
+	function fermeController($location,notifier,fermeService,mapsService){
+	
+		var vm = this;	
+
+		vm.saveProfil=saveProfil;
+		vm.checkAdresse=checkAdresse;
+
+		init();
+
+		vm.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+		function checkAdresse(){
+			vm.userProfil.adresse = mapsService.getPosition();
+			console.log(vm.userProfil.adresse);
+			console.log(mapsService.getPosition());
+		}
+	   function saveProfil(){
+			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
+				.success(function(data, status, headers, config){
+					notifier.notify({template : 'Sauvegarde OK'});
+				})
+				.error(function(data, status, headers, config){
+					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
+				});
+		}
+
+		function init(){
+			vm.busy = fermeService.getProfil()
+				.success(function(data, status, headers, config){
+					vm.userProfil=data;
+				});
+		}
+	}
+
+
+})();
+;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('mapsService',mapsService);
+	
+	//fermeService.$inject=['$http'];
+
+    function mapsService(){
+		
+		var service ={
+			position 		: {},
+			getPosition 	: getPosition,
+			setPosition		: setPosition
+		};
+		
+		return service;
+	
+		function getPosition(){
+			return service.position;
+		}
+
+        function setPosition(data) {
+            service.position = data;
+        }
+    }       
+})();
+;(function () {
     'use strict';
 
     angular
@@ -533,9 +533,9 @@ function modal(){
         .module('locashopApp')
         .controller('profilController', profilController);
 
-    profilController.$inject = ['$timeout','$scope','$upload','$q','notifier','profilService','mapsService'];
+    profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
 
-	function profilController($timeout,$scope,$upload,$q,notifier,profilService,mapsService){
+	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
 		var vm = this;	
 
 		vm.uploadedImage='';
@@ -577,10 +577,10 @@ function modal(){
 		}
 
 		function init(){
-			vm.busy = profilService.getProfil()
-				.success(function(data, status, headers, config){
+			vm.busy = profilService.get({id : $stateParams.id_profil}).$promise
+				.then(function(data, status, headers, config){
 					vm.userProfil=data;
-					vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					if(data.Photo) vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
@@ -588,11 +588,10 @@ function modal(){
 			var deferred = $q.defer();
 			var file = vm.profilImageChanged?dataURItoBlob(vm.profilImage):false;
 			var dataForm = 	{
-				url: '/api/user/profil/save',
+				url: '/api/profil/'+$stateParams.id_profil,
 	            fields: {'userProfil' : vm.userProfil},
 	            file: file
 			}
-			console.log(file);
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {
@@ -646,11 +645,14 @@ function modal(){
 		.module('locashopApp')
 		.factory('profilService', profilService);
 	
-	profilService.$inject=['$http'];
+	profilService.$inject=['$http','$resource'];
 
-    function profilService($http){
+    function profilService($http,$resource){
 		
-		var service = {
+		var profil = $resource('/api/profil/:id');
+		
+		return profil;
+		/*var service = {
 			getProfil 	: getProfil,
 			saveProfil	: saveProfil,
 			saveAdresse	: saveAdresse
@@ -669,6 +671,6 @@ function modal(){
         function saveAdresse(data) {
             return $http.post('/api/user/adresse/save',data);
         }
-
+		*/
     }       
 })();
