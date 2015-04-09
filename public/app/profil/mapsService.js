@@ -5,8 +5,6 @@
 		.module('locashopApp')
 		.factory('mapsService',mapsService);
 	
-	//fermeService.$inject=['$http'];
-
     function mapsService(){
 		
 		var service ={
@@ -14,8 +12,7 @@
 			getPlace 		: getPlace,
 			setPlace		: setPlace
 		};
-		
-		
+			
 		return service;
 	
 		function getPlace(){

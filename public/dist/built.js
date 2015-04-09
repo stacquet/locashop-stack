@@ -1,7 +1,8 @@
 angular
 	.module('locashopApp', 
 	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ngImgCrop','ui.router','angularFileUpload',
-	'appRoutes','validationAdresseCtrl','ui.tinymce','ngResource']);// public/js/appRoutes.js
+	'appRoutes','ui.tinymce','ngResource'])
+	;// public/js/appRoutes.js
     angular.module('appRoutes', [] ).
 		config(function($stateProvider, $urlRouterProvider) {
 			// For any unmatched url, send to /
@@ -53,233 +54,6 @@ angular
 				
 });
 
-;
-angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps']) 
-.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-	GoogleMapApi.configure({
-	// key: 'your api key',
-	v: '3.16',
-	libraries: 'places'
-	}); 
-}])
-.run(['$templateCache', function ($templateCache) {
-	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-	$templateCache.put('window.tpl.html', 
-		'<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">'+
-		'	{{place.name}}'+
-		'	<div class="form-group">'+
-		'            <div class="col-xs-offset-2 ">'+
-		'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
-		'           </div>'+
-		'         </div>'+
-		'</div>');
-}])
-.controller('WindowCtrl', function ($scope, mapsService) {
-	$scope.place = {};
-	$scope.showPlaceDetails = function(param) {
-		$scope.place = param;
-	}
-	$scope.saveAdresse = function(){
-		console.log($scope.place);
-		mapsService.setPlace($scope.place);
-	}
-})
-.controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'
-	, function ($scope, $timeout, $log, $http, GoogleMapApi) {
-		$log.doLog = true
-		GoogleMapApi.then(function(maps) {
-			maps.visualRefresh = true;
-			$scope.defaultBounds = new google.maps.LatLngBounds(
-				new google.maps.LatLng(40.82148, -73.66450),
-				new google.maps.LatLng(40.66541, -74.31715));
-			$scope.map.bounds = {
-				northeast: {
-					latitude:$scope.defaultBounds.getNorthEast().lat(),
-					longitude:$scope.defaultBounds.getNorthEast().lng()
-				},
-				southwest: {
-					latitude:$scope.defaultBounds.getSouthWest().lat(),
-					longitude:-$scope.defaultBounds.getSouthWest().lng()
-				}
-			}
-		$scope.searchbox.options.bounds = new google.maps.LatLngBounds($scope.defaultBounds.getNorthEast(), $scope.defaultBounds.getSouthWest());
-		});
-		angular.extend($scope, {
-			selected: {
-				options: {
-					visible:false
-				},
-				templateurl:'window.tpl.html',
-				templateparameter: {}
-			},
-			map: {
-				control: {},
-				center: {
-					latitude: 47.472955, 
-					longitude: -0.554351
-				},
-				zoom: 10,
-				dragging: false,
-				bounds: {},
-				markers: [],
-				idkey: 'place_id',
-				events: {
-					idle: function (map) {
-					},
-					dragend: function(map) {
-						//update the search box bounds after dragging the map
-						var bounds = map.getBounds();
-						var ne = bounds.getNorthEast();
-						var sw = bounds.getSouthWest();
-						$scope.searchbox.options.bounds = new google.maps.LatLngBounds(sw, ne);
-						//$scope.searchbox.options.visible = true;
-					}
-				}
-			},
-			searchbox: {
-				template:'searchbox.tpl.html',
-				//position:'top-right',
-				position:'top-left',
-				options: {
-					bounds: {}
-				},
-				parentdiv:'searchBoxParent',
-				events: {
-					places_changed: function (searchBox) {
-						places = searchBox.getPlaces()
-						if (places.length == 0) {
-							return;
-						}
-						// For each place, get the icon, place name, and location.
-						newMarkers = [];
-						var bounds = new google.maps.LatLngBounds();
-						for (var i = 0, place; place = places[i]; i++) {
-							// Create a marker for each place.
-							var marker = {
-								id:i,
-								place_id: place.place_id,
-								name: place.name,
-								latitude: place.geometry.location.lat(),
-								longitude: place.geometry.location.lng(),
-								options: {
-								visible:false
-								},
-								templateurl:'window.tpl.html',
-								templateparameter: place
-							};
-							newMarkers.push(marker);
-							bounds.extend(place.geometry.location);
-						}
-						$scope.map.bounds = {
-							northeast: {
-								latitude: bounds.getNorthEast().lat(),
-								longitude: bounds.getNorthEast().lng()
-							},
-							southwest: {
-								latitude: bounds.getSouthWest().lat(),
-								longitude: bounds.getSouthWest().lng()
-							} 
-						}
-						$scope.map.zoom = 14;
-						_.each(newMarkers, function(marker) {
-							marker.closeClick = function() {
-								$scope.selected.options.visible = false;
-								marker.options.visible = false;
-								return $scope.$apply();
-							};
-							marker.onClicked = function() {
-								$scope.selected.options.visible = false;
-								$scope.selected = marker;
-								console.log(marker);
-								$scope.selected.options.visible = true;
-							};
-						}); 
-						$scope.map.markers = newMarkers;
-						//$scope.searchbox.options.visible = false;
-					}
-				}
-			}
-		});
-	}
-]);;(function () {
-    'use strict';
-
-    angular
-        .module('locashopApp')
-        .controller('fermeController', fermeController);
-
-    fermeController.$inject = ['$location','notifier','fermeService','mapsService'];
-
-	function fermeController($location,notifier,fermeService,mapsService){
-	
-		var vm = this;	
-
-		vm.saveProfil=saveProfil;
-		vm.checkAdresse=checkAdresse;
-
-		init();
-
-		vm.options = {
-		    language: 'en',
-		    allowedContent: true,
-		    entities: false
-		  };
-
-		function checkAdresse(){
-			vm.userProfil.adresse = mapsService.getPosition();
-			console.log(vm.userProfil.adresse);
-			console.log(mapsService.getPosition());
-		}
-	   function saveProfil(){
-			vm.busy = fermeService.saveProfil({userProfil : vm.userProfil})
-				.success(function(data, status, headers, config){
-					notifier.notify({template : 'Sauvegarde OK'});
-				})
-				.error(function(data, status, headers, config){
-					notifier.notify({template : 'Erreur à la savegarde',type:'error'});
-				});
-		}
-
-		function init(){
-			vm.busy = fermeService.getProfil()
-				.success(function(data, status, headers, config){
-					vm.userProfil=data;
-				});
-		}
-	}
-
-
-})();
-;(function () {
-    'use strict';
-	
-	angular	
-		.module('locashopApp')
-		.factory('mapsService',mapsService);
-	
-	//fermeService.$inject=['$http'];
-
-    function mapsService(){
-		
-		var service ={
-			place 			: {},
-			getPlace 		: getPlace,
-			setPlace		: setPlace
-		};
-		
-		
-		return service;
-	
-		function getPlace(){
-			return service.place;
-		}
-
-        function setPlace(data) {
-            service.place = data;
-			console.log('MAJ Position : '+service.place);
-        }
-    }       
-})();
 ;(function () {
     'use strict';
 
@@ -471,6 +245,203 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 
         function emailVerification(){
         	return $http.get('/api/inscription/emailVerification')
+        }
+    }       
+})();
+;
+(function () {
+    'use strict';
+
+/*angular.module('locashopApp')
+.controller('WindowCtrl', WindowCtrl);
+
+WindowCtrl.$inject = ['$scope'];
+
+function WindowCtrl($scope, mapsService) {
+	$scope.place = {};
+	$scope.showPlaceDetails = function(param) {
+		$scope.place = param;
+	}
+	$scope.saveAdresse = function(){
+		console.log($scope.place);
+		mapsService.setPlace($scope.place);
+	}
+}*/
+
+angular.module('locashopApp')
+.controller('SearchBoxController', SearchBoxController)
+.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+		GoogleMapApi.configure({
+		// key: 'your api key',
+		v: '3.16',
+		libraries: 'places'
+		}); 
+	}])
+	.run(['$templateCache', function ($templateCache) {
+		console.log('rurnnnnnnnnn');
+		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
+		$templateCache.put('window.tpl.html', 
+			'<div ng-init="showPlaceDetails(parameter)">'+
+			'	{{place.name}}'+
+			'	<div class="form-group">'+
+			'            <div class="col-xs-offset-2 ">'+
+			'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
+			'           </div>'+
+			'         </div>'+
+			'</div>');
+	}]);
+	
+SearchBoxController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'];
+
+function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
+		$scope.place = {};
+		$scope.showPlaceDetails = function(param) {
+			$scope.place = param;
+		}
+		$scope.saveAdresse = function(){
+			console.log($scope.place);
+			mapsService.setPlace($scope.place);
+		}
+		$log.doLog = true
+		GoogleMapApi.then(function(maps) {
+			maps.visualRefresh = true;
+			$scope.defaultBounds = new google.maps.LatLngBounds(
+				new google.maps.LatLng(40.82148, -73.66450),
+				new google.maps.LatLng(40.66541, -74.31715));
+			$scope.map.bounds = {
+				northeast: {
+					latitude:$scope.defaultBounds.getNorthEast().lat(),
+					longitude:$scope.defaultBounds.getNorthEast().lng()
+				},
+				southwest: {
+					latitude:$scope.defaultBounds.getSouthWest().lat(),
+					longitude:-$scope.defaultBounds.getSouthWest().lng()
+				}
+			}
+		$scope.searchbox.options.bounds = new google.maps.LatLngBounds($scope.defaultBounds.getNorthEast(), $scope.defaultBounds.getSouthWest());
+		});
+		angular.extend($scope, {
+			selected: {
+				options: {
+					visible:false
+				},
+				templateurl:'window.tpl.html',
+				templateparameter: {}
+			},
+			map: {
+				control: {},
+				center: {
+					latitude: 47.472955, 
+					longitude: -0.554351
+				},
+				zoom: 10,
+				dragging: false,
+				bounds: {},
+				markers: [],
+				idkey: 'place_id',
+				events: {
+					idle: function (map) {
+					},
+					dragend: function(map) {
+						//update the search box bounds after dragging the map
+						var bounds = map.getBounds();
+						var ne = bounds.getNorthEast();
+						var sw = bounds.getSouthWest();
+						$scope.searchbox.options.bounds = new google.maps.LatLngBounds(sw, ne);
+						//$scope.searchbox.options.visible = true;
+					}
+				}
+			},
+			searchbox: {
+				template:'searchbox.tpl.html',
+				//position:'top-right',
+				position:'top-left',
+				options: {
+					bounds: {}
+				},
+				parentdiv:'searchBoxParent',
+				events: {
+					places_changed: function (searchBox) {
+						places = searchBox.getPlaces()
+						if (places.length == 0) {
+							return;
+						}
+						// For each place, get the icon, place name, and location.
+						newMarkers = [];
+						var bounds = new google.maps.LatLngBounds();
+						for (var i = 0, place; place = places[i]; i++) {
+							// Create a marker for each place.
+							var marker = {
+								id:i,
+								place_id: place.place_id,
+								name: place.name,
+								latitude: place.geometry.location.lat(),
+								longitude: place.geometry.location.lng(),
+								options: {
+								visible:false
+								},
+								templateurl:'window.tpl.html',
+								templateparameter: place
+							};
+							newMarkers.push(marker);
+							bounds.extend(place.geometry.location);
+						}
+						$scope.map.bounds = {
+							northeast: {
+								latitude: bounds.getNorthEast().lat(),
+								longitude: bounds.getNorthEast().lng()
+							},
+							southwest: {
+								latitude: bounds.getSouthWest().lat(),
+								longitude: bounds.getSouthWest().lng()
+							} 
+						}
+						$scope.map.zoom = 14;
+						_.each(newMarkers, function(marker) {
+							marker.closeClick = function() {
+								$scope.selected.options.visible = false;
+								marker.options.visible = false;
+								return $scope.$apply();
+							};
+							marker.onClicked = function() {
+								$scope.selected.options.visible = false;
+								$scope.selected = marker;
+								console.log(marker);
+								$scope.selected.options.visible = true;
+							};
+						}); 
+						$scope.map.markers = newMarkers;
+						//$scope.searchbox.options.visible = false;
+					}
+				}
+			}
+		});
+	}
+
+})();;(function () {
+    'use strict';
+	
+	angular	
+		.module('locashopApp')
+		.factory('mapsService',mapsService);
+	
+    function mapsService(){
+		
+		var service ={
+			place 			: {},
+			getPlace 		: getPlace,
+			setPlace		: setPlace
+		};
+			
+		return service;
+	
+		function getPlace(){
+			return service.place;
+		}
+
+        function setPlace(data) {
+            service.place = data;
+			console.log('MAJ Position : '+service.place);
         }
     }       
 })();

@@ -1,24 +1,5 @@
 
 angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps']) 
-.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-	GoogleMapApi.configure({
-	// key: 'your api key',
-	v: '3.16',
-	libraries: 'places'
-	}); 
-}])
-.run(['$templateCache', function ($templateCache) {
-	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-	$templateCache.put('window.tpl.html', 
-		'<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">'+
-		'	{{place.name}}'+
-		'	<div class="form-group">'+
-		'            <div class="col-xs-offset-2 ">'+
-		'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
-		'           </div>'+
-		'         </div>'+
-		'</div>');
-}])
 .controller('WindowCtrl', function ($scope, mapsService) {
 	$scope.place = {};
 	$scope.showPlaceDetails = function(param) {
@@ -146,4 +127,24 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 			}
 		});
 	}
-]);
+])
+.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+	GoogleMapApi.configure({
+	// key: 'your api key',
+	v: '3.16',
+	libraries: 'places'
+	}); 
+}])
+.run(['$templateCache', function ($templateCache) {
+	console.log('rurnnnnnnnnn');
+	$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
+	$templateCache.put('window.tpl.html', 
+		'<div ng-controller="WindowCtrl" ng-init="showPlaceDetails(parameter)">'+
+		'	{{place.name}}'+
+		'	<div class="form-group">'+
+		'            <div class="col-xs-offset-2 ">'+
+		'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
+		'           </div>'+
+		'         </div>'+
+		'</div>');
+}]);
