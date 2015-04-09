@@ -37,9 +37,14 @@
 						url : '/infos',
 						templateUrl: 'app/profil/profilInfos.html'
 					})
-					.state('profil.coordonnees', {
-						url : '/coordonnees',
-						templateUrl: 'app/profil/profilCoordonnees.html'
+					.state('profil.adresse', {
+						url : '/adresse',
+						templateUrl: 'app/profil/profilAdresse.html',
+						controller : 'SearchBoxController'
+					})
+					.state('profil.mobile', {
+						url : '/mobile',
+						templateUrl: 'app/profil/profilMobile.html'
 					})
 				;
 				

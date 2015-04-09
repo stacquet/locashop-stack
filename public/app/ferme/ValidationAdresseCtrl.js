@@ -26,11 +26,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 	}
 	$scope.saveAdresse = function(){
 		console.log($scope.place);
-		var adresse = $scope.place.geometry.location;
-		mapsService.setPosition(adresse);
-			/*.success(function(data, status, headers, config){
-				console.log(data);
-			});*/
+		mapsService.setPlace($scope.place);
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'

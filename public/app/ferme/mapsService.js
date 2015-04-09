@@ -10,19 +10,21 @@
     function mapsService(){
 		
 		var service ={
-			position 		: {},
-			getPosition 	: getPosition,
-			setPosition		: setPosition
+			place 			: {},
+			getPlace 		: getPlace,
+			setPlace		: setPlace
 		};
+		
 		
 		return service;
 	
-		function getPosition(){
-			return service.position;
+		function getPlace(){
+			return service.place;
 		}
 
-        function setPosition(data) {
-            service.position = data;
+        function setPlace(data) {
+            service.place = data;
+			console.log('MAJ Position : '+service.place);
         }
     }       
 })();

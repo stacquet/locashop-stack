@@ -1,47 +1,47 @@
-<div class="row">
-        <form class="form-horizontal encadrement_leger" name="information_personnelle">
-			   <legend>Mes informations personnelles</legend>
-          <div class="form-group">
-            <label for="email" class=" col-xs-2 control-label">Email</label>
-            <div class="col-xs-10">
-              <p class="form-control-static">{{vm.userProfil.email}}</p>
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label for="text" class="col-xs-2 control-label">Nom</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="nom" ng-model="vm.userProfil.nom" placeholder="Nom">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="prenom" class="col-xs-2 control-label">Prénom</label>
-            <div class=" col-xs-10">
-              <input type="text" class="form-control" id="prenom" ng-model="vm.userProfil.prenom" placeholder="Prénom">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="age" class="col-xs-2 control-label">Age</label>
-            <div class="col-xs-10">
-              <input type="text" class="form-control" id="age" ng-model="vm.userProfil.age" placeholder="Age">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="image" class="col-xs-2 control-label">Photo de profil</label>
-            <div class="col-xs-10" ng-show="!vm.profilImage">
-                <div class="btn btn-sm btn-success" ng-file-select ng-model="vm.files" >Ajouter</div>
-            </div>
-            <div class="col-xs-10" ng-show="vm.profilImage">
-              <img class="image-arrondie" ng-src="{{vm.profilImage}}" />
-               <div class="btn btn-sm btn-success" ng-file-select ng-model="vm.files" >Modifier</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-offset-8 ">
-              <a ui-sref="profil.coordonnees" id="adresseButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Enregister et poursuivre <span class="glyphicon glyphicon-floppy-save"></span></a>
-            </div>  
-          </div>
-       </form>  
+        <form class="form-horizontal encadrement_leger" name="information_personnelle">
+			<legend>Mes informations personnelles</legend>
+			<div class="form-group">
+				<label for="email" class=" col-xs-2 control-label">Email</label>
+				<div class="col-xs-10">
+					<p class="form-control-static">{{vm.userProfil.email}}</p>
+				</div>
+			</div>
+            
+			<div class="form-group">
+				<label for="text" class="col-xs-2 control-label">Nom</label>
+				<div class="col-xs-10">
+					<input type="text" class="form-control" id="nom" ng-model="vm.userProfil.nom" placeholder="Nom">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="prenom" class="col-xs-2 control-label">Prénom</label>
+				<div class=" col-xs-10">
+					<input type="text" class="form-control" id="prenom" ng-model="vm.userProfil.prenom" placeholder="Prénom">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="age" class="col-xs-2 control-label">Age</label>
+				<div class="col-xs-10">
+					<input type="text" class="form-control" id="age" ng-model="vm.userProfil.age" placeholder="Age">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="image" class="col-xs-2 control-label">Photo de profil</label>
+				<div class="col-xs-10" ng-show="!vm.profilImage">
+					<div class="btn btn-sm btn-success" ng-file-select ng-model="vm.files" >Ajouter</div>
+					</div>
+					<div class="col-xs-10" ng-show="vm.profilImage">
+						<img class="image-arrondie" ng-src="{{vm.profilImage}}" />
+					<div class="btn btn-sm btn-success" ng-file-select ng-model="vm.files" >Modifier</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-xs-offset-9 col-xs-3 ">
+					<a ui-sref="profil.adresse" id="adresseButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+				</div>  
+			</div>
+		</form>
         <!-- Button trigger modal -->		
 		<modal title="Login form" visible="vm.showModal">
 			<form role="form">

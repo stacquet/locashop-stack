@@ -1,0 +1,26 @@
+<div class="form-horizontal spacer" >
+
+	<div class="form-group" >
+		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
+		 <div class=" col-xs-10" id="searchBoxParent" ng-model="vm.userProfil.adresse"></div>
+	</div>
+	<div>
+	  <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"
+	  bounds="map.bounds" events="map.events" options="map.options"
+	  pan="true"  control="map.control">
+		 <ui-gmap-search-box options="searchbox.options" template="searchbox.template" events="searchbox.events" parentdiv="searchbox.parentdiv"></ui-gmap-search-box>
+		 <ui-gmap-markers idkey="map.idkey" models="map.markers" coords="'self'" icon="'icon'"
+		   click="'onClicked'">
+		 </ui-gmap-markers>
+		 <ui-gmap-window coords="selected" idkey="selected.place_id" templateurl="selected.templateurl"
+		   templateparameter="selected.templateparameter" options="selected.options"
+		   closeClick='selected.closeClick()' ng-cloak>
+		 </ui-gmap-window>
+	  </ui-gmap-google-map>
+	</div>
+	<div class="form-group">
+		<div class="col-xs-offset-9 col-xs-3">
+			<a ui-sref="profil.mobile" id="adresseButton" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+		</div>  
+	</div>
+</div>

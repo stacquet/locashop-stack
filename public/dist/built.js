@@ -40,9 +40,14 @@ angular
 						url : '/infos',
 						templateUrl: 'app/profil/profilInfos.html'
 					})
-					.state('profil.coordonnees', {
-						url : '/coordonnees',
-						templateUrl: 'app/profil/profilCoordonnees.html'
+					.state('profil.adresse', {
+						url : '/adresse',
+						templateUrl: 'app/profil/profilAdresse.html',
+						controller : 'SearchBoxController'
+					})
+					.state('profil.mobile', {
+						url : '/mobile',
+						templateUrl: 'app/profil/profilMobile.html'
 					})
 				;
 				
@@ -76,11 +81,7 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 	}
 	$scope.saveAdresse = function(){
 		console.log($scope.place);
-		var adresse = $scope.place.geometry.location;
-		mapsService.setPosition(adresse);
-			/*.success(function(data, status, headers, config){
-				console.log(data);
-			});*/
+		mapsService.setPlace($scope.place);
 	}
 })
 .controller("SearchBoxController",['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'
@@ -261,19 +262,21 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
     function mapsService(){
 		
 		var service ={
-			position 		: {},
-			getPosition 	: getPosition,
-			setPosition		: setPosition
+			place 			: {},
+			getPlace 		: getPlace,
+			setPlace		: setPlace
 		};
+		
 		
 		return service;
 	
-		function getPosition(){
-			return service.position;
+		function getPlace(){
+			return service.place;
 		}
 
-        function setPosition(data) {
-            service.position = data;
+        function setPlace(data) {
+            service.place = data;
+			console.log('MAJ Position : '+service.place);
         }
     }       
 })();
