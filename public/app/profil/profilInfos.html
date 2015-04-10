@@ -38,11 +38,11 @@
 			</div>
 			<div class="form-group">
 				<div class="col-xs-offset-10 col-xs-2">
-					<a ui-sref="profil.adresse" id="adresseButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+					<a ui-sref="profil.adresse" id="profilButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
 				</div>  
 			</div>
 		</form>
-        <!-- Button trigger modal -->		
+		<!-- modal pour choisir et tailler la photo -->
 		<modal title="Login form" visible="vm.showModal">
 			<form role="form">
 			  <div class="cropArea"><img-crop image="vm.uploadedImage" result-image="vm.croppedImage"></img-crop></div>

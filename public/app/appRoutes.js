@@ -40,7 +40,7 @@
 					.state('profil.adresse', {
 						url : '/adresse',
 						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'SearchBoxController'
+						controller : 'MapsController'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',

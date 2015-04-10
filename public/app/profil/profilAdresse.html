@@ -2,7 +2,7 @@
 
 	<div class="form-group" >
 		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
-		 <div class=" col-xs-10" id="searchBoxParent" ng-model="vm.userProfil.adresse"></div>
+		 <div class=" col-xs-10" id="MapsControllerParent"></div>
 	</div>
 	<div>
 	  <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"
@@ -23,4 +23,26 @@
 			<a ui-sref="profil.mobile" id="mobileButton" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
 		</div>  
 	</div>
+	<div class="form-group">
+		<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
+		<div class="col-xs-10">
+			<p class="form-control-static">{{vm.userProfil.adresse.formatted_address}}</p>
+		</div>
+	</div>
+	<!-- modal pour valider son adresse -->
+	<modal title="Votre adresse" visible="showModal">
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label for="email" class=" col-xs-6 control-label">Votre adresse</label>
+				<div class="col-xs-6">
+					<p class="form-control-static">{{place.formatted_address}}</p>
+				</div>
+			</div>
+			<div class="form-group">
+		            <div class="col-xs-offset-5 ">
+		              <a ui-sref="profil.mobile" id="adresseButton" ng-click="saveAdresse()" class="btn btn-success">J'habite ici ! </a>
+		            </div>
+		   </div>
+		</div>
+	</modal>
 </div>

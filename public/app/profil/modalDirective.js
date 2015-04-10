@@ -38,16 +38,18 @@ function modal(){
 		
 		$(element).on('shown.bs.modal', function(){
 		  scope.$apply(function(scope){
-			//scope.$parent[attrs.visible] = true;
-			scope.vm['showModal']=true;
+			console.log(scope);
+			scope.$parent[attrs.visible] = true;
+			//scope.vm['showModal']=true;
 			
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
 		  scope.$apply(function(scope){
-			//scope.$parent[attrs.visible] = false;
-			scope.vm['showModal']=false;
+			console.log(scope);
+			scope.$parent[attrs.visible] = false;
+			//scope.vm['showModal']=false;
 		  });
 		});
 		

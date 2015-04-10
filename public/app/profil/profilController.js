@@ -9,7 +9,6 @@
 
 	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
 		var vm = this;	
-
 		vm.uploadedImage='';
         vm.croppedImage='';
         vm.profilImage='';
@@ -95,6 +94,11 @@
     	$scope.$watch('vm.files',function(){
           vm.crop();
         });
+		
+		$scope.$on('MAJ_ADRESSE', function() {
+			console.log('Evénément reçu');
+			vm.userProfil.adresse = mapsService.getPlace();
+		});
 
 		function dataURItoBlob(dataURI) {
 			var binary = atob(dataURI.split(',')[1]);

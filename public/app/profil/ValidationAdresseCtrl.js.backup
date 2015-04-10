@@ -116,7 +116,6 @@ angular.module("validationAdresseCtrl", ['uiGmapgoogle-maps'])
 							marker.onClicked = function() {
 								$scope.selected.options.visible = false;
 								$scope.selected = marker;
-								console.log(marker);
 								$scope.selected.options.visible = true;
 							};
 						}); 

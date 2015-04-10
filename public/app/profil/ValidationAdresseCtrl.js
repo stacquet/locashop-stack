@@ -1,57 +1,41 @@
-
 (function () {
     'use strict';
 
-/*angular.module('locashopApp')
-.controller('WindowCtrl', WindowCtrl);
-
-WindowCtrl.$inject = ['$scope'];
-
-function WindowCtrl($scope, mapsService) {
-	$scope.place = {};
-	$scope.showPlaceDetails = function(param) {
-		$scope.place = param;
-	}
-	$scope.saveAdresse = function(){
-		console.log($scope.place);
-		mapsService.setPlace($scope.place);
-	}
-}*/
-
-angular.module('locashopApp')
-.controller('SearchBoxController', SearchBoxController)
-.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-		GoogleMapApi.configure({
-		// key: 'your api key',
-		v: '3.16',
-		libraries: 'places'
-		}); 
+	angular.module('locashopApp')
+	.controller('MapsController', MapsController)
+	.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+			GoogleMapApi.configure({
+			// key: 'your api key',
+			v: '3.16',
+			libraries: 'places'
+			});
+			console.log('config faite');
 	}])
 	.run(['$templateCache', function ($templateCache) {
-		console.log('rurnnnnnnnnn');
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
 		$templateCache.put('window.tpl.html', 
-			'<div ng-init="showPlaceDetails(parameter)">'+
-			'	{{place.name}}'+
+			'<div class="form-horizontal" ng-controller="MapsWindowController" ng-init="showPlaceDetails(parameter)">'+
 			'	<div class="form-group">'+
-			'            <div class="col-xs-offset-2 ">'+
-			'              <a href="#" id="saveProfilButton" ng-click="saveAdresse()" class="btn btn-sm btn-success">Sauver <span class="glyphicon glyphicon-floppy-save"></span></a>'+
-			'           </div>'+
-			'         </div>'+
+			'		<label for="email" class=" col-xs-6 control-label">Votre adresse</label>'+
+			'		<div class="col-xs-6">'+
+			'			<p class="form-control-static">{{place.formatted_address}}</p>'+
+			'		</div>'+
+			'	</div>'+
+			'	<div class="form-group">'+
+			'            <div class="col-xs-offset-5 ">'+
+			'              <a ui-sref="profil.mobile" id="adresseButton" ng-click="saveAdresse()" class="btn btn-success">J\'habite ici ! </a>'+
+			'            </div>'+
+			'   </div>'+
 			'</div>');
+		console.log('run fait');
 	}]);
 	
-SearchBoxController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'];
+	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'];
 
-function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
-		$scope.place = {};
-		$scope.showPlaceDetails = function(param) {
-			$scope.place = param;
-		}
-		$scope.saveAdresse = function(){
-			console.log($scope.place);
-			mapsService.setPlace($scope.place);
-		}
+	function MapsController($scope, $timeout, $log, $http, GoogleMapApi) {
+		$scope.showModal=false;
+		console.log('MapsController');
+		console.log($scope);
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
 			maps.visualRefresh = true;
@@ -81,8 +65,8 @@ function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
 			map: {
 				control: {},
 				center: {
-					latitude: 47.472955, 
-					longitude: -0.554351
+					latitude: /*$scope.vm.userProfil?$scope.vm.userProfil.adresse.geometry.location.k:*/47.472955, 
+					longitude: /*$scope.vm.userProfil?$scope.vm.userProfil.adresse.geometry.location.B:*/-0.554351
 				},
 				zoom: 10,
 				dragging: false,
@@ -104,20 +88,19 @@ function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
 			},
 			searchbox: {
 				template:'searchbox.tpl.html',
-				//position:'top-right',
 				position:'top-left',
 				options: {
 					bounds: {}
 				},
-				parentdiv:'searchBoxParent',
+				parentdiv:'MapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
-						places = searchBox.getPlaces()
+						var places = searchBox.getPlaces()
 						if (places.length == 0) {
 							return;
 						}
 						// For each place, get the icon, place name, and location.
-						newMarkers = [];
+						var newMarkers = [];
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
@@ -131,7 +114,8 @@ function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
 								visible:false
 								},
 								templateurl:'window.tpl.html',
-								templateparameter: place
+								templateparameter: place,
+								adresse : place
 							};
 							newMarkers.push(marker);
 							bounds.extend(place.geometry.location);
@@ -150,14 +134,15 @@ function SearchBoxController($scope, $timeout, $log, $http, GoogleMapApi) {
 						_.each(newMarkers, function(marker) {
 							marker.closeClick = function() {
 								$scope.selected.options.visible = false;
-								marker.options.visible = false;
-								return $scope.$apply();
+								//marker.options.visible = false;
+								//return $scope.$apply();
 							};
 							marker.onClicked = function() {
 								$scope.selected.options.visible = false;
 								$scope.selected = marker;
-								console.log(marker);
-								$scope.selected.options.visible = true;
+								/*$scope.selected.options.visible = true;*/
+								$scope.place = marker.adresse
+								$scope.showModal=true;
 							};
 						}); 
 						$scope.map.markers = newMarkers;
