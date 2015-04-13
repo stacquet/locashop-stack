@@ -97,7 +97,9 @@
 		
 		$scope.$on('MAJ_ADRESSE', function() {
 			console.log('Evénément reçu');
+			console.log(mapsService.getPlace());
 			vm.userProfil.adresse = mapsService.getPlace();
+			$scope.myAdress = mapsService.getPlace();
 		});
 
 		function dataURItoBlob(dataURI) {

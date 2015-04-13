@@ -40,7 +40,7 @@
 					.state('profil.adresse', {
 						url : '/adresse',
 						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'MapsController'
+						controller : 'MapsController as vm'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',

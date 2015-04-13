@@ -44,7 +44,7 @@ angular
 					.state('profil.adresse', {
 						url : '/adresse',
 						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'MapsController'
+						controller : 'MapsController as vm'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',
@@ -259,11 +259,10 @@ angular
 			v: '3.16',
 			libraries: 'places'
 			});
-			console.log('config faite');
 	}])
 	.run(['$templateCache', function ($templateCache) {
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-		$templateCache.put('window.tpl.html', 
+		/*$templateCache.put('window.tpl.html', 
 			'<div class="form-horizontal" ng-controller="MapsWindowController" ng-init="showPlaceDetails(parameter)">'+
 			'	<div class="form-group">'+
 			'		<label for="email" class=" col-xs-6 control-label">Votre adresse</label>'+
@@ -276,16 +275,15 @@ angular
 			'              <a ui-sref="profil.mobile" id="adresseButton" ng-click="saveAdresse()" class="btn btn-success">J\'habite ici ! </a>'+
 			'            </div>'+
 			'   </div>'+
-			'</div>');
-		console.log('run fait');
+			'</div>');*/
 	}]);
 	
-	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi'];
+	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService'];
 
-	function MapsController($scope, $timeout, $log, $http, GoogleMapApi) {
-		$scope.showModal=false;
+	function MapsController($scope, $timeout, $log, $http, GoogleMapApi,mapsService) {
+		var vm = this;
+		vm.showModal=false;
 		console.log('MapsController');
-		console.log($scope);
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
 			maps.visualRefresh = true;
@@ -315,8 +313,8 @@ angular
 			map: {
 				control: {},
 				center: {
-					latitude: /*$scope.vm.userProfil?$scope.vm.userProfil.adresse.geometry.location.k:*/47.472955, 
-					longitude: /*$scope.vm.userProfil?$scope.vm.userProfil.adresse.geometry.location.B:*/-0.554351
+					latitude: mapsService.getPlace().geometry?mapsService.getPlace().geometry.location.k:47.472955, 
+					longitude: mapsService.getPlace().geometry?mapsService.getPlace().geometry.location.B:-0.554351
 				},
 				zoom: 10,
 				dragging: false,
@@ -382,25 +380,21 @@ angular
 						}
 						$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
-							marker.closeClick = function() {
-								$scope.selected.options.visible = false;
-								//marker.options.visible = false;
-								//return $scope.$apply();
-							};
 							marker.onClicked = function() {
-								$scope.selected.options.visible = false;
-								$scope.selected = marker;
-								/*$scope.selected.options.visible = true;*/
-								$scope.place = marker.adresse
-								$scope.showModal=true;
+								vm.place = marker.adresse;
+								vm.showModal=true;
 							};
 						}); 
 						$scope.map.markers = newMarkers;
-						//$scope.searchbox.options.visible = false;
 					}
 				}
 			}
 		});
+		vm.saveAdresse = function(){
+			vm.showModal=false;
+			mapsService.setPlace(vm.place);
+			$scope.$emit('MAJ_ADRESSE');
+		}
 	}
 
 })();;(function () {
@@ -430,30 +424,7 @@ angular
         }
     }       
 })();
-;(function () {
-    'use strict';	
-	
-	angular.module('locashopApp')
-	.controller('MapsWindowController', MapsWindowController)
-
-	MapsWindowController.$inject = ['mapsService'];
-	function MapsWindowController($scope, mapsService) {
-		//console.log($scope.vm.options.language);
-		console.log('MapsWindowController');
-		console.log($scope);
-		$scope.place = {};
-		$scope.showPlaceDetails = function(param) {
-			console.log('showPlaceDetails');
-			$scope.place = param;
-		}
-		$scope.saveAdresse = function(){
-			console.log($scope.place);
-			mapsService.setPlace($scope.place);
-			$scope.$emit('MAJ_ADRESSE');
-			$scope.selected.options.visible = false;
-		}
-	}
-})();;angular
+;angular
     .module('locashopApp')
     .directive('modal', modal);
 		
@@ -493,18 +464,15 @@ function modal(){
 		
 		$(element).on('shown.bs.modal', function(){
 		  scope.$apply(function(scope){
-			console.log(scope);
-			scope.$parent[attrs.visible] = true;
-			//scope.vm['showModal']=true;
+			scope.vm.showModal=true;
 			
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
 		  scope.$apply(function(scope){
-			console.log(scope);
-			scope.$parent[attrs.visible] = false;
-			//scope.vm['showModal']=false;
+			//scope.$parent.vm[attrs.visible] = false;
+			scope.vm.showModal=false;
 		  });
 		});
 		
@@ -609,7 +577,9 @@ function modal(){
 		
 		$scope.$on('MAJ_ADRESSE', function() {
 			console.log('Evénément reçu');
+			console.log(mapsService.getPlace());
 			vm.userProfil.adresse = mapsService.getPlace();
+			$scope.myAdress = mapsService.getPlace();
 		});
 
 		function dataURItoBlob(dataURI) {
