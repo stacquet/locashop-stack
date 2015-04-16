@@ -20,6 +20,7 @@
 		vm.dataURItoBlob=dataURItoBlob;
 		vm.toggleModal=toggleModal;
 		vm.updateProfilImage=updateProfilImage;
+		vm.userProfil={};
 
 		vm.showModal = false;
 		function toggleModal(){

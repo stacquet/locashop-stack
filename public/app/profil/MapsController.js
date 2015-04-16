@@ -12,20 +12,6 @@
 	}])
 	.run(['$templateCache', function ($templateCache) {
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
-		/*$templateCache.put('window.tpl.html', 
-			'<div class="form-horizontal" ng-controller="MapsWindowController" ng-init="showPlaceDetails(parameter)">'+
-			'	<div class="form-group">'+
-			'		<label for="email" class=" col-xs-6 control-label">Votre adresse</label>'+
-			'		<div class="col-xs-6">'+
-			'			<p class="form-control-static">{{place.formatted_address}}</p>'+
-			'		</div>'+
-			'	</div>'+
-			'	<div class="form-group">'+
-			'            <div class="col-xs-offset-5 ">'+
-			'              <a ui-sref="profil.mobile" id="adresseButton" ng-click="saveAdresse()" class="btn btn-success">J\'habite ici ! </a>'+
-			'            </div>'+
-			'   </div>'+
-			'</div>');*/
 	}]);
 	
 	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService'];
@@ -33,6 +19,7 @@
 	function MapsController($scope, $timeout, $log, $http, GoogleMapApi,mapsService) {
 		var vm = this;
 		vm.showModal=false;
+		vm.saveAdresse = saveAdresse;
 		console.log('MapsController');
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -140,10 +127,24 @@
 				}
 			}
 		});
-		vm.saveAdresse = function(){
+		init();
+		function saveAdresse(){
 			vm.showModal=false;
 			mapsService.setPlace(vm.place);
 			$scope.$emit('MAJ_ADRESSE');
+		}
+		
+		function init(){
+			console.log($scope.vm1);
+			if($scope.vm1.userProfil.adresse){
+				var marker = {
+					id:0,
+					latitude: vm.userProfil.adresse.geometry.location.k,
+					longitude: vm.userProfil.adresse.geometry.location.B,
+					templateurl:'window.tpl.html'
+				};
+				$scope.map.markers.push(marker);
+			}
 		}
 	}
 

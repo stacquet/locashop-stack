@@ -31,7 +31,7 @@
 				.state('profil', {
 					url: '/profil/:id_profil',
 					templateUrl: 'app/profil/profil.html',
-					controller : 'profilController as vm'
+					controller : 'profilController as vm1'
 				})
 					.state('profil.infos', {
 						url : '/infos',
@@ -40,7 +40,7 @@
 					.state('profil.adresse', {
 						url : '/adresse',
 						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'MapsController as vm'
+						controller : 'MapsController as vm2'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',
