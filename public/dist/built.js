@@ -1,8 +1,7 @@
 angular
 	.module('locashopApp', 
 	['uiGmapgoogle-maps', 'llNotifier','cgBusy','ngImgCrop','ui.router','angularFileUpload',
-	'appRoutes','ui.tinymce','ngResource'])
- ;// public/js/appRoutes.js
+	'appRoutes','ui.tinymce','ngResource']);// public/js/appRoutes.js
     angular.module('appRoutes', [] ).
 		config(function($stateProvider, $urlRouterProvider) {
 			// For any unmatched url, send to /
@@ -34,17 +33,18 @@ angular
 				})
 				.state('profil', {
 					url: '/profil/:id_profil',
-					templateUrl: 'app/profil/profil.html',
-					controller : 'profilController as vm1'
+					templateUrl: 'app/profil/profil.html'/*,
+					controller : 'profilController as vmProfil'*/
 				})
 					.state('profil.infos', {
 						url : '/infos',
-						templateUrl: 'app/profil/profilInfos.html'
+						templateUrl: 'app/profil/profilInfos.html',
+						controller : 'profilController as vmProfil'
 					})
 					.state('profil.adresse', {
 						url : '/adresse',
 						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'MapsController as vm2'
+						controller : 'MapsController as vmMaps'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',
@@ -267,9 +267,9 @@ angular
 	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService'];
 
 	function MapsController($scope, $timeout, $log, $http, GoogleMapApi,mapsService) {
-		var vm = this;
-		vm.showModal=false;
-		vm.saveAdresse = saveAdresse;
+		var vmMaps = this;
+		$scope.showModal=false;
+		vmMaps.saveAdresse = saveAdresse;
 		console.log('MapsController');
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -368,8 +368,9 @@ angular
 						$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								vm.place = marker.adresse;
-								vm.showModal=true;
+								console.log($scope);
+								vmMaps.place = marker.adresse;
+								$scope.showModal=true;
 							};
 						}); 
 						$scope.map.markers = newMarkers;
@@ -379,23 +380,26 @@ angular
 		});
 		init();
 		function saveAdresse(){
-			vm.showModal=false;
-			mapsService.setPlace(vm.place);
+			toggleModal();
+			mapsService.setPlace(vmMaps.place);
 			$scope.$emit('MAJ_ADRESSE');
 		}
 		
 		function init(){
-			console.log($scope.vm1);
-			if($scope.vm1.userProfil.adresse){
+			console.log($scope.vmProfil);
+			if($scope.vmProfil.userProfil.adresse){
 				var marker = {
 					id:0,
-					latitude: vm.userProfil.adresse.geometry.location.k,
-					longitude: vm.userProfil.adresse.geometry.location.B,
+					latitude: $scope.vmProfil.userProfil.adresse.geometry.location.k,
+					longitude: $scope.vmProfil.userProfil.adresse.geometry.location.B,
 					templateurl:'window.tpl.html'
 				};
 				$scope.map.markers.push(marker);
 			}
 		}
+		function toggleModal(){
+			$scope.showModal = !$scope.showModal;
+		};
 	}
 
 })();;(function () {
@@ -425,7 +429,10 @@ angular
         }
     }       
 })();
-;angular
+;(function () {
+    'use strict';
+
+    angular
     .module('locashopApp')
     .directive('modal', modal);
 		
@@ -452,6 +459,7 @@ function modal(){
     return directive;
 	
 	function postLink(scope, element, attrs) {
+		console.log(scope);
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){
@@ -465,21 +473,21 @@ function modal(){
 		
 		$(element).on('shown.bs.modal', function(){
 		  scope.$apply(function(scope){
-			scope.vm.showModal=true;
-			
+			scope[attrs.visible] = true;
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
 		  scope.$apply(function(scope){
-			//scope.$parent.vm[attrs.visible] = false;
-			scope.vm.showModal=false;
+			scope[attrs.visible] = false;
 		  });
 		});
 		
 	}
       
-};;(function () {
+};
+
+})();;(function () {
     'use strict';
 
     angular
@@ -489,39 +497,39 @@ function modal(){
     profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
 
 	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
-		var vm = this;	
-		vm.uploadedImage='';
-        vm.croppedImage='';
-        vm.profilImage='';
-        vm.profilImageChanged=false;
-		vm.saveProfil=saveProfil;
-		vm.checkAdresse=checkAdresse;
-		vm.upload=upload;
-		vm.crop=crop;
-		vm.dataURItoBlob=dataURItoBlob;
-		vm.toggleModal=toggleModal;
-		vm.updateProfilImage=updateProfilImage;
-		vm.userProfil={};
+		var vmProfil = this;	
+		vmProfil.uploadedImage='';
+        vmProfil.croppedImage='';
+        vmProfil.profilImage='';
+        vmProfil.profilImageChanged=false;
+		vmProfil.saveProfil=saveProfil;
+		vmProfil.checkAdresse=checkAdresse;
+		vmProfil.upload=upload;
+		vmProfil.crop=crop;
+		vmProfil.dataURItoBlob=dataURItoBlob;
+		vmProfil.toggleModal=toggleModal;
+		vmProfil.updateProfilImage=updateProfilImage;
+		vmProfil.userProfil={};
 
-		vm.showModal = false;
+		$scope.showModal = false;
 		function toggleModal(){
-			vm.showModal = !vm.showModal;
+			$scope.showModal = !$scope.showModal;
 		};
 		init();
 
-		vm.options = {
+		vmProfil.options = {
 		    language: 'en',
 		    allowedContent: true,
 		    entities: false
 		  };
 
 		function checkAdresse(){
-			vm.userProfil.adresse = mapsService.getPosition();
-			console.log(vm.userProfil.adresse);
+			vmProfil.userProfil.adresse = mapsService.getPosition();
+			console.log(vmProfil.userProfil.adresse);
 			console.log(mapsService.getPosition());
 		}
 	   function saveProfil(){
-			vm.busy = upload().then(function(){
+			vmProfil.busy = upload().then(function(){
 				notifier.notify({template : 'Sauvegarde OK'});
 				},
 				function(error){
@@ -530,19 +538,19 @@ function modal(){
 		}
 
 		function init(){
-			vm.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			vmProfil.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
-					vm.userProfil=data;
-					if(data.Photo) vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmProfil.userProfil=data;
+					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
 		function upload() { 
 			var deferred = $q.defer();
-			var file = vm.profilImageChanged?dataURItoBlob(vm.profilImage):false;
+			var file = vmProfil.profilImageChanged?dataURItoBlob(vmProfil.profilImage):false;
 			var dataForm = 	{
 				url: '/api/profil/'+$stateParams.id_profil,
-	            fields: {'userProfil' : vm.userProfil},
+	            fields: {'userProfil' : vmProfil.userProfil},
 	            file: file
 			}
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
@@ -554,14 +562,14 @@ function modal(){
 	        return deferred.promise;
 	    }
 		function crop(){
-			if(vm.files){
-				console.log(vm.files);
-				var file=vm.files[0];
+			if(vmProfil.files){
+				console.log(vmProfil.files);
+				var file=vmProfil.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
-		              vm.uploadedImage=evt.target.result;
-					  vm.showModal = true;
+		              vmProfil.uploadedImage=evt.target.result;
+					  $scope.showModal = true;
 		            });
 		        }
 	        	reader.readAsDataURL(file);
@@ -569,18 +577,18 @@ function modal(){
 	        }
     	}
     	function updateProfilImage(){
-    		vm.profilImage=vm.croppedImage;
-    		vm.profilImageChanged=true;
+    		vmProfil.profilImage=vmProfil.croppedImage;
+    		vmProfil.profilImageChanged=true;
     		toggleModal();
     	}
-    	$scope.$watch('vm.files',function(){
-          vm.crop();
+    	$scope.$watch('vmProfil.files',function(){
+          vmProfil.crop();
         });
 		
 		$scope.$on('MAJ_ADRESSE', function() {
 			console.log('Evénément reçu');
 			console.log(mapsService.getPlace());
-			vm.userProfil.adresse = mapsService.getPlace();
+			vmProfil.userProfil.adresse = mapsService.getPlace();
 			$scope.myAdress = mapsService.getPlace();
 		});
 

@@ -8,39 +8,39 @@
     profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
 
 	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
-		var vm = this;	
-		vm.uploadedImage='';
-        vm.croppedImage='';
-        vm.profilImage='';
-        vm.profilImageChanged=false;
-		vm.saveProfil=saveProfil;
-		vm.checkAdresse=checkAdresse;
-		vm.upload=upload;
-		vm.crop=crop;
-		vm.dataURItoBlob=dataURItoBlob;
-		vm.toggleModal=toggleModal;
-		vm.updateProfilImage=updateProfilImage;
-		vm.userProfil={};
+		var vmProfil = this;	
+		vmProfil.uploadedImage='';
+        vmProfil.croppedImage='';
+        vmProfil.profilImage='';
+        vmProfil.profilImageChanged=false;
+		vmProfil.saveProfil=saveProfil;
+		vmProfil.checkAdresse=checkAdresse;
+		vmProfil.upload=upload;
+		vmProfil.crop=crop;
+		vmProfil.dataURItoBlob=dataURItoBlob;
+		vmProfil.toggleModal=toggleModal;
+		vmProfil.updateProfilImage=updateProfilImage;
+		vmProfil.userProfil={};
 
-		vm.showModal = false;
+		$scope.showModal = false;
 		function toggleModal(){
-			vm.showModal = !vm.showModal;
+			$scope.showModal = !$scope.showModal;
 		};
 		init();
 
-		vm.options = {
+		vmProfil.options = {
 		    language: 'en',
 		    allowedContent: true,
 		    entities: false
 		  };
 
 		function checkAdresse(){
-			vm.userProfil.adresse = mapsService.getPosition();
-			console.log(vm.userProfil.adresse);
+			vmProfil.userProfil.adresse = mapsService.getPosition();
+			console.log(vmProfil.userProfil.adresse);
 			console.log(mapsService.getPosition());
 		}
 	   function saveProfil(){
-			vm.busy = upload().then(function(){
+			vmProfil.busy = upload().then(function(){
 				notifier.notify({template : 'Sauvegarde OK'});
 				},
 				function(error){
@@ -49,19 +49,19 @@
 		}
 
 		function init(){
-			vm.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			vmProfil.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
-					vm.userProfil=data;
-					if(data.Photo) vm.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmProfil.userProfil=data;
+					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
 		function upload() { 
 			var deferred = $q.defer();
-			var file = vm.profilImageChanged?dataURItoBlob(vm.profilImage):false;
+			var file = vmProfil.profilImageChanged?dataURItoBlob(vmProfil.profilImage):false;
 			var dataForm = 	{
 				url: '/api/profil/'+$stateParams.id_profil,
-	            fields: {'userProfil' : vm.userProfil},
+	            fields: {'userProfil' : vmProfil.userProfil},
 	            file: file
 			}
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
@@ -73,14 +73,14 @@
 	        return deferred.promise;
 	    }
 		function crop(){
-			if(vm.files){
-				console.log(vm.files);
-				var file=vm.files[0];
+			if(vmProfil.files){
+				console.log(vmProfil.files);
+				var file=vmProfil.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
-		              vm.uploadedImage=evt.target.result;
-					  vm.showModal = true;
+		              vmProfil.uploadedImage=evt.target.result;
+					  $scope.showModal = true;
 		            });
 		        }
 	        	reader.readAsDataURL(file);
@@ -88,18 +88,18 @@
 	        }
     	}
     	function updateProfilImage(){
-    		vm.profilImage=vm.croppedImage;
-    		vm.profilImageChanged=true;
+    		vmProfil.profilImage=vmProfil.croppedImage;
+    		vmProfil.profilImageChanged=true;
     		toggleModal();
     	}
-    	$scope.$watch('vm.files',function(){
-          vm.crop();
+    	$scope.$watch('vmProfil.files',function(){
+          vmProfil.crop();
         });
 		
 		$scope.$on('MAJ_ADRESSE', function() {
 			console.log('Evénément reçu');
 			console.log(mapsService.getPlace());
-			vm.userProfil.adresse = mapsService.getPlace();
+			vmProfil.userProfil.adresse = mapsService.getPlace();
 			$scope.myAdress = mapsService.getPlace();
 		});
 

@@ -17,9 +17,9 @@
 	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService'];
 
 	function MapsController($scope, $timeout, $log, $http, GoogleMapApi,mapsService) {
-		var vm = this;
-		vm.showModal=false;
-		vm.saveAdresse = saveAdresse;
+		var vmMaps = this;
+		$scope.showModal=false;
+		vmMaps.saveAdresse = saveAdresse;
 		console.log('MapsController');
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -118,8 +118,9 @@
 						$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								vm.place = marker.adresse;
-								vm.showModal=true;
+								console.log($scope);
+								vmMaps.place = marker.adresse;
+								$scope.showModal=true;
 							};
 						}); 
 						$scope.map.markers = newMarkers;
@@ -129,23 +130,26 @@
 		});
 		init();
 		function saveAdresse(){
-			vm.showModal=false;
-			mapsService.setPlace(vm.place);
+			toggleModal();
+			mapsService.setPlace(vmMaps.place);
 			$scope.$emit('MAJ_ADRESSE');
 		}
 		
 		function init(){
-			console.log($scope.vm1);
-			if($scope.vm1.userProfil.adresse){
+			console.log($scope.vmProfil);
+			if($scope.vmProfil.userProfil.adresse){
 				var marker = {
 					id:0,
-					latitude: vm.userProfil.adresse.geometry.location.k,
-					longitude: vm.userProfil.adresse.geometry.location.B,
+					latitude: $scope.vmProfil.userProfil.adresse.geometry.location.k,
+					longitude: $scope.vmProfil.userProfil.adresse.geometry.location.B,
 					templateurl:'window.tpl.html'
 				};
 				$scope.map.markers.push(marker);
 			}
 		}
+		function toggleModal(){
+			$scope.showModal = !$scope.showModal;
+		};
 	}
 
 })();

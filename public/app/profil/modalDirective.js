@@ -1,4 +1,7 @@
-angular
+(function () {
+    'use strict';
+
+    angular
     .module('locashopApp')
     .directive('modal', modal);
 		
@@ -25,6 +28,7 @@ function modal(){
     return directive;
 	
 	function postLink(scope, element, attrs) {
+		console.log(scope);
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){
@@ -38,18 +42,18 @@ function modal(){
 		
 		$(element).on('shown.bs.modal', function(){
 		  scope.$apply(function(scope){
-			scope.vm.showModal=true;
-			
+			scope[attrs.visible] = true;
 		  });
 		});
 
 		$(element).on('hidden.bs.modal', function(){
 		  scope.$apply(function(scope){
-			//scope.$parent.vm[attrs.visible] = false;
-			scope.vm.showModal=false;
+			scope[attrs.visible] = false;
 		  });
 		});
 		
 	}
       
 };
+
+})();
