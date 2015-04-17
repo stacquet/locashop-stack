@@ -13,7 +13,7 @@ module.exports = function (app,passport) {
 	app.get('/auth/facebook/callback'								, controllers.auth.facebook_callback); 
 	app.get('/api/profil/:id'										, controllers.user.get); 
 	app.post('/api/profil/:id'										, controllers.user.save); 
-	app.post('/api/user/adresse/save'								, controllers.user.save); 
+	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.get('*'														, controllers.home.home);
 };

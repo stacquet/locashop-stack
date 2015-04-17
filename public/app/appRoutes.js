@@ -30,18 +30,17 @@
 				})
 				.state('profil', {
 					url: '/profil/:id_profil',
-					templateUrl: 'app/profil/profil.html'/*,
-					controller : 'profilController as vmProfil'*/
+					templateUrl: 'app/profil/profil.html'
 				})
 					.state('profil.infos', {
 						url : '/infos',
-						templateUrl: 'app/profil/profilInfos.html',
-						controller : 'profilController as vmProfil'
+						templateUrl: 'app/profil/profilInfo.html',
+						controller : 'profilInfoController as vmProfil'
 					})
 					.state('profil.adresse', {
 						url : '/adresse',
-						templateUrl: 'app/profil/profilAdresse.html',
-						controller : 'MapsController as vmMaps'
+						templateUrl: 'app/profil/profilMaps.html',
+						controller : 'profilMapsController as vmMaps'
 					})
 					.state('profil.mobile', {
 						url : '/mobile',

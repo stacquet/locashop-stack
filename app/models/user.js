@@ -34,6 +34,9 @@ module.exports = function(sequelize, Sequelize) {
         User.belongsTo(models.Photo,{
     			foreignKey: 'id_photo'
     		});
+		User.belongsTo(models.Adresse,{
+    			foreignKey: 'id_adresse'
+    		});
       }
     }
   });

@@ -6,7 +6,6 @@ var HttpStatus		= require('http-status-codes');
 var models   		= require('../models/');
 var Promise 		= require("bluebird");
 var logger			= require('../util/logger');
-var util 			= require('util');
 var config			= require('../../secret/config');
 
 Promise.promisifyAll(crypto);
@@ -14,6 +13,7 @@ Promise.promisifyAll(fs);
 Promise.promisifyAll(formidable);
 
 module.exports = {
+	//var adresse={};
 	get: function (req, res, next) {
 			models.User.find(
 			{
@@ -131,5 +131,78 @@ module.exports = {
 			logger.log('error','error : '+err);
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 		});
+	},
+	
+	adresse : {
+		/* Sauvegarde ou MAJ de l'adresse de l'utilisateur. Pour cela, on recherche l'utilisateur et son adresse :
+				- si on ne retrouve pas le user => 404
+				- s'il n'a pas d'adresse :
+					1. On créé l'adresse
+					2. On assigne l'adresse au user
+					3. On renvoie 200
+				- s'il a une adresse :
+					1. On créé la nouvelle adresse
+					2. On associe la nouvelle adresse au user
+					3. On supprime l'ancienne adresse
+					4. On renvoie 200
+		*/
+		save : function (req, res, next) {
+			logger.log('debug','sauvegarde de l\'adresse d\'un utilisateur requête '+JSON.stringify(req.body));
+			var req_id_user = req.params.id_user;
+			var db_user;
+			var old_id_adresse;
+			var new_adresse={
+				adresse_complete 	: req.body.userProfil.adresse.formatted_adress,
+				coordonnee_x 		: req.body.userProfil.adresse.geometry.location.B,
+				coordonnee_y		: req.body.userProfil.adresse.geometry.location.k
+			};
+			var new_id_adresse;
+			var myT;
+			models.sequelize.transaction()
+			.then(function(t){
+				logger.log('debug','userController|adresse|save|recherche du user en base'); 
+				myT=t;
+				return models.User.find({	where:	{id_user : req.params.id},
+					include: [models.Adresse]})
+			})
+			.then(function(user){
+				db_user=user;
+				old_id_adresse = user.getDataValue('id_adresse');
+				return models.Adresse.build(
+						new_adresse
+					).save({transaction:myT})
+			})
+			.then(function(adresse){
+				new_id_adresse = adresse.getDataValue('id_adresse');
+				if(new_id_adresse) db_user.setDataValue('id_adresse',new_id_adresse);
+				logger.log('debug','userController|save|save user in database : ');
+				return db_user.save({transaction:myT})
+			})
+			.then(function(){
+				if(old_id_adresse){
+					logger.log('debug','userController|adresse|save|on retrouve l\'ancienne adresse en db');
+					return models.Adresse.find({	where:	{id_adresse : old_id_adresse}})
+					.then(function(adresse){
+						if(adresse){
+							logger.log('debug','userController|adresse|save|on supprime l\'ancienne adresse en db');
+							return adresse.destroy({transaction:myT})
+						}
+						else{
+							logger.log('debug','userController|adresse|save|pas d\'ancienne adresse à supprimer');				
+						}
+					})
+				}
+			})
+			.then(function(){
+				logger.log('debug','user|adresse : commit transaction');
+				myT.commit();
+				res.status(HttpStatus.OK).send()
+			})
+			/*.catch(function(err){
+				myT.rollback();
+				logger.log('error','error : '+err);
+				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+			});*/
 		}
 	}
+}

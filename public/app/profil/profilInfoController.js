@@ -3,18 +3,17 @@
 
     angular
         .module('locashopApp')
-        .controller('profilController', profilController);
+        .controller('profilInfoController', profilInfoController);
 
-    profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
+    profilInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
 
-	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
+	function profilInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
 		var vmProfil = this;	
 		vmProfil.uploadedImage='';
         vmProfil.croppedImage='';
         vmProfil.profilImage='';
         vmProfil.profilImageChanged=false;
 		vmProfil.saveProfil=saveProfil;
-		vmProfil.checkAdresse=checkAdresse;
 		vmProfil.upload=upload;
 		vmProfil.crop=crop;
 		vmProfil.dataURItoBlob=dataURItoBlob;
@@ -33,12 +32,7 @@
 		    allowedContent: true,
 		    entities: false
 		  };
-
-		function checkAdresse(){
-			vmProfil.userProfil.adresse = mapsService.getPosition();
-			console.log(vmProfil.userProfil.adresse);
-			console.log(mapsService.getPosition());
-		}
+		  
 	   function saveProfil(){
 			vmProfil.busy = upload().then(function(){
 				notifier.notify({template : 'Sauvegarde OK'});
@@ -49,7 +43,7 @@
 		}
 
 		function init(){
-			vmProfil.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
 					vmProfil.userProfil=data;
 					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
@@ -96,12 +90,12 @@
           vmProfil.crop();
         });
 		
-		$scope.$on('MAJ_ADRESSE', function() {
+		/*$rootScope.$on('MAJ_ADRESSE', function() {
 			console.log('Evénément reçu');
 			console.log(mapsService.getPlace());
 			vmProfil.userProfil.adresse = mapsService.getPlace();
 			$scope.myAdress = mapsService.getPlace();
-		});
+		});*/
 
 		function dataURItoBlob(dataURI) {
 			var binary = atob(dataURI.split(',')[1]);

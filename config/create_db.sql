@@ -1,8 +1,9 @@
 DROP DATABASE IF EXISTS locashop;
 CREATE DATABASE locashop  CHARACTER SET utf8;
 USE locashop;
-CREATE TABLE ref_adresse (
+CREATE TABLE adresse (
   id_adresse INT NOT NULL AUTO_INCREMENT,
+  adresse_complete VARCHAR(500) NULL,
   nom VARCHAR(45) NULL,
   complement_nom VARCHAR(45) NULL,
   complement_adresse VARCHAR(45) NULL,
@@ -11,8 +12,10 @@ CREATE TABLE ref_adresse (
   cp VARCHAR(5) NULL,
   ville VARCHAR(45) NULL,
   pays VARCHAR(45) NULL,
-  coordonnee_x VARCHAR(45) NULL,
-  coordonnee_y VARCHAR(45) NULL,
+  coordonnee_x DECIMAL(15,10) NULL,
+  coordonnee_y DECIMAL(10,10) NULL,
+  createdAt DATETIME NULL,
+  updatedAt DATETIME NULL,
   PRIMARY KEY (id_adresse))
 ENGINE = InnoDB;
 
@@ -97,7 +100,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table ref_user
 -- -----------------------------------------------------
-CREATE TABLE hab_user (
+CREATE TABLE user (
   id_user INT NOT NULL AUTO_INCREMENT,
   id_profil VARCHAR(45) NOT NULL,
   statut TINYINT NULL,
@@ -119,7 +122,7 @@ CREATE TABLE hab_user (
   PRIMARY KEY (id_user),
   UNIQUE INDEX email_UNIQUE (email ASC),
   INDEX fk_ref_user_ref_profil1_idx (id_profil ASC),
-  INDEX fk_ref_user_ref_adresse1_idx (id_adresse ASC),
+  INDEX fk_ref_user_adresse1_idx (id_adresse ASC),
   INDEX fk_ref_user_photo_idx (id_photo ASC),
   CONSTRAINT fk_ref_user_ref_profil1
     FOREIGN KEY (id_profil)
@@ -131,9 +134,9 @@ CREATE TABLE hab_user (
     REFERENCES photo (id_photo)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT fk_ref_user_ref_adresse1
+  CONSTRAINT fk_ref_user_adresse1
     FOREIGN KEY (id_adresse)
-    REFERENCES ref_adresse (id_adresse)
+    REFERENCES adresse (id_adresse)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

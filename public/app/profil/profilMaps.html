@@ -2,7 +2,7 @@
 
 	<div class="form-group" >
 		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
-		 <div class=" col-xs-10" id="MapsControllerParent"></div>
+		 <div class=" col-xs-10" id="profilMapsControllerParent"></div>
 	</div>
 	<div>
 	  <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"
@@ -26,7 +26,7 @@
 	<div class="form-group">
 		<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
 		<div class="col-xs-10">
-			<p class="form-control-static">{{myAdress.formatted_address}}</p>
+			<p class="form-control-static">{{vmMaps.userProfil.adresse.formatted_address}}</p>
 		</div>
 	</div>
 	<!-- modal pour valider son adresse -->

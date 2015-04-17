@@ -3,25 +3,15 @@
 	
 	angular	
 		.module('locashopApp')
-		.factory('mapsService',mapsService);
+		.factory('mapsService', mapsService);
 	
-    function mapsService(){
-		
-		var service ={
-			place 			: {},
-			getPlace 		: getPlace,
-			setPlace		: setPlace
-		};
-			
-		return service;
-	
-		function getPlace(){
-			return service.place;
-		}
+	mapsService.$inject=['$http','$resource'];
 
-        function setPlace(data) {
-            service.place = data;
-			console.log('MAJ Position : '+service.place);
-        }
+    function mapsService($http,$resource){
+		
+		var maps = $resource('/api/user/:id_user/adresse/:id_adresse');
+		
+		return maps;
+
     }       
 })();

@@ -2,7 +2,7 @@
     'use strict';
 
 	angular.module('locashopApp')
-	.controller('MapsController', MapsController)
+	.controller('profilMapsController', profilMapsController)
 	.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 			GoogleMapApi.configure({
 			// key: 'your api key',
@@ -14,13 +14,13 @@
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
 	}]);
 	
-	MapsController.$inject= ['$scope', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService'];
+	profilMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','profilService'];
 
-	function MapsController($scope, $timeout, $log, $http, GoogleMapApi,mapsService) {
+	function profilMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,profilService) {
 		var vmMaps = this;
 		$scope.showModal=false;
 		vmMaps.saveAdresse = saveAdresse;
-		console.log('MapsController');
+		console.log('profilMapsController');
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
 			maps.visualRefresh = true;
@@ -49,9 +49,9 @@
 			},
 			map: {
 				control: {},
-				center: {
-					latitude: mapsService.getPlace().geometry?mapsService.getPlace().geometry.location.k:47.472955, 
-					longitude: mapsService.getPlace().geometry?mapsService.getPlace().geometry.location.B:-0.554351
+				center: { 
+					latitude: /*vmMaps.userProfil.adresse?vmMaps.userProfil.adresse.geometry.location.k:*/47.472955, 
+					longitude: /*vmMaps.userProfil.adresse?vmMaps.userProfil.adresse.geometry.location.B:*/-0.554351
 				},
 				zoom: 10,
 				dragging: false,
@@ -77,7 +77,7 @@
 				options: {
 					bounds: {}
 				},
-				parentdiv:'MapsControllerParent',
+				parentdiv:'profilMapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
 						var places = searchBox.getPlaces()
@@ -131,21 +131,36 @@
 		init();
 		function saveAdresse(){
 			toggleModal();
-			mapsService.setPlace(vmMaps.place);
-			$scope.$emit('MAJ_ADRESSE');
+			/*mapsService.setPlace(vmMaps.place);
+			$rootScope.$emit('MAJ_ADRESSE');*/
+			vmMaps.userProfil.adresse = vmMaps.place;
+			/*$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
+				.then(function(data, status, headers, config){
+					vmProfil.userProfil=data;
+					vmProfil.userProfil
+					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+				});*/
+			vmMaps.userProfil.$save();
+			//var toSave = 
 		}
 		
 		function init(){
-			console.log($scope.vmProfil);
-			if($scope.vmProfil.userProfil.adresse){
-				var marker = {
-					id:0,
-					latitude: $scope.vmProfil.userProfil.adresse.geometry.location.k,
-					longitude: $scope.vmProfil.userProfil.adresse.geometry.location.B,
-					templateurl:'window.tpl.html'
-				};
-				$scope.map.markers.push(marker);
-			}
+			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
+				.then(function(data, status, headers, config){
+					vmMaps.userProfil=data;
+					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					console.log(vmMaps);
+					if(vmMaps.userProfil.adresse){
+						var marker = {
+							id:0,
+							latitude: vmMaps.userProfil.adresse.geometry.location.k,
+							longitude: vmMaps.userProfil.adresse.geometry.location.B,
+							templateurl:'window.tpl.html'
+						};
+						$scope.map.markers.push(marker);
+					}
+				});
+			
 		}
 		function toggleModal(){
 			$scope.showModal = !$scope.showModal;
