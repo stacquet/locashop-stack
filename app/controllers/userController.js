@@ -148,7 +148,7 @@ module.exports = {
 		*/
 		save : function (req, res, next) {
 			logger.log('debug','sauvegarde de l\'adresse d\'un utilisateur requête '+JSON.stringify(req.body));
-			var req_id_user = req.params.id_user;
+			/*var req_id_user = req.params.id_user;
 			var db_user;
 			var old_id_adresse;
 			var new_adresse={
@@ -197,7 +197,8 @@ module.exports = {
 				logger.log('debug','user|adresse : commit transaction');
 				myT.commit();
 				res.status(HttpStatus.OK).send()
-			})
+			})*/
+			res.status(HttpStatus.OK).send(req.params);
 			/*.catch(function(err){
 				myT.rollback();
 				logger.log('error','error : '+err);
