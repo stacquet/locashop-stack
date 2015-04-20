@@ -15,15 +15,13 @@
 
 		
 		var service = {
-			saveAdresse : saveAdresse,
-			localSignup			: localSignup,
-			emailVerification	: emailVerification
+			saveAdresse : saveAdresse
 		};
 		
 		return service;
 	
-		function checkEmailAvailable(email){
-			return $http.post('/api/inscription/checkEmailAvailable',{'email':email})
+		function saveAdresse(data){
+			return $http.post('/api/user/1/adresse',{'userProfil':data})
 						.success(function(data, status, headers, config) {
 							console.log(data);
 							return data;
@@ -31,13 +29,5 @@
 						.error(function(data, status, headers, config) {
 						});
 		}
-
-        function localSignup(data) {
-            return $http.post('/api/inscription/localSignup',data)
-        }
-
-        function emailVerification(){
-        	return $http.get('/api/inscription/emailVerification')
-        }
     }       
 })();

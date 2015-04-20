@@ -12,8 +12,8 @@ CREATE TABLE adresse (
   cp VARCHAR(5) NULL,
   ville VARCHAR(45) NULL,
   pays VARCHAR(45) NULL,
-  coordonnee_x DECIMAL(15,10) NULL,
-  coordonnee_y DECIMAL(10,10) NULL,
+  coordonnee_x DECIMAL(20,17) NULL,
+  coordonnee_y DECIMAL(20,17) NULL,
   createdAt DATETIME NULL,
   updatedAt DATETIME NULL,
   PRIMARY KEY (id_adresse))

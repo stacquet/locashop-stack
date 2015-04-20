@@ -50,8 +50,8 @@
 			map: {
 				control: {},
 				center: { 
-					latitude: /*vmMaps.userProfil.adresse?vmMaps.userProfil.adresse.geometry.location.k:*/47.472955, 
-					longitude: /*vmMaps.userProfil.adresse?vmMaps.userProfil.adresse.geometry.location.B:*/-0.554351
+					latitude: vmMaps.userProfil.Adresse?vmMaps.userProfil.Adresse.coordonnee_x:47.472955, 
+					longitude: vmMaps.userProfil.Adresse?vmMaps.userProfil.Adresse.coordonnee_y:-0.554351
 				},
 				zoom: 10,
 				dragging: false,
@@ -140,7 +140,7 @@
 					vmProfil.userProfil
 					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});*/
-			vmMaps.userProfil.$save();
+			$rootScope.busy = mapsService.saveAdresse(vmMaps.userProfil);
 			//var toSave = 
 		}
 		
@@ -150,11 +150,11 @@
 					vmMaps.userProfil=data;
 					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 					console.log(vmMaps);
-					if(vmMaps.userProfil.adresse){
+					if(vmMaps.userProfil.Adresse){
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.adresse.geometry.location.k,
-							longitude: vmMaps.userProfil.adresse.geometry.location.B,
+							latitude: vmMaps.userProfil.Adresse.coordonnee_x,
+							longitude: vmMaps.userProfil.Adresse.coordonnee_y,
 							templateurl:'window.tpl.html'
 						};
 						$scope.map.markers.push(marker);

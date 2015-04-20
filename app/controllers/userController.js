@@ -18,7 +18,7 @@ module.exports = {
 			models.User.find(
 			{
 				where:	{id_user : req.params.id},
-				include: [models.Photo]
+				include: [models.Photo,models.Adresse]
 			}).then(function(user){
 				res.status(HttpStatus.OK).send(user);
 			}).catch(function(err){
@@ -148,11 +148,11 @@ module.exports = {
 		*/
 		save : function (req, res, next) {
 			logger.log('debug','sauvegarde de l\'adresse d\'un utilisateur requête '+JSON.stringify(req.body));
-			/*var req_id_user = req.params.id_user;
+			var req_id_user = req.params.id_user;
 			var db_user;
 			var old_id_adresse;
 			var new_adresse={
-				adresse_complete 	: req.body.userProfil.adresse.formatted_adress,
+				adresse_complete 	: req.body.userProfil.adresse.formatted_address,
 				coordonnee_x 		: req.body.userProfil.adresse.geometry.location.B,
 				coordonnee_y		: req.body.userProfil.adresse.geometry.location.k
 			};
@@ -162,12 +162,13 @@ module.exports = {
 			.then(function(t){
 				logger.log('debug','userController|adresse|save|recherche du user en base'); 
 				myT=t;
-				return models.User.find({	where:	{id_user : req.params.id},
+				return models.User.find({	where:	{id_user : req.params.id_user},
 					include: [models.Adresse]})
 			})
 			.then(function(user){
 				db_user=user;
 				old_id_adresse = user.getDataValue('id_adresse');
+				logger.log('debug','userController|adresse|save|sauvegarde de la nouvelle adresse'); 
 				return models.Adresse.build(
 						new_adresse
 					).save({transaction:myT})
@@ -197,7 +198,7 @@ module.exports = {
 				logger.log('debug','user|adresse : commit transaction');
 				myT.commit();
 				res.status(HttpStatus.OK).send()
-			})*/
+			})
 			res.status(HttpStatus.OK).send(req.params);
 			/*.catch(function(err){
 				myT.rollback();
