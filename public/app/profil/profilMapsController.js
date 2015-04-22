@@ -20,6 +20,7 @@
 		var vmMaps = this;
 		$scope.showModal=false;
 		vmMaps.saveAdresse = saveAdresse;
+		vmMaps.logMap=logMap;
 		console.log('profilMapsController');
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -50,8 +51,8 @@
 			map: {
 				control: {},
 				center: { 
-					latitude: vmMaps.userProfil.Adresse?vmMaps.userProfil.Adresse.coordonnee_x:47.472955, 
-					longitude: vmMaps.userProfil.Adresse?vmMaps.userProfil.Adresse.coordonnee_y:-0.554351
+					latitude: 47.472955, 
+					longitude: -0.554351
 				},
 				zoom: 10,
 				dragging: false,
@@ -96,7 +97,7 @@
 								latitude: place.geometry.location.lat(),
 								longitude: place.geometry.location.lng(),
 								options: {
-								visible:false
+									visible:false
 								},
 								templateurl:'window.tpl.html',
 								templateparameter: place,
@@ -115,7 +116,7 @@
 								longitude: bounds.getSouthWest().lng()
 							} 
 						}
-						$scope.map.zoom = 14;
+						//$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
 								console.log($scope);
@@ -143,7 +144,9 @@
 			$rootScope.busy = mapsService.saveAdresse(vmMaps.userProfil);
 			//var toSave = 
 		}
-		
+		function logMap(){
+			console.log($scope.map);
+		}
 		function init(){
 			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
@@ -151,12 +154,29 @@
 					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 					console.log(vmMaps);
 					if(vmMaps.userProfil.Adresse){
+						
+						var bounds = new google.maps.LatLngBounds();
+						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.coordonnee_y,vmMaps.userProfil.Adresse.coordonnee_x);
+						bounds.extend(myPoint);
+						$scope.map.bounds = {
+							northeast: {
+								latitude: bounds.getNorthEast().lat(),
+								longitude: bounds.getNorthEast().lng()
+							},
+							southwest: {
+								latitude: bounds.getSouthWest().lat(),
+								longitude: bounds.getSouthWest().lng()
+							} 
+						}
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.Adresse.coordonnee_x,
-							longitude: vmMaps.userProfil.Adresse.coordonnee_y,
-							templateurl:'window.tpl.html'
+							//place_id: 1,vmMaps.userProfil.Adresse.place_id,
+							latitude: vmMaps.userProfil.Adresse.coordonnee_y,
+							longitude: vmMaps.userProfil.Adresse.coordonnee_x
+//							templateurl:'window.tpl.html'
 						};
+						console.log($scope.map);
+						console.log(marker);
 						$scope.map.markers.push(marker);
 					}
 				});
