@@ -20,8 +20,11 @@
 		var vmMaps = this;
 		$scope.showModal=false;
 		vmMaps.saveAdresse = saveAdresse;
-		vmMaps.logMap=logMap;
-		console.log('profilMapsController');
+		vmMaps.logMap = logMap;
+		vmMaps.changeAdresse = changeAdresse;
+		function changeAdresse(){
+			delete vmMaps.userProfil.Adresse;
+		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
 			maps.visualRefresh = true;
@@ -116,7 +119,6 @@
 								longitude: bounds.getSouthWest().lng()
 							} 
 						}
-						//$scope.map.zoom = 14;
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
 								console.log($scope);
@@ -125,6 +127,7 @@
 							};
 						}); 
 						$scope.map.markers = newMarkers;
+						$scope.map.zoom= 12;
 					}
 				}
 			}
@@ -132,27 +135,14 @@
 		init();
 		function saveAdresse(){
 			toggleModal();
-			/*mapsService.setPlace(vmMaps.place);
-			$rootScope.$emit('MAJ_ADRESSE');*/
 			vmMaps.userProfil.adresse = vmMaps.place;
-			/*$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
-				.then(function(data, status, headers, config){
-					vmProfil.userProfil=data;
-					vmProfil.userProfil
-					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
-				});*/
 			$rootScope.busy = mapsService.saveAdresse(vmMaps.userProfil);
-			//var toSave = 
-		}
-		function logMap(){
-			console.log($scope.map);
 		}
 		function init(){
 			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
 					vmMaps.userProfil=data;
 					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
-					console.log(vmMaps);
 					if(vmMaps.userProfil.Adresse){
 						
 						var bounds = new google.maps.LatLngBounds();
@@ -170,17 +160,18 @@
 						}
 						var marker = {
 							id:0,
-							//place_id: 1,vmMaps.userProfil.Adresse.place_id,
 							latitude: vmMaps.userProfil.Adresse.coordonnee_y,
 							longitude: vmMaps.userProfil.Adresse.coordonnee_x
-//							templateurl:'window.tpl.html'
 						};
-						console.log($scope.map);
-						console.log(marker);
+
 						$scope.map.markers.push(marker);
+						$scope.map.zoom= 12;
 					}
 				});
 			
+		}
+		function logMap(){
+			console.log($scope.map);
 		}
 		function toggleModal(){
 			$scope.showModal = !$scope.showModal;
