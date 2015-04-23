@@ -143,11 +143,16 @@
 			toggleModal();
 			toggleEditMode();
 			//vmMaps.userProfil.Adresse = vmMaps.place;
-			console.log(vmMaps.place);
-			for (var attrname in vmMaps.place) { vmMaps.userProfil.Adresse[attrname] = vmMaps.place[attrname]; console.log(vmMaps.userProfil.Adresse[attrname]);}
+			console.log(vmMaps.place.formatted_address);
+			vmMaps.userProfil.Adresse["formatted_address"] = vmMaps.place.formatted_address;
+			console.log(vmMaps.userProfil.Adresse["formatted_address"]);
+
 			console.log(vmMaps);
-			$rootScope.busy = vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
-			//mapsService.saveAdresse(vmMaps.userProfil);
+			vmMaps.userProfil.Adresse["latitude"]=vmMaps.place.geometry.location.k;
+			vmMaps.userProfil.Adresse["longitude"]=vmMaps.place.geometry.location.B;			
+			console.log(JSON.stringify(vmMaps));
+			//$rootScope.busy = 
+			vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
 		}
 		function init(){
 			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
@@ -156,7 +161,7 @@
 					if(vmMaps.userProfil.Adresse){
 						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
-						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.coordonnee_y,vmMaps.userProfil.Adresse.coordonnee_x);
+						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.latitude,vmMaps.userProfil.Adresse.longitude);
 						bounds.extend(myPoint);
 						$scope.map.bounds = {
 							northeast: {
@@ -170,8 +175,8 @@
 						}
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.Adresse.coordonnee_y,
-							longitude: vmMaps.userProfil.Adresse.coordonnee_x
+							latitude: vmMaps.userProfil.Adresse.latitude,
+							longitude: vmMaps.userProfil.Adresse.longitude
 						};
 
 						$scope.map.markers.push(marker);

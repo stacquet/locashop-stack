@@ -8,8 +8,8 @@ module.exports = function(sequelize, Sequelize) {
       primaryKey:true
     },
 	  formatted_address 			: Sequelize.STRING(500),
-	  coordonnee_x 					: Sequelize.DECIMAL(20,17),
-	  coordonnee_y					: Sequelize.DECIMAL(20,17)
+	  longitude 					    : Sequelize.DECIMAL(20,17),
+	  latitude					      : Sequelize.DECIMAL(20,17)
 	  },
   {
     timestamps: true,

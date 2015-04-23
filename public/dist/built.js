@@ -342,6 +342,125 @@ function modal(){
 
     angular
         .module('locashopApp')
+        .controller('profilController', profilController);
+
+    profilController.$inject = ['$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
+
+	function profilController($timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
+		var vmProfil = this;	
+		vmProfil.uploadedImage='';
+        vmProfil.croppedImage='';
+        vmProfil.profilImage='';
+        vmProfil.profilImageChanged=false;
+		vmProfil.saveProfil=saveProfil;
+		vmProfil.checkAdresse=checkAdresse;
+		vmProfil.upload=upload;
+		vmProfil.crop=crop;
+		vmProfil.dataURItoBlob=dataURItoBlob;
+		vmProfil.toggleModal=toggleModal;
+		vmProfil.updateProfilImage=updateProfilImage;
+		vmProfil.userProfil={};
+
+		$scope.showModal = false;
+		function toggleModal(){
+			$scope.showModal = !$scope.showModal;
+		};
+		init();
+
+		vmProfil.options = {
+		    language: 'en',
+		    allowedContent: true,
+		    entities: false
+		  };
+
+		function checkAdresse(){
+			vmProfil.userProfil.adresse = mapsService.getPosition();
+			console.log(vmProfil.userProfil.adresse);
+			console.log(mapsService.getPosition());
+		}
+	   function saveProfil(){
+			vmProfil.busy = upload().then(function(){
+				notifier.notify({template : 'Sauvegarde OK'});
+				},
+				function(error){
+					notifier.notify({template : error,type:'error'});
+				});
+		}
+
+		function init(){
+			vmProfil.busy = profilService.get({id : $stateParams.id_profil}).$promise
+				.then(function(data, status, headers, config){
+					vmProfil.userProfil=data;
+					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+				});
+		}
+
+		function upload() { 
+			var deferred = $q.defer();
+			var file = vmProfil.profilImageChanged?dataURItoBlob(vmProfil.profilImage):false;
+			var dataForm = 	{
+				url: '/api/profil/'+$stateParams.id_profil,
+	            fields: {'userProfil' : vmProfil.userProfil},
+	            file: file
+			}
+	        $upload.upload(dataForm).success(function (data, status, headers, config) {
+	                    deferred.resolve();
+	                }).error(function (data, status, headers, config) {
+	                	console.log('pas bon');
+	                    deferred.reject('error : '+data);
+	                });
+	        return deferred.promise;
+	    }
+		function crop(){
+			if(vmProfil.files){
+				console.log(vmProfil.files);
+				var file=vmProfil.files[0];
+	          	var reader = new FileReader();
+	          	reader.onload = function (evt) {
+		            $scope.$apply(function(){
+		              vmProfil.uploadedImage=evt.target.result;
+					  $scope.showModal = true;
+		            });
+		        }
+	        	reader.readAsDataURL(file);
+	        	
+	        }
+    	}
+    	function updateProfilImage(){
+    		vmProfil.profilImage=vmProfil.croppedImage;
+    		vmProfil.profilImageChanged=true;
+    		toggleModal();
+    	}
+    	$scope.$watch('vmProfil.files',function(){
+          vmProfil.crop();
+        });
+		
+		$scope.$on('MAJ_ADRESSE', function() {
+			console.log('Evénément reçu');
+			console.log(mapsService.getPlace());
+			vmProfil.userProfil.adresse = mapsService.getPlace();
+			$scope.myAdress = mapsService.getPlace();
+		});
+
+		function dataURItoBlob(dataURI) {
+			var binary = atob(dataURI.split(',')[1]);
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+			var array = [];
+			for(var i = 0; i < binary.length; i++) {
+			  array.push(binary.charCodeAt(i));
+			}
+			return new Blob([new Uint8Array(array)], {type: mimeString});
+		  };
+	}
+
+
+})();
+
+;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
         .controller('profilInfoController', profilInfoController);
 
     profilInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
@@ -589,11 +708,16 @@ function modal(){
 			toggleModal();
 			toggleEditMode();
 			//vmMaps.userProfil.Adresse = vmMaps.place;
-			console.log(vmMaps.place);
-			for (var attrname in vmMaps.place) { vmMaps.userProfil.Adresse[attrname] = vmMaps.place[attrname]; console.log(vmMaps.userProfil.Adresse[attrname]);}
+			console.log(vmMaps.place.formatted_address);
+			vmMaps.userProfil.Adresse["formatted_address"] = vmMaps.place.formatted_address;
+			console.log(vmMaps.userProfil.Adresse["formatted_address"]);
+
 			console.log(vmMaps);
-			$rootScope.busy = vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
-			//mapsService.saveAdresse(vmMaps.userProfil);
+			vmMaps.userProfil.Adresse["latitude"]=vmMaps.place.geometry.location.k;
+			vmMaps.userProfil.Adresse["longitude"]=vmMaps.place.geometry.location.B;			
+			console.log(JSON.stringify(vmMaps));
+			//$rootScope.busy = 
+			vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
 		}
 		function init(){
 			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
@@ -602,7 +726,7 @@ function modal(){
 					if(vmMaps.userProfil.Adresse){
 						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
-						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.coordonnee_y,vmMaps.userProfil.Adresse.coordonnee_x);
+						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.latitude,vmMaps.userProfil.Adresse.longitude);
 						bounds.extend(myPoint);
 						$scope.map.bounds = {
 							northeast: {
@@ -616,8 +740,8 @@ function modal(){
 						}
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.Adresse.coordonnee_y,
-							longitude: vmMaps.userProfil.Adresse.coordonnee_x
+							latitude: vmMaps.userProfil.Adresse.latitude,
+							longitude: vmMaps.userProfil.Adresse.longitude
 						};
 
 						$scope.map.markers.push(marker);

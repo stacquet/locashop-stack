@@ -170,8 +170,8 @@ module.exports = {
 			var old_id_adresse;
 			var new_adresse={
 				formatted_address 	: req.body.formatted_address,
-				coordonnee_x 		: req.body.geometry.location.B,
-				coordonnee_y		: req.body.geometry.location.k
+				longitude 		: req.body.longitude,
+				latitude		: req.body.latitude
 			};
 			var new_id_adresse;
 			var myT;
@@ -214,14 +214,13 @@ module.exports = {
 			.then(function(){
 				logger.log('debug','user|adresse : commit transaction');
 				myT.commit();
-				res.status(HttpStatus.OK).send()
+				res.status(HttpStatus.OK).send(new_adresse);
 			})
-			res.status(HttpStatus.OK).send(req.params);
-			/*.catch(function(err){
+			.catch(function(err){
 				myT.rollback();
 				logger.log('error','error : '+err);
 				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
-			});*/
+			});
 		}
 	}
 }
