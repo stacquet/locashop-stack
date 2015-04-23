@@ -7,7 +7,7 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey:true
     },
-	  adresse_complete 				: Sequelize.STRING(500),
+	  formatted_address 			: Sequelize.STRING(500),
 	  coordonnee_x 					: Sequelize.DECIMAL(20,17),
 	  coordonnee_y					: Sequelize.DECIMAL(20,17)
 	  },

@@ -258,12 +258,12 @@ angular
 
     function mapsService($http,$resource){
 		
-		/*var maps = $resource('/api/user/:id_user/adresse/:id_adresse');
+		var maps = $resource('/api/user/:id_user/adresse');
 		
-		return maps;*/
+		return maps;
 
 		
-		var service = {
+		/*var service = {
 			saveAdresse : saveAdresse
 		};
 		
@@ -277,7 +277,7 @@ angular
 						})
 						.error(function(data, status, headers, config) {
 						});
-		}
+		}*/
     }       
 })();
 ;(function () {
@@ -310,7 +310,6 @@ function modal(){
     return directive;
 	
 	function postLink(scope, element, attrs) {
-		console.log(scope);
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){
@@ -385,6 +384,7 @@ function modal(){
 		function init(){
 			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
+					console.log(data);
 					vmProfil.userProfil=data;
 					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
@@ -418,24 +418,17 @@ function modal(){
 		            });
 		        }
 	        	reader.readAsDataURL(file);
-	        	
 	        }
     	}
     	function updateProfilImage(){
     		vmProfil.profilImage=vmProfil.croppedImage;
     		vmProfil.profilImageChanged=true;
     		toggleModal();
+			console.log(vmProfil.userProfil);
     	}
     	$scope.$watch('vmProfil.files',function(){
           vmProfil.crop();
         });
-		
-		/*$rootScope.$on('MAJ_ADRESSE', function() {
-			console.log('Evénément reçu');
-			console.log(mapsService.getPlace());
-			vmProfil.userProfil.adresse = mapsService.getPlace();
-			$scope.myAdress = mapsService.getPlace();
-		});*/
 
 		function dataURItoBlob(dataURI) {
 			var binary = atob(dataURI.split(',')[1]);
@@ -474,9 +467,16 @@ function modal(){
 		$scope.showModal=false;
 		vmMaps.saveAdresse = saveAdresse;
 		vmMaps.logMap = logMap;
-		vmMaps.changeAdresse = changeAdresse;
-		function changeAdresse(){
-			delete vmMaps.userProfil.Adresse;
+		vmMaps.editMode = true;
+		vmMaps.toggleEditMode= toggleEditMode;
+		
+		vmMaps.userProfil={
+			id_user : $stateParams.id_profil,
+			Adresse : {}
+		};
+		
+		function toggleEditMode(){
+			vmMaps.editMode = !vmMaps.editMode;
 		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -574,7 +574,6 @@ function modal(){
 						}
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								console.log($scope);
 								vmMaps.place = marker.adresse;
 								$scope.showModal=true;
 							};
@@ -588,16 +587,20 @@ function modal(){
 		init();
 		function saveAdresse(){
 			toggleModal();
-			vmMaps.userProfil.adresse = vmMaps.place;
-			$rootScope.busy = mapsService.saveAdresse(vmMaps.userProfil);
+			toggleEditMode();
+			//vmMaps.userProfil.Adresse = vmMaps.place;
+			console.log(vmMaps.place);
+			for (var attrname in vmMaps.place) { vmMaps.userProfil.Adresse[attrname] = vmMaps.place[attrname]; console.log(vmMaps.userProfil.Adresse[attrname]);}
+			console.log(vmMaps);
+			$rootScope.busy = vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
+			//mapsService.saveAdresse(vmMaps.userProfil);
 		}
 		function init(){
-			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
-					vmMaps.userProfil=data;
-					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmMaps.userProfil.Adresse=data;
 					if(vmMaps.userProfil.Adresse){
-						
+						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
 						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.coordonnee_y,vmMaps.userProfil.Adresse.coordonnee_x);
 						bounds.extend(myPoint);
@@ -620,6 +623,12 @@ function modal(){
 						$scope.map.markers.push(marker);
 						$scope.map.zoom= 12;
 					}
+				})
+				.catch(function(err){
+					vmMaps.userProfil.Adresse=new mapsService();
+				})
+				.finally(function(){
+					console.log(vmMaps);
 				});
 			
 		}

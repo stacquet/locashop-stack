@@ -146,15 +146,32 @@ module.exports = {
 					3. On supprime l'ancienne adresse
 					4. On renvoie 200
 		*/
+		get : function (req, res, next) {
+			logger.log('debug','get de l\'adresse d\'un utilisateur requête '+JSON.stringify(req.body));
+			models.User.find({	where:	{id_user : req.params.id_user},	include: [models.Adresse]})
+			.then(function(user){
+				if(user){
+					if(user.dataValues.Adresse){
+						res.status(HttpStatus.OK).send(user.dataValues.Adresse.dataValues);
+					}
+					else{
+						res.status(HttpStatus.NOT_FOUND).send();
+					}
+				}
+				else{
+					res.status(HttpStatus.NOT_FOUND).send();
+				}
+			})
+		},
 		save : function (req, res, next) {
 			logger.log('debug','sauvegarde de l\'adresse d\'un utilisateur requête '+JSON.stringify(req.body));
 			var req_id_user = req.params.id_user;
 			var db_user;
 			var old_id_adresse;
 			var new_adresse={
-				adresse_complete 	: req.body.userProfil.adresse.formatted_address,
-				coordonnee_x 		: req.body.userProfil.adresse.geometry.location.B,
-				coordonnee_y		: req.body.userProfil.adresse.geometry.location.k
+				formatted_address 	: req.body.formatted_address,
+				coordonnee_x 		: req.body.geometry.location.B,
+				coordonnee_y		: req.body.geometry.location.k
 			};
 			var new_id_adresse;
 			var myT;

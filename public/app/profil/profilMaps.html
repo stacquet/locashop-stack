@@ -1,14 +1,14 @@
 <div class="form-horizontal spacer" >
 
-	<div class="form-group" ng-show="!vmMaps.userProfil.Adresse">
+	<div class="form-group" ng-show="vmMaps.editMode">
 		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
 		 <div class=" col-xs-10" id="profilMapsControllerParent"></div>
 	</div>
-	<div class="form-group" ng-show="vmMaps.userProfil.Adresse">
+	<div class="form-group" ng-show="!vmMaps.editMode">
 		<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
 		<div class="col-xs-10">
-			<p class="form-control-static">{{vmMaps.userProfil.Adresse.adresse_complete}}</p>
-			<a ng-click="vmMaps.changeAdresse()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
+			<p class="form-control-static">{{vmMaps.userProfil.Adresse.formatted_address}}</p>
+			<a ng-click="vmMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
 		</div>
 	</div>
 	<div>

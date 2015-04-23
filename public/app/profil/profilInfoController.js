@@ -45,6 +45,7 @@
 		function init(){
 			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
+					console.log(data);
 					vmProfil.userProfil=data;
 					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
@@ -78,24 +79,17 @@
 		            });
 		        }
 	        	reader.readAsDataURL(file);
-	        	
 	        }
     	}
     	function updateProfilImage(){
     		vmProfil.profilImage=vmProfil.croppedImage;
     		vmProfil.profilImageChanged=true;
     		toggleModal();
+			console.log(vmProfil.userProfil);
     	}
     	$scope.$watch('vmProfil.files',function(){
           vmProfil.crop();
         });
-		
-		/*$rootScope.$on('MAJ_ADRESSE', function() {
-			console.log('Evénément reçu');
-			console.log(mapsService.getPlace());
-			vmProfil.userProfil.adresse = mapsService.getPlace();
-			$scope.myAdress = mapsService.getPlace();
-		});*/
 
 		function dataURItoBlob(dataURI) {
 			var binary = atob(dataURI.split(',')[1]);

@@ -28,7 +28,6 @@ function modal(){
     return directive;
 	
 	function postLink(scope, element, attrs) {
-		console.log(scope);
 		scope.title = attrs.title;
 
 		scope.$watch(attrs.visible, function(value){

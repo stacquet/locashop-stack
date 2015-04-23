@@ -9,12 +9,12 @@
 
     function mapsService($http,$resource){
 		
-		/*var maps = $resource('/api/user/:id_user/adresse/:id_adresse');
+		var maps = $resource('/api/user/:id_user/adresse');
 		
-		return maps;*/
+		return maps;
 
 		
-		var service = {
+		/*var service = {
 			saveAdresse : saveAdresse
 		};
 		
@@ -28,6 +28,6 @@
 						})
 						.error(function(data, status, headers, config) {
 						});
-		}
+		}*/
     }       
 })();

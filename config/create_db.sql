@@ -3,7 +3,7 @@ CREATE DATABASE locashop  CHARACTER SET utf8;
 USE locashop;
 CREATE TABLE adresse (
   id_adresse INT NOT NULL AUTO_INCREMENT,
-  adresse_complete VARCHAR(500) NULL,
+  formatted_address VARCHAR(500) NULL,
   nom VARCHAR(45) NULL,
   complement_nom VARCHAR(45) NULL,
   complement_adresse VARCHAR(45) NULL,

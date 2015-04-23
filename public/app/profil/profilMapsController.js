@@ -21,9 +21,16 @@
 		$scope.showModal=false;
 		vmMaps.saveAdresse = saveAdresse;
 		vmMaps.logMap = logMap;
-		vmMaps.changeAdresse = changeAdresse;
-		function changeAdresse(){
-			delete vmMaps.userProfil.Adresse;
+		vmMaps.editMode = true;
+		vmMaps.toggleEditMode= toggleEditMode;
+		
+		vmMaps.userProfil={
+			id_user : $stateParams.id_profil,
+			Adresse : {}
+		};
+		
+		function toggleEditMode(){
+			vmMaps.editMode = !vmMaps.editMode;
 		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -121,7 +128,6 @@
 						}
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								console.log($scope);
 								vmMaps.place = marker.adresse;
 								$scope.showModal=true;
 							};
@@ -135,16 +141,20 @@
 		init();
 		function saveAdresse(){
 			toggleModal();
-			vmMaps.userProfil.adresse = vmMaps.place;
-			$rootScope.busy = mapsService.saveAdresse(vmMaps.userProfil);
+			toggleEditMode();
+			//vmMaps.userProfil.Adresse = vmMaps.place;
+			console.log(vmMaps.place);
+			for (var attrname in vmMaps.place) { vmMaps.userProfil.Adresse[attrname] = vmMaps.place[attrname]; console.log(vmMaps.userProfil.Adresse[attrname]);}
+			console.log(vmMaps);
+			$rootScope.busy = vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
+			//mapsService.saveAdresse(vmMaps.userProfil);
 		}
 		function init(){
-			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
 				.then(function(data, status, headers, config){
-					vmMaps.userProfil=data;
-					if(data.Photo) vmMaps.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmMaps.userProfil.Adresse=data;
 					if(vmMaps.userProfil.Adresse){
-						
+						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
 						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.coordonnee_y,vmMaps.userProfil.Adresse.coordonnee_x);
 						bounds.extend(myPoint);
@@ -167,6 +177,12 @@
 						$scope.map.markers.push(marker);
 						$scope.map.zoom= 12;
 					}
+				})
+				.catch(function(err){
+					vmMaps.userProfil.Adresse=new mapsService();
+				})
+				.finally(function(){
+					console.log(vmMaps);
 				});
 			
 		}
