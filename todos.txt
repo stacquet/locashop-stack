@@ -1,3 +1,2 @@
-splitter profil + ferme
-$resource
 sequalize autobuild
+teset selenium user info/adresse
