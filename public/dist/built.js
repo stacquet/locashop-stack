@@ -27,27 +27,27 @@ angular
 					controller : 'fermeController as vm'/*,
 					resolve : {
 						ferme : function(fermeService){
-							return fermeService.getProfil();
+							return fermeService.getuser();
 						}
 					}*/
 				})
-				.state('profil', {
-					url: '/profil/:id_profil',
-					templateUrl: 'app/profil/profil.html'
+				.state('user', {
+					url: '/user/:id_user',
+					templateUrl: 'app/user/user.html'
 				})
-					.state('profil.infos', {
+					.state('user.infos', {
 						url : '/infos',
-						templateUrl: 'app/profil/profilInfo.html',
-						controller : 'profilInfoController as vmProfil'
+						templateUrl: 'app/user/userInfo.html',
+						controller : 'userInfoController as vmUserInfo'
 					})
-					.state('profil.adresse', {
+					.state('user.adresse', {
 						url : '/adresse',
-						templateUrl: 'app/profil/profilMaps.html',
-						controller : 'profilMapsController as vmMaps'
+						templateUrl: 'app/user/userMaps.html',
+						controller : 'userMapsController as vmUserMaps'
 					})
-					.state('profil.mobile', {
+					.state('user.mobile', {
 						url : '/mobile',
-						templateUrl: 'app/profil/profilMobile.html'
+						templateUrl: 'app/user/userMobile.html'
 					})
 				;
 				
@@ -461,23 +461,23 @@ function modal(){
 
     angular
         .module('locashopApp')
-        .controller('profilInfoController', profilInfoController);
+        .controller('userInfoController', userInfoController);
 
-    profilInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
+    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','userService','mapsService'];
 
-	function profilInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
-		var vmProfil = this;	
-		vmProfil.uploadedImage='';
-        vmProfil.croppedImage='';
-        vmProfil.profilImage='';
-        vmProfil.profilImageChanged=false;
-		vmProfil.saveProfil=saveProfil;
-		vmProfil.upload=upload;
-		vmProfil.crop=crop;
-		vmProfil.dataURItoBlob=dataURItoBlob;
-		vmProfil.toggleModal=toggleModal;
-		vmProfil.updateProfilImage=updateProfilImage;
-		vmProfil.userProfil={};
+	function userInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,userService,mapsService){
+		var vmUserInfo = this;	
+		vmUserInfo.uploadedImage='';
+        vmUserInfo.croppedImage='';
+        vmUserInfo.profilImage='';
+        vmUserInfo.profilImageChanged=false;
+		vmUserInfo.saveProfil=saveProfil;
+		vmUserInfo.upload=upload;
+		vmUserInfo.crop=crop;
+		vmUserInfo.dataURItoBlob=dataURItoBlob;
+		vmUserInfo.toggleModal=toggleModal;
+		vmUserInfo.updateProfilImage=updateProfilImage;
+		vmUserInfo.user={};
 
 		$scope.showModal = false;
 		function toggleModal(){
@@ -485,14 +485,14 @@ function modal(){
 		};
 		init();
 
-		vmProfil.options = {
+		vmUserInfo.options = {
 		    language: 'en',
 		    allowedContent: true,
 		    entities: false
 		  };
 		  
 	   function saveProfil(){
-			vmProfil.busy = upload().then(function(){
+			vmUserInfo.busy = upload().then(function(){
 				notifier.notify({template : 'Sauvegarde OK'});
 				},
 				function(error){
@@ -501,20 +501,19 @@ function modal(){
 		}
 
 		function init(){
-			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			$rootScope.busy = userService.get({id : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
-					console.log(data);
-					vmProfil.userProfil=data;
-					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmUserInfo.user=data;
+					if(data.Photo) vmUserInfo.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
 		function upload() { 
 			var deferred = $q.defer();
-			var file = vmProfil.profilImageChanged?dataURItoBlob(vmProfil.profilImage):false;
+			var file = vmUserInfo.profilImageChanged?dataURItoBlob(vmUserInfo.profilImage):false;
 			var dataForm = 	{
-				url: '/api/profil/'+$stateParams.id_profil,
-	            fields: {'userProfil' : vmProfil.userProfil},
+				url: '/api/user/'+$stateParams.id_user,
+	            fields: {'user' : vmUserInfo.user},
 	            file: file
 			}
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
@@ -526,13 +525,13 @@ function modal(){
 	        return deferred.promise;
 	    }
 		function crop(){
-			if(vmProfil.files){
-				console.log(vmProfil.files);
-				var file=vmProfil.files[0];
+			if(vmUserInfo.files){
+				console.log(vmUserInfo.files);
+				var file=vmUserInfo.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
-		              vmProfil.uploadedImage=evt.target.result;
+		              vmUserInfo.uploadedImage=evt.target.result;
 					  $scope.showModal = true;
 		            });
 		        }
@@ -540,13 +539,13 @@ function modal(){
 	        }
     	}
     	function updateProfilImage(){
-    		vmProfil.profilImage=vmProfil.croppedImage;
-    		vmProfil.profilImageChanged=true;
+    		vmUserInfo.profilImage=vmUserInfo.croppedImage;
+    		vmUserInfo.profilImageChanged=true;
     		toggleModal();
-			console.log(vmProfil.userProfil);
+			console.log(vmUserInfo.user);
     	}
-    	$scope.$watch('vmProfil.files',function(){
-          vmProfil.crop();
+    	$scope.$watch('vmUserInfo.files',function(){
+          vmUserInfo.crop();
         });
 
 		function dataURItoBlob(dataURI) {
@@ -567,7 +566,7 @@ function modal(){
     'use strict';
 
 	angular.module('locashopApp')
-	.controller('profilMapsController', profilMapsController)
+	.controller('userMapsController', userMapsController)
 	.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 			GoogleMapApi.configure({
 			// key: 'your api key',
@@ -579,23 +578,23 @@ function modal(){
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
 	}]);
 	
-	profilMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','profilService'];
+	userMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','userService'];
 
-	function profilMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,profilService) {
-		var vmMaps = this;
+	function userMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
+		var vmUserMaps = this;
 		$scope.showModal=false;
-		vmMaps.saveAdresse = saveAdresse;
-		vmMaps.logMap = logMap;
-		vmMaps.editMode = true;
-		vmMaps.toggleEditMode= toggleEditMode;
+		vmUserMaps.saveAdresse = saveAdresse;
+		vmUserMaps.logMap = logMap;
+		vmUserMaps.editMode = true;
+		vmUserMaps.toggleEditMode= toggleEditMode;
 		
-		vmMaps.userProfil={
-			id_user : $stateParams.id_profil,
+		vmUserMaps.user={
+			id_user : $stateParams.id_user,
 			Adresse : {}
 		};
 		
 		function toggleEditMode(){
-			vmMaps.editMode = !vmMaps.editMode;
+			vmUserMaps.editMode = !vmUserMaps.editMode;
 		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -653,7 +652,7 @@ function modal(){
 				options: {
 					bounds: {}
 				},
-				parentdiv:'profilMapsControllerParent',
+				parentdiv:'userMapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
 						var places = searchBox.getPlaces()
@@ -693,7 +692,7 @@ function modal(){
 						}
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								vmMaps.place = marker.adresse;
+								vmUserMaps.place = marker.adresse;
 								$scope.showModal=true;
 							};
 						}); 
@@ -707,26 +706,20 @@ function modal(){
 		function saveAdresse(){
 			toggleModal();
 			toggleEditMode();
-			//vmMaps.userProfil.Adresse = vmMaps.place;
-			console.log(vmMaps.place.formatted_address);
-			vmMaps.userProfil.Adresse["formatted_address"] = vmMaps.place.formatted_address;
-			console.log(vmMaps.userProfil.Adresse["formatted_address"]);
-
-			console.log(vmMaps);
-			vmMaps.userProfil.Adresse["latitude"]=vmMaps.place.geometry.location.k;
-			vmMaps.userProfil.Adresse["longitude"]=vmMaps.place.geometry.location.B;			
-			console.log(JSON.stringify(vmMaps));
-			//$rootScope.busy = 
-			vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
+			console.log(vmUserMaps.place.formatted_address);
+			vmUserMaps.user.Adresse["formatted_address"] = vmUserMaps.place.formatted_address;
+			vmUserMaps.user.Adresse["latitude"]=vmUserMaps.place.geometry.location.k;
+			vmUserMaps.user.Adresse["longitude"]=vmUserMaps.place.geometry.location.B;			
+			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user});
 		}
 		function init(){
-			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
+			$rootScope.busy = mapsService.get({id_user : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
-					vmMaps.userProfil.Adresse=data;
-					if(vmMaps.userProfil.Adresse){
+					vmUserMaps.user.Adresse=data;
+					if(vmUserMaps.user.Adresse){
 						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
-						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.latitude,vmMaps.userProfil.Adresse.longitude);
+						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
 						bounds.extend(myPoint);
 						$scope.map.bounds = {
 							northeast: {
@@ -740,8 +733,8 @@ function modal(){
 						}
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.Adresse.latitude,
-							longitude: vmMaps.userProfil.Adresse.longitude
+							latitude: vmUserMaps.user.Adresse.latitude,
+							longitude: vmUserMaps.user.Adresse.longitude
 						};
 
 						$scope.map.markers.push(marker);
@@ -749,10 +742,10 @@ function modal(){
 					}
 				})
 				.catch(function(err){
-					vmMaps.userProfil.Adresse=new mapsService();
+					vmUserMaps.user.Adresse=new mapsService();
 				})
 				.finally(function(){
-					console.log(vmMaps);
+					console.log(vmUserMaps);
 				});
 			
 		}
@@ -769,15 +762,15 @@ function modal(){
 	
 	angular	
 		.module('locashopApp')
-		.factory('profilService', profilService);
+		.factory('userService', userService);
 	
-	profilService.$inject=['$http','$resource'];
+	userService.$inject=['$http','$resource'];
 
-    function profilService($http,$resource){
+    function userService($http,$resource){
 		
-		var profil = $resource('/api/profil/:id');
+		var user = $resource('/api/user/:id');
 		
-		return profil;
+		return user;
 		/*var service = {
 			getProfil 	: getProfil,
 			saveProfil	: saveProfil,

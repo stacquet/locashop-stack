@@ -18,7 +18,7 @@ module.exports = {
 			models.User.find(
 			{
 				where:	{id_user : req.params.id},
-				include: [models.Photo,models.Adresse]
+				include: [models.Photo]
 			}).then(function(user){
 				res.status(HttpStatus.OK).send(user);
 			}).catch(function(err){
@@ -61,7 +61,7 @@ module.exports = {
 			}
 		})
 		.then(function(files) {
-			req_user=JSON.parse(files[0].userProfil);
+			req_user=JSON.parse(files[0].user);
 			req_photo=files[1];
 			/* Si une photo est présente à l'upload on l'enregistre en base puis sur disque */
 			if(files[1].file){
@@ -214,7 +214,7 @@ module.exports = {
 			.then(function(){
 				logger.log('debug','user|adresse : commit transaction');
 				myT.commit();
-				res.status(HttpStatus.OK).send(new_adresse);
+				res.status(HttpStatus.OK).send();
 			})
 			.catch(function(err){
 				myT.rollback();

@@ -2,7 +2,7 @@
     'use strict';
 
 	angular.module('locashopApp')
-	.controller('profilMapsController', profilMapsController)
+	.controller('userMapsController', userMapsController)
 	.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
 			GoogleMapApi.configure({
 			// key: 'your api key',
@@ -14,23 +14,23 @@
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
 	}]);
 	
-	profilMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','profilService'];
+	userMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','userService'];
 
-	function profilMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,profilService) {
-		var vmMaps = this;
+	function userMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
+		var vmUserMaps = this;
 		$scope.showModal=false;
-		vmMaps.saveAdresse = saveAdresse;
-		vmMaps.logMap = logMap;
-		vmMaps.editMode = true;
-		vmMaps.toggleEditMode= toggleEditMode;
+		vmUserMaps.saveAdresse = saveAdresse;
+		vmUserMaps.logMap = logMap;
+		vmUserMaps.editMode = true;
+		vmUserMaps.toggleEditMode= toggleEditMode;
 		
-		vmMaps.userProfil={
-			id_user : $stateParams.id_profil,
+		vmUserMaps.user={
+			id_user : $stateParams.id_user,
 			Adresse : {}
 		};
 		
 		function toggleEditMode(){
-			vmMaps.editMode = !vmMaps.editMode;
+			vmUserMaps.editMode = !vmUserMaps.editMode;
 		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
@@ -88,7 +88,7 @@
 				options: {
 					bounds: {}
 				},
-				parentdiv:'profilMapsControllerParent',
+				parentdiv:'userMapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
 						var places = searchBox.getPlaces()
@@ -128,7 +128,7 @@
 						}
 						_.each(newMarkers, function(marker) {
 							marker.onClicked = function() {
-								vmMaps.place = marker.adresse;
+								vmUserMaps.place = marker.adresse;
 								$scope.showModal=true;
 							};
 						}); 
@@ -142,26 +142,20 @@
 		function saveAdresse(){
 			toggleModal();
 			toggleEditMode();
-			//vmMaps.userProfil.Adresse = vmMaps.place;
-			console.log(vmMaps.place.formatted_address);
-			vmMaps.userProfil.Adresse["formatted_address"] = vmMaps.place.formatted_address;
-			console.log(vmMaps.userProfil.Adresse["formatted_address"]);
-
-			console.log(vmMaps);
-			vmMaps.userProfil.Adresse["latitude"]=vmMaps.place.geometry.location.k;
-			vmMaps.userProfil.Adresse["longitude"]=vmMaps.place.geometry.location.B;			
-			console.log(JSON.stringify(vmMaps));
-			//$rootScope.busy = 
-			vmMaps.userProfil.Adresse.$save({id_user:$stateParams.id_profil});
+			console.log(vmUserMaps.place.formatted_address);
+			vmUserMaps.user.Adresse["formatted_address"] = vmUserMaps.place.formatted_address;
+			vmUserMaps.user.Adresse["latitude"]=vmUserMaps.place.geometry.location.k;
+			vmUserMaps.user.Adresse["longitude"]=vmUserMaps.place.geometry.location.B;			
+			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user});
 		}
 		function init(){
-			$rootScope.busy = mapsService.get({id_user : $stateParams.id_profil}).$promise
+			$rootScope.busy = mapsService.get({id_user : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
-					vmMaps.userProfil.Adresse=data;
-					if(vmMaps.userProfil.Adresse){
+					vmUserMaps.user.Adresse=data;
+					if(vmUserMaps.user.Adresse){
 						toggleEditMode();
 						var bounds = new google.maps.LatLngBounds();
-						var myPoint  = new google.maps.LatLng(vmMaps.userProfil.Adresse.latitude,vmMaps.userProfil.Adresse.longitude);
+						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
 						bounds.extend(myPoint);
 						$scope.map.bounds = {
 							northeast: {
@@ -175,8 +169,8 @@
 						}
 						var marker = {
 							id:0,
-							latitude: vmMaps.userProfil.Adresse.latitude,
-							longitude: vmMaps.userProfil.Adresse.longitude
+							latitude: vmUserMaps.user.Adresse.latitude,
+							longitude: vmUserMaps.user.Adresse.longitude
 						};
 
 						$scope.map.markers.push(marker);
@@ -184,10 +178,10 @@
 					}
 				})
 				.catch(function(err){
-					vmMaps.userProfil.Adresse=new mapsService();
+					vmUserMaps.user.Adresse=new mapsService();
 				})
 				.finally(function(){
-					console.log(vmMaps);
+					console.log(vmUserMaps);
 				});
 			
 		}

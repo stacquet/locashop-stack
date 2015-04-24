@@ -24,27 +24,27 @@
 					controller : 'fermeController as vm'/*,
 					resolve : {
 						ferme : function(fermeService){
-							return fermeService.getProfil();
+							return fermeService.getuser();
 						}
 					}*/
 				})
-				.state('profil', {
-					url: '/profil/:id_profil',
-					templateUrl: 'app/profil/profil.html'
+				.state('user', {
+					url: '/user/:id_user',
+					templateUrl: 'app/user/user.html'
 				})
-					.state('profil.infos', {
+					.state('user.infos', {
 						url : '/infos',
-						templateUrl: 'app/profil/profilInfo.html',
-						controller : 'profilInfoController as vmProfil'
+						templateUrl: 'app/user/userInfo.html',
+						controller : 'userInfoController as vmUserInfo'
 					})
-					.state('profil.adresse', {
+					.state('user.adresse', {
 						url : '/adresse',
-						templateUrl: 'app/profil/profilMaps.html',
-						controller : 'profilMapsController as vmMaps'
+						templateUrl: 'app/user/userMaps.html',
+						controller : 'userMapsController as vmUserMaps'
 					})
-					.state('profil.mobile', {
+					.state('user.mobile', {
 						url : '/mobile',
-						templateUrl: 'app/profil/profilMobile.html'
+						templateUrl: 'app/user/userMobile.html'
 					})
 				;
 				

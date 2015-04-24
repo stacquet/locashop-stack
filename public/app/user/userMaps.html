@@ -1,15 +1,20 @@
 <div class="form-horizontal spacer" >
 
-	<div class="form-group" ng-show="vmMaps.editMode">
+	<div class="form-group" ng-show="vmUserMaps.editMode">
 		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
-		 <div class=" col-xs-10" id="profilMapsControllerParent"></div>
+		 <div class=" col-xs-8" id="userMapsControllerParent"></div>
+		 <div class=" col-xs-2">
+			<a ng-click="vmUserMaps.toggleEditMode()" id="AnnulerAdresseButton" class="btn btn-sm btn-danger">Annuler </a>
+		 </div>
 	</div>
-	<div class="form-group" ng-show="!vmMaps.editMode">
+	<div class="form-group" ng-show="!vmUserMaps.editMode">
 		<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
-		<div class="col-xs-10">
-			<p class="form-control-static">{{vmMaps.userProfil.Adresse.formatted_address}}</p>
-			<a ng-click="vmMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
+		<div class="col-xs-8">
+			<p class="form-control-static">{{vmUserMaps.user.Adresse.formatted_address}}</p>
 		</div>
+		<div class=" col-xs-2">
+			<a ng-click="vmUserMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
+		 </div>
 	</div>
 	<div>
 	  <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"
@@ -22,7 +27,7 @@
 	</div>
 	<div class="form-group spacer">
 		<div class="col-xs-offset-10 col-xs-2">
-			<a ng-click="vmMaps.logMap()" id="mobileButton" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+			<a ng-click="vmUserMaps.logMap()" id="mobileButton" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
 		</div>  
 	</div>
 	
@@ -32,13 +37,13 @@
 			<div class="form-group">
 				<label for="email" class=" col-xs-6 control-label">Votre adresse</label>
 				<div class="col-xs-6">
-					<p class="form-control-static">{{vmMaps.place.formatted_address}}</p>
+					<p class="form-control-static">{{vmUserMaps.place.formatted_address}}</p>
 				</div>
 			</div>
 			<div class="form-group">
 		            <div class="col-xs-offset-5 ">
 		            	<!-- <a ui-sref="profil.mobile" id="adresseButton" ng-click="vm.saveAdresse()" class="btn btn-success"> -->
-		            	<a id="adresseButton" ng-click="vmMaps.saveAdresse()" class="btn btn-success">J'habite ici ! </a>
+		            	<a id="adresseButton" ng-click="vmUserMaps.saveAdresse()" class="btn btn-success">J'habite ici ! </a>
 		            </div>
 		   </div>
 		</div>

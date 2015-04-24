@@ -3,23 +3,23 @@
 
     angular
         .module('locashopApp')
-        .controller('profilInfoController', profilInfoController);
+        .controller('userInfoController', userInfoController);
 
-    profilInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','profilService','mapsService'];
+    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','userService','mapsService'];
 
-	function profilInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,profilService,mapsService){
-		var vmProfil = this;	
-		vmProfil.uploadedImage='';
-        vmProfil.croppedImage='';
-        vmProfil.profilImage='';
-        vmProfil.profilImageChanged=false;
-		vmProfil.saveProfil=saveProfil;
-		vmProfil.upload=upload;
-		vmProfil.crop=crop;
-		vmProfil.dataURItoBlob=dataURItoBlob;
-		vmProfil.toggleModal=toggleModal;
-		vmProfil.updateProfilImage=updateProfilImage;
-		vmProfil.userProfil={};
+	function userInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,userService,mapsService){
+		var vmUserInfo = this;	
+		vmUserInfo.uploadedImage='';
+        vmUserInfo.croppedImage='';
+        vmUserInfo.profilImage='';
+        vmUserInfo.profilImageChanged=false;
+		vmUserInfo.saveProfil=saveProfil;
+		vmUserInfo.upload=upload;
+		vmUserInfo.crop=crop;
+		vmUserInfo.dataURItoBlob=dataURItoBlob;
+		vmUserInfo.toggleModal=toggleModal;
+		vmUserInfo.updateProfilImage=updateProfilImage;
+		vmUserInfo.user={};
 
 		$scope.showModal = false;
 		function toggleModal(){
@@ -27,14 +27,14 @@
 		};
 		init();
 
-		vmProfil.options = {
+		vmUserInfo.options = {
 		    language: 'en',
 		    allowedContent: true,
 		    entities: false
 		  };
 		  
 	   function saveProfil(){
-			vmProfil.busy = upload().then(function(){
+			vmUserInfo.busy = upload().then(function(){
 				notifier.notify({template : 'Sauvegarde OK'});
 				},
 				function(error){
@@ -43,20 +43,19 @@
 		}
 
 		function init(){
-			$rootScope.busy = profilService.get({id : $stateParams.id_profil}).$promise
+			$rootScope.busy = userService.get({id : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
-					console.log(data);
-					vmProfil.userProfil=data;
-					if(data.Photo) vmProfil.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+					vmUserInfo.user=data;
+					if(data.Photo) vmUserInfo.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				});
 		}
 
 		function upload() { 
 			var deferred = $q.defer();
-			var file = vmProfil.profilImageChanged?dataURItoBlob(vmProfil.profilImage):false;
+			var file = vmUserInfo.profilImageChanged?dataURItoBlob(vmUserInfo.profilImage):false;
 			var dataForm = 	{
-				url: '/api/profil/'+$stateParams.id_profil,
-	            fields: {'userProfil' : vmProfil.userProfil},
+				url: '/api/user/'+$stateParams.id_user,
+	            fields: {'user' : vmUserInfo.user},
 	            file: file
 			}
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
@@ -68,13 +67,13 @@
 	        return deferred.promise;
 	    }
 		function crop(){
-			if(vmProfil.files){
-				console.log(vmProfil.files);
-				var file=vmProfil.files[0];
+			if(vmUserInfo.files){
+				console.log(vmUserInfo.files);
+				var file=vmUserInfo.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
-		              vmProfil.uploadedImage=evt.target.result;
+		              vmUserInfo.uploadedImage=evt.target.result;
 					  $scope.showModal = true;
 		            });
 		        }
@@ -82,13 +81,13 @@
 	        }
     	}
     	function updateProfilImage(){
-    		vmProfil.profilImage=vmProfil.croppedImage;
-    		vmProfil.profilImageChanged=true;
+    		vmUserInfo.profilImage=vmUserInfo.croppedImage;
+    		vmUserInfo.profilImageChanged=true;
     		toggleModal();
-			console.log(vmProfil.userProfil);
+			console.log(vmUserInfo.user);
     	}
-    	$scope.$watch('vmProfil.files',function(){
-          vmProfil.crop();
+    	$scope.$watch('vmUserInfo.files',function(){
+          vmUserInfo.crop();
         });
 
 		function dataURItoBlob(dataURI) {

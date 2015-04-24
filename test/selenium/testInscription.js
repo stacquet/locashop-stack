@@ -23,7 +23,7 @@ describe('Page de profil', function() {
     
 	it('enter an email that exists should lead to error message', function() {
 		inscriptionLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/inscription/inscription');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/inscription');
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.com');
 		element(by.model('vm.user.password')).sendKeys('tatata');
 		element(by.model('vm.user.passwordBis')).sendKeys('tatata');
@@ -33,7 +33,7 @@ describe('Page de profil', function() {
 	
 	it('enter 2 != password should lead to error message', function() {
 		inscriptionLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/inscription/inscription');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/inscription');
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.comd');
 		element(by.model('vm.user.password')).sendKeys('tatata');
 		element(by.model('vm.user.passwordBis')).sendKeys('tatatat');

@@ -22,7 +22,7 @@ describe('login test suite', function() {
     
 	it('click on login should lead to login page', function() {
 		loginLink.click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/home/login');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/login');
 	});
 	it('enter an wrong login email should let login button disabled', function() {
 		loginLink.click();
@@ -46,7 +46,7 @@ describe('login test suite', function() {
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.com');
 		element(by.model('vm.user.password')).sendKeys('tatata');
 		element(by.id('loginButton')).click();
-		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/');
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/');
 	});
 
 	it('enter a wrong login and password and click login should show error message', function() {

@@ -3,15 +3,15 @@
 	
 	angular	
 		.module('locashopApp')
-		.factory('profilService', profilService);
+		.factory('userService', userService);
 	
-	profilService.$inject=['$http','$resource'];
+	userService.$inject=['$http','$resource'];
 
-    function profilService($http,$resource){
+    function userService($http,$resource){
 		
-		var profil = $resource('/api/profil/:id');
+		var user = $resource('/api/user/:id');
 		
-		return profil;
+		return user;
 		/*var service = {
 			getProfil 	: getProfil,
 			saveProfil	: saveProfil,
