@@ -1,10 +1,10 @@
 
-      <form class="form-horizontal" name="information_personnelle">
+      <form class="form-horizontal" name="information_personnelle" ng-show="vmUserInfo.ajax">
 			<legend>Mes informations personnelles</legend>
 			<div class="form-group">
 				<label for="email" class=" col-xs-2 control-label">Email</label>
 				<div class="col-xs-10">
-					<p class="form-control-static">{{vmUserInfo.user.email}}</p>
+					<p class="form-control-static" id="userInfoEmail">{{vmUserInfo.user.email}}</p>
 				</div>
 			</div>
             
@@ -29,16 +29,16 @@
 			<div class="form-group">
 				<label for="image" class="col-xs-2 control-label">Photo de profil</label>
 				<div class="col-xs-10" ng-show="!vmUserInfo.profilImage">
-					<div class="btn btn-sm btn-success" ng-file-select ng-model="vmUserInfo.files" >Ajouter</div>
+					<div id="userInfoUploadButton" class="btn btn-sm btn-success" ng-file-select ng-model="vmUserInfo.files" >Ajouter</div>
 					</div>
 					<div class="col-xs-10" ng-show="vmUserInfo.profilImage">
 						<img class="image-arrondie" ng-src="{{vmUserInfo.profilImage}}" onerror="this.src='/storage/image_not_found.png'"/>
-					<div class="btn btn-sm btn-success" ng-file-select ng-model="vmUserInfo.files" >Modifier</div>
+					<div id="userInfoUploadButtonModify" class="btn btn-sm btn-success" ng-file-select ng-model="vmUserInfo.files" >Modifier</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-xs-offset-10 col-xs-2">
-					<a ui-sref="user.adresse" id="adresseButton" ng-click="vmUserInfo.saveProfil()" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+					<a id="saveUserInfoButton" ng-click="vmUserInfo.saveProfil()" class="btn btn-sm btn-success">Poursuivre <span class="glyphicon glyphicon-circle-arrow-right"></span></a>
 				</div>  
 			</div>
 		</form>
@@ -46,6 +46,6 @@
 		<modal title="Login form" visible="showModal">
 			<form role="form">
 			  <div class="cropArea"><img-crop image="vmUserInfo.uploadedImage" result-image="vmUserInfo.croppedImage"></img-crop></div>
-			  <div class="btn btn-sm btn-success" ng-click="vmUserInfo.updateProfilImage()">OK</div>
+			  <div id="userInfoUploadButtonOK" class="btn btn-sm btn-success" ng-click="vmUserInfo.updateProfilImage()">OK</div>
 			</form>
 		</modal>

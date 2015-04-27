@@ -463,9 +463,9 @@ function modal(){
         .module('locashopApp')
         .controller('userInfoController', userInfoController);
 
-    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','userService','mapsService'];
+    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','userService','mapsService'];
 
-	function userInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,userService,mapsService){
+	function userInfoController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,userService,mapsService){
 		var vmUserInfo = this;	
 		vmUserInfo.uploadedImage='';
         vmUserInfo.croppedImage='';
@@ -478,6 +478,7 @@ function modal(){
 		vmUserInfo.toggleModal=toggleModal;
 		vmUserInfo.updateProfilImage=updateProfilImage;
 		vmUserInfo.user={};
+		vmUserInfo.ajax=false;
 
 		$scope.showModal = false;
 		function toggleModal(){
@@ -492,8 +493,9 @@ function modal(){
 		  };
 		  
 	   function saveProfil(){
-			vmUserInfo.busy = upload().then(function(){
-				notifier.notify({template : 'Sauvegarde OK'});
+			$rootScope.busy = upload().then(function(){
+				//notifier.notify({template : 'Sauvegarde OK'});
+				$state.go('user.adresse');
 				},
 				function(error){
 					notifier.notify({template : error,type:'error'});
@@ -505,7 +507,11 @@ function modal(){
 				.then(function(data, status, headers, config){
 					vmUserInfo.user=data;
 					if(data.Photo) vmUserInfo.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+				})
+				.finally(function(){
+					vmUserInfo.ajax = true;
 				});
+				
 		}
 
 		function upload() { 
@@ -583,10 +589,12 @@ function modal(){
 	function userMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
 		var vmUserMaps = this;
 		$scope.showModal=false;
+		vmUserMaps.place_changed=false;
 		vmUserMaps.saveAdresse = saveAdresse;
 		vmUserMaps.logMap = logMap;
 		vmUserMaps.editMode = true;
 		vmUserMaps.toggleEditMode= toggleEditMode;
+		vmUserMaps.ajax = false;
 		
 		vmUserMaps.user={
 			id_user : $stateParams.id_user,
@@ -655,6 +663,8 @@ function modal(){
 				parentdiv:'userMapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
+						vmUserMaps.place_changed=true;
+						console.log("vmUserMaps.place_changed : "+vmUserMaps.place_changed);
 						var places = searchBox.getPlaces()
 						if (places.length == 0) {
 							return;
@@ -664,7 +674,7 @@ function modal(){
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
-							var marker = {
+							var marker = { 
 								id:i,
 								place_id: place.place_id,
 								name: place.name,
@@ -698,6 +708,7 @@ function modal(){
 						}); 
 						$scope.map.markers = newMarkers;
 						$scope.map.zoom= 12;
+						
 					}
 				}
 			}
@@ -711,10 +722,12 @@ function modal(){
 			vmUserMaps.user.Adresse["latitude"]=vmUserMaps.place.geometry.location.k;
 			vmUserMaps.user.Adresse["longitude"]=vmUserMaps.place.geometry.location.B;			
 			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user});
+			vmUserMaps.place_changed=false;
 		}
 		function init(){
 			$rootScope.busy = mapsService.get({id_user : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
+					
 					vmUserMaps.user.Adresse=data;
 					if(vmUserMaps.user.Adresse){
 						toggleEditMode();
@@ -746,6 +759,7 @@ function modal(){
 				})
 				.finally(function(){
 					console.log(vmUserMaps);
+					vmUserMaps.ajax=true;
 				});
 			
 		}

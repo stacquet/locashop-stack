@@ -1,12 +1,14 @@
 var request = require('request');
+var path = require('path');
+
 describe('User info page', function() {
 
 	var loginLink = element(by.id('loginLink'));
-	var profilLink = element(by.id('profilLink'));
-	var saveProfilButton = element(by.id('saveProfilButton'))
+	var profilLink = element(by.id('userInfoLink'));
+	var saveProfilButton = element(by.id('saveUserInfoButton'))
 	var baseUrl = 'http://localhost:3000';
 
-	browser.get(baseUrl+"/#/user/1/infos");
+	
 	
 	/*afterEach(function() {
 		element(by.id('menuAutenticated')).isDisplayed().then(function(isDisplayed){
@@ -35,4 +37,23 @@ describe('User info page', function() {
 		element(by.id('pac-input')).sendKeys('7 rue lauz');
 		saveProfilButton.click();
 	});*/
+	it('work with userInfo form', function() {
+		browser.get(baseUrl+"/#/user/1/infos");
+		expect(element(by.id('userInfoEmail')).getText()).toEqual('sylvain.tacquet@gmail.com');
+		element(by.model('vmUserInfo.user.nom')).clear();
+		element(by.model('vmUserInfo.user.prenom')).clear();
+		element(by.model('vmUserInfo.user.age')).clear();
+		element(by.model('vmUserInfo.user.nom')).sendKeys('tacquet');
+		element(by.model('vmUserInfo.user.prenom')).sendKeys('sylvain');
+		element(by.model('vmUserInfo.user.age')).sendKeys('26');
+		/*var fileToUpload = '20140829_142035.jpg';
+		var absolutePath = path.resolve(__dirname, fileToUpload);
+		element(by.id('userInfoUploadButtonModify')).click();
+		$('input[type="file"]').sendKeys(absolutePath);
+		element(by.id('userInfoUploadButtonOK')).click();
+		browser.sleep(5000);
+		*/
+		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/user/1/adresse');
+
+	});
 });

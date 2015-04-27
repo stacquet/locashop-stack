@@ -73,7 +73,7 @@
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{$root.userInfos.email}} <span class="caret"></span></a>
 					  <ul class="dropdown-menu" role="menu">
 						<li><a href="/user/producteur" data-toggle="collapse" data-target=".navbar-collapse">Mon espace producteur</a></li>
-						<li><a ui-sref="user.infos({id_user : $root.userInfos.id_user})" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
+						<li><a id="userInfoLink" ui-sref="user.infos({id_user : $root.userInfos.id_user})" data-toggle="collapse" data-target=".navbar-collapse">Mon profil</a></li>
 						<li class="divider"></li>
 						<li><a id="logoutLink" ng-click="vm.logout()" data-toggle="collapse" data-target=".navbar-collapse" >Logout</a></li>
 					  </ul>

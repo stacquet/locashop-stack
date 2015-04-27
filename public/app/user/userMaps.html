@@ -1,20 +1,29 @@
 <div class="form-horizontal spacer" >
-
-	<div class="form-group" ng-show="vmUserMaps.editMode">
-		 <label for="mobile" class="col-xs-2 control-label">Adresse postale</label>
-		 <div class=" col-xs-8" id="userMapsControllerParent"></div>
-		 <div class=" col-xs-2">
-			<a ng-click="vmUserMaps.toggleEditMode()" id="AnnulerAdresseButton" class="btn btn-sm btn-danger">Annuler </a>
-		 </div>
-	</div>
-	<div class="form-group" ng-show="!vmUserMaps.editMode">
-		<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
-		<div class="col-xs-8">
-			<p class="form-control-static">{{vmUserMaps.user.Adresse.formatted_address}}</p>
+	<div ng-show="vmUserMaps.ajax">
+		<div class="form-group" ng-show="vmUserMaps.editMode">
+			<div class="alert alert-warning alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Commencez à entrer votre adresse dans la barre d'adresse
+			</div>
+			<label for="mobile" class="col-xs-2 control-label ">Adresse postale</label>
+			<div class=" col-xs-8" id="userMapsControllerParent"></div>
+			<div class=" col-xs-2">
+				<a ng-click="vmUserMaps.toggleEditMode()" id="AnnulerAdresseButton" class="btn btn-sm btn-danger">Annuler </a>
+			</div>
 		</div>
-		<div class=" col-xs-2">
-			<a ng-click="vmUserMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
-		 </div>
+		<div class="alert alert-warning alert-dismissible" ng-show="vmUserMaps.place_changed" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				Cliquez sur le marqueur pour confirmez votre adresse
+		</div>
+		<div class="form-group" ng-show="!vmUserMaps.editMode">
+			<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
+			<div class="col-xs-8">
+				<p class="form-control-static">{{vmUserMaps.user.Adresse.formatted_address}}</p>
+			</div>
+			<div class=" col-xs-2">
+				<a ng-click="vmUserMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
+			 </div>
+		</div>
 	</div>
 	<div>
 	  <ui-gmap-google-map center="map.center" zoom="map.zoom" dragging="map.dragging"

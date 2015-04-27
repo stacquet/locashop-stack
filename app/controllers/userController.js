@@ -129,7 +129,7 @@ module.exports = {
 		.catch(function(err){
 			myT.rollback();
 			logger.log('error','error : '+err);
-			res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+			res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err);
 		});
 	},
 	

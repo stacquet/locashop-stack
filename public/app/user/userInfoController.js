@@ -5,9 +5,9 @@
         .module('locashopApp')
         .controller('userInfoController', userInfoController);
 
-    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$upload','$q','notifier','userService','mapsService'];
+    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','userService','mapsService'];
 
-	function userInfoController($rootScope,$timeout,$scope,$stateParams,$upload,$q,notifier,userService,mapsService){
+	function userInfoController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,userService,mapsService){
 		var vmUserInfo = this;	
 		vmUserInfo.uploadedImage='';
         vmUserInfo.croppedImage='';
@@ -20,6 +20,7 @@
 		vmUserInfo.toggleModal=toggleModal;
 		vmUserInfo.updateProfilImage=updateProfilImage;
 		vmUserInfo.user={};
+		vmUserInfo.ajax=false;
 
 		$scope.showModal = false;
 		function toggleModal(){
@@ -34,8 +35,9 @@
 		  };
 		  
 	   function saveProfil(){
-			vmUserInfo.busy = upload().then(function(){
-				notifier.notify({template : 'Sauvegarde OK'});
+			$rootScope.busy = upload().then(function(){
+				//notifier.notify({template : 'Sauvegarde OK'});
+				$state.go('user.adresse');
 				},
 				function(error){
 					notifier.notify({template : error,type:'error'});
@@ -47,7 +49,11 @@
 				.then(function(data, status, headers, config){
 					vmUserInfo.user=data;
 					if(data.Photo) vmUserInfo.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
+				})
+				.finally(function(){
+					vmUserInfo.ajax = true;
 				});
+				
 		}
 
 		function upload() { 

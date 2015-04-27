@@ -19,10 +19,12 @@
 	function userMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
 		var vmUserMaps = this;
 		$scope.showModal=false;
+		vmUserMaps.place_changed=false;
 		vmUserMaps.saveAdresse = saveAdresse;
 		vmUserMaps.logMap = logMap;
 		vmUserMaps.editMode = true;
 		vmUserMaps.toggleEditMode= toggleEditMode;
+		vmUserMaps.ajax = false;
 		
 		vmUserMaps.user={
 			id_user : $stateParams.id_user,
@@ -91,6 +93,8 @@
 				parentdiv:'userMapsControllerParent',
 				events: {
 					places_changed: function (searchBox) {
+						vmUserMaps.place_changed=true;
+						console.log("vmUserMaps.place_changed : "+vmUserMaps.place_changed);
 						var places = searchBox.getPlaces()
 						if (places.length == 0) {
 							return;
@@ -100,7 +104,7 @@
 						var bounds = new google.maps.LatLngBounds();
 						for (var i = 0, place; place = places[i]; i++) {
 							// Create a marker for each place.
-							var marker = {
+							var marker = { 
 								id:i,
 								place_id: place.place_id,
 								name: place.name,
@@ -134,6 +138,7 @@
 						}); 
 						$scope.map.markers = newMarkers;
 						$scope.map.zoom= 12;
+						
 					}
 				}
 			}
@@ -147,10 +152,12 @@
 			vmUserMaps.user.Adresse["latitude"]=vmUserMaps.place.geometry.location.k;
 			vmUserMaps.user.Adresse["longitude"]=vmUserMaps.place.geometry.location.B;			
 			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user});
+			vmUserMaps.place_changed=false;
 		}
 		function init(){
 			$rootScope.busy = mapsService.get({id_user : $stateParams.id_user}).$promise
 				.then(function(data, status, headers, config){
+					
 					vmUserMaps.user.Adresse=data;
 					if(vmUserMaps.user.Adresse){
 						toggleEditMode();
@@ -182,6 +189,7 @@
 				})
 				.finally(function(){
 					console.log(vmUserMaps);
+					vmUserMaps.ajax=true;
 				});
 			
 		}
