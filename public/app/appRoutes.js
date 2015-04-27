@@ -44,7 +44,8 @@
 					})
 					.state('user.mobile', {
 						url : '/mobile',
-						templateUrl: 'app/user/userMobile.html'
+						templateUrl: 'app/user/userMobile.html',
+						controller : 'userMobileController as vmUserMobile'
 					})
 				;
 				

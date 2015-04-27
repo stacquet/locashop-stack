@@ -5,9 +5,9 @@
 		.module('locashopApp')
 		.factory('userService', userService);
 	
-	userService.$inject=['$http','$resource'];
+	userService.$inject=['$resource'];
 
-    function userService($http,$resource){
+    function userService($resource){
 		
 		var user = $resource('/api/user/:id');
 		

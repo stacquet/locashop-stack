@@ -47,7 +47,8 @@ angular
 					})
 					.state('user.mobile', {
 						url : '/mobile',
-						templateUrl: 'app/user/userMobile.html'
+						templateUrl: 'app/user/userMobile.html',
+						controller : 'userMobileController as vmUserMobile'
 					})
 				;
 				
@@ -254,30 +255,30 @@ angular
 		.module('locashopApp')
 		.factory('mapsService', mapsService);
 	
-	mapsService.$inject=['$http','$resource'];
+	mapsService.$inject=['$resource'];
 
-    function mapsService($http,$resource){
+    function mapsService($resource){
 		
 		var maps = $resource('/api/user/:id_user/adresse');
 		
 		return maps;
-
-		
-		/*var service = {
-			saveAdresse : saveAdresse
-		};
-		
-		return service;
+    }       
+})();
+;(function () {
+    'use strict';
 	
-		function saveAdresse(data){
-			return $http.post('/api/user/1/adresse',{'userProfil':data})
-						.success(function(data, status, headers, config) {
-							console.log(data);
-							return data;
-						})
-						.error(function(data, status, headers, config) {
-						});
-		}*/
+	angular	
+		.module('locashopApp')
+		.factory('mobileService', mobileService);
+	
+	mobileService.$inject=['$resource'];
+
+    function mobileService($resource){
+		
+		var mobile = $resource('/api/user/:id_user/mobile');
+		
+		return mobile;
+	
     }       
 })();
 ;(function () {
@@ -584,26 +585,21 @@ function modal(){
 		$templateCache.put('searchbox.tpl.html', '<input id="pac-input" class="form-control" type="text" placeholder="Rechercher votre adresse">');
 	}]);
 	
-	userMapsController.$inject= ['$rootScope','$scope','$stateParams', '$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','userService'];
+	userMapsController.$inject= ['$rootScope','$scope','$stateParams', '$state','$timeout', 'uiGmapLogger', '$http','uiGmapGoogleMapApi','mapsService','userService'];
 
-	function userMapsController($rootScope,$scope, $stateParams,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
+	function userMapsController($rootScope,$scope, $stateParams,$state,$timeout, $log, $http, GoogleMapApi,mapsService,userService) {
 		var vmUserMaps = this;
 		$scope.showModal=false;
 		vmUserMaps.place_changed=false;
 		vmUserMaps.saveAdresse = saveAdresse;
 		vmUserMaps.logMap = logMap;
-		vmUserMaps.editMode = true;
-		vmUserMaps.toggleEditMode= toggleEditMode;
+		vmUserMaps.editMode = 'edit'; // can take value read, edit, new
 		vmUserMaps.ajax = false;
 		
 		vmUserMaps.user={
 			id_user : $stateParams.id_user,
 			Adresse : {}
 		};
-		
-		function toggleEditMode(){
-			vmUserMaps.editMode = !vmUserMaps.editMode;
-		}
 		$log.doLog = true
 		GoogleMapApi.then(function(maps) {
 			maps.visualRefresh = true;
@@ -664,7 +660,6 @@ function modal(){
 				events: {
 					places_changed: function (searchBox) {
 						vmUserMaps.place_changed=true;
-						console.log("vmUserMaps.place_changed : "+vmUserMaps.place_changed);
 						var places = searchBox.getPlaces()
 						if (places.length == 0) {
 							return;
@@ -716,13 +711,17 @@ function modal(){
 		init();
 		function saveAdresse(){
 			toggleModal();
-			toggleEditMode();
+			vmUserMaps.editMode='read';
 			console.log(vmUserMaps.place.formatted_address);
 			vmUserMaps.user.Adresse["formatted_address"] = vmUserMaps.place.formatted_address;
 			vmUserMaps.user.Adresse["latitude"]=vmUserMaps.place.geometry.location.k;
 			vmUserMaps.user.Adresse["longitude"]=vmUserMaps.place.geometry.location.B;			
-			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user});
-			vmUserMaps.place_changed=false;
+			$rootScope.busy = vmUserMaps.user.Adresse.$save({id_user:$stateParams.id_user})
+				.then(function(){
+					$state.go('user.mobile');
+					vmUserMaps.place_changed=false;
+				});
+
 		}
 		function init(){
 			$rootScope.busy = mapsService.get({id_user : $stateParams.id_user}).$promise
@@ -730,7 +729,7 @@ function modal(){
 					
 					vmUserMaps.user.Adresse=data;
 					if(vmUserMaps.user.Adresse){
-						toggleEditMode();
+						vmUserMaps.editMode='read';
 						var bounds = new google.maps.LatLngBounds();
 						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
 						bounds.extend(myPoint);
@@ -756,9 +755,9 @@ function modal(){
 				})
 				.catch(function(err){
 					vmUserMaps.user.Adresse=new mapsService();
+					vmUserMaps.editMode='new';
 				})
 				.finally(function(){
-					console.log(vmUserMaps);
 					vmUserMaps.ajax=true;
 				});
 			
@@ -773,14 +772,59 @@ function modal(){
 
 })();;(function () {
     'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('userMobileController', userMobileController);
+
+    userMobileController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','mobileService'];
+
+	function userMobileController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,mobileService){
+		var vmUserMobile 			= this;	
+		vmUserMobile.user 			={};
+		vmUserMobile.ajax			=false;
+		vmUserMobile.editMode		='edit';
+		vmUserMobile.saveMobile		=saveMobile;
+		init();
+
+		  
+	   function saveMobile(){
+	   		console.log('saving mobile');
+			$rootScope.busy = vmUserMobile.user.$save({id_user:$stateParams.id_user})
+				.then(function(){
+					//$state.go('user.mobile');
+				});
+		}
+
+		function init(){
+			$rootScope.busy = mobileService.get({id_user : $stateParams.id_user}).$promise
+				.then(function(data, status, headers, config){
+					vmUserMobile.user=data;
+				})
+				.catch(function(err){
+					vmUserMobile.user=new mobileService();
+					vmUserMobile.editMode='new';
+				})
+				.finally(function(){
+					vmUserMobile.ajax=true;
+				});
+				
+		}
+	}
+
+
+})();
+
+;(function () {
+    'use strict';
 	
 	angular	
 		.module('locashopApp')
 		.factory('userService', userService);
 	
-	userService.$inject=['$http','$resource'];
+	userService.$inject=['$resource'];
 
-    function userService($http,$resource){
+    function userService($resource){
 		
 		var user = $resource('/api/user/:id');
 		

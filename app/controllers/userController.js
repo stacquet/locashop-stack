@@ -222,5 +222,72 @@ module.exports = {
 				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 			});
 		}
+	},
+	mobile : {
+		/* Save or update of the user's mobile phone. To achieve this, we query the user :
+				- if user not found => 404
+				- if user has no mobile phone :
+					1. We insert the mobile phone
+					2. return 200
+				- if user has an old mobile phone :
+					1. We update the mobile phone, set mobile_valide to false and generate a new mobile_verification_token
+					2. We send a message to the mobile phone
+					4. return 200				
+		*/
+		get : function (req, res, next) {
+			logger.log('debug','get du mobile d\' un utilisateur requête '+JSON.stringify(req.body));
+			models.User.find({	where:	{id_user : req.params.id_user}})
+			.then(function(user){
+				if(user){
+					res.status(HttpStatus.OK).send(user.dataValues);
+				}
+				else{
+					res.status(HttpStatus.NOT_FOUND).send();
+				}
+			})
+		},
+		save : function (req, res, next) {
+			logger.log('debug','sauvegarde du mobile d\'un utilisateur requête '+JSON.stringify(req.body));
+			var req_id_user = req.params.id_user;
+			var form_mobile = req.body.mobile;
+			var db_user;
+			var mobile_verification_token;
+			var myT;
+			if(/^\d{10}$/.test(form_mobile)){
+				models.sequelize.transaction()
+				.then(function(t){
+					logger.log('debug','userController|mobile|save|query user'); 
+					myT=t;
+					return models.User.find({	where:	{id_user : req.params.id_user}})
+				})
+				.then(function(user){
+					db_user=user;
+					db_user.mobile=form_mobile;
+					db_user.mobile_verified=false;
+					var mobile_verification_token = Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10)
+						+''+Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10);
+					db_user.mobile_verification_token=mobile_verification_token;
+					logger.log('debug','userController|mobile|save|save mobile with new mobile_verification_token'); 
+					return db_user.save({transaction:myT})
+				})
+				.then(function(){
+					logger.log('debug','user|mobile : commit transaction');
+					myT.commit();
+					res.status(HttpStatus.OK).send();
+				})
+				.catch(function(err){
+					myT.rollback();
+					logger.log('error','error : '+err);
+					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+				});
+			}
+			else{
+				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('format mobile invalide');
+			}
+		},
+		validate : function (req, res, next) {
+			logger.log('debug','validation du mobile d\'un utilisateur requête '+JSON.stringify(req.body));
+			
+		}
 	}
 }

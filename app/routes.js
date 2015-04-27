@@ -11,10 +11,12 @@ module.exports = function (app,passport) {
 	app.get('/api/home/logout'										, controllers.auth.logout);
 	app.get('/auth/facebook'										, controllers.auth.facebook);
 	app.get('/auth/facebook/callback'								, controllers.auth.facebook_callback); 
-	app.get('/api/user/:id'										, controllers.user.get); 
+	app.get('/api/user/:id'											, controllers.user.get); 
 	app.post('/api/user/:id'										, controllers.user.save); 
 	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 
 	app.get('/api/user/:id_user/adresse'							, controllers.user.adresse.get); 
+	app.get('/api/user/:id_user/mobile'								, controllers.user.mobile.get); 
+	app.post('/api/user/:id_user/mobile'							, controllers.user.mobile.save); 
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.get('*'														, controllers.home.home);
 };

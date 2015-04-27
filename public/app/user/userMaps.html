@@ -1,6 +1,6 @@
 <div class="form-horizontal spacer" >
 	<div ng-show="vmUserMaps.ajax">
-		<div class="form-group" ng-show="vmUserMaps.editMode">
+		<div class="form-group" ng-show="vmUserMaps.editMode=='edit' || vmUserMaps.editMode=='new'">
 			<div class="alert alert-warning alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				Commencez à entrer votre adresse dans la barre d'adresse
@@ -8,20 +8,20 @@
 			<label for="mobile" class="col-xs-2 control-label ">Adresse postale</label>
 			<div class=" col-xs-8" id="userMapsControllerParent"></div>
 			<div class=" col-xs-2">
-				<a ng-click="vmUserMaps.toggleEditMode()" id="AnnulerAdresseButton" class="btn btn-sm btn-danger">Annuler </a>
+				<a ng-show="vmUserMaps.editMode=='edit'" ng-click="vmUserMaps.editMode='read'" id="AnnulerAdresseButton" class="btn btn-sm btn-danger">Annuler </a>
 			</div>
 		</div>
 		<div class="alert alert-warning alert-dismissible" ng-show="vmUserMaps.place_changed" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				Cliquez sur le marqueur pour confirmez votre adresse
 		</div>
-		<div class="form-group" ng-show="!vmUserMaps.editMode">
+		<div class="form-group" ng-show="vmUserMaps.editMode=='read'">
 			<label for="email" class=" col-xs-2 control-label">Adresse validée</label>
 			<div class="col-xs-8">
 				<p class="form-control-static">{{vmUserMaps.user.Adresse.formatted_address}}</p>
 			</div>
 			<div class=" col-xs-2">
-				<a ng-click="vmUserMaps.toggleEditMode()" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
+				<a ng-click="vmUserMaps.editMode='edit'" id="modifierAdresseButton" class="btn btn-sm btn-warning">Modifier </a>
 			 </div>
 		</div>
 	</div>

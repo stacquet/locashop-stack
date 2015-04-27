@@ -1,11 +1,18 @@
-﻿<div class="form-group spacer">
-            <label for="mobile" class="col-xs-2 control-label">Mobile</label>
-            <div class=" col-xs-10">
-              <input type="text" class="form-control" id="mobile" ng-model="vm.userProfil.mobile" placeholder="Téléphone Mobile">
-            </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-offset-8 ">
-        <a ui-sref="profil.coordonnees" id="adresseButton" ng-click="vm.saveProfil()" class="btn btn-sm btn-success">Suivant <span class="glyphicon glyphicon-floppy-save"></span></a>
-    </div>
-</div>
+﻿<form class="form-horizontal" ng-show="vmUserMobile.ajax">
+	<legend>Mon mobile</legend>
+	<div class="alert alert-info" role="alert">
+		<p>Avoir un numéro de mobile <strong>validé</strong> est primordial pour montrer son implication et assurer une <strong>réactivité</strong> nécessaire pour la <strong>communauté</strong>
+		</p>
+		<p>Un code de vérification va vous être envoyé afin de vérifier votre numéro
+		</p>
+	</div>
+	<div class="form-group spacer">
+	    <label for="mobile" class="col-xs-2 control-label">Mobile</label>
+	    <div class=" col-xs-8">
+	      <input type="text" class="form-control" id="mobile" ng-model="vmUserMobile.user.mobile" placeholder="Téléphone Mobile">
+	    </div>
+	    <div class="col-xs-offset-10">
+	        <a id="saveMobileButton" ng-click="vmUserMobile.saveMobile()" class="btn btn-sm btn-success">Recevoir mon code</a>
+	    </div>
+	</div>
+</form>
