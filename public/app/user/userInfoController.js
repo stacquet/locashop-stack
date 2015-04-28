@@ -20,7 +20,7 @@
 		vmUserInfo.toggleModal=toggleModal;
 		vmUserInfo.updateProfilImage=updateProfilImage;
 		vmUserInfo.user={};
-		vmUserInfo.ajax=false;
+		vmUserInfo.initDone=false;
 
 		$scope.showModal = false;
 		function toggleModal(){
@@ -51,7 +51,7 @@
 					if(data.Photo) vmUserInfo.profilImage=data.Photo.chemin_webapp+"/"+data.Photo.uuid+".jpg";
 				})
 				.finally(function(){
-					vmUserInfo.ajax = true;
+					vmUserInfo.initDone = true;
 				});
 				
 		}

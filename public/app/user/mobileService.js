@@ -9,7 +9,10 @@
 
     function mobileService($resource){
 		
-		var mobile = $resource('/api/user/:id_user/mobile');
+		var mobile = {};
+
+		mobile.entity = $resource('/api/user/:id_user/mobile');
+		mobile.verify = $resource('/api/user/:id_user/mobile/verify');
 		
 		return mobile;
 	

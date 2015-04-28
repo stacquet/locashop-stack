@@ -23,7 +23,7 @@
 		vmUserMaps.saveAdresse = saveAdresse;
 		vmUserMaps.logMap = logMap;
 		vmUserMaps.editMode = 'edit'; // can take value read, edit, new
-		vmUserMaps.ajax = false;
+		vmUserMaps.initDone = false;
 		
 		vmUserMaps.user={
 			id_user : $stateParams.id_user,
@@ -187,7 +187,7 @@
 					vmUserMaps.editMode='new';
 				})
 				.finally(function(){
-					vmUserMaps.ajax=true;
+					vmUserMaps.initDone=true;
 				});
 			
 		}

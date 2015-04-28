@@ -1,12 +1,12 @@
-﻿<form class="form-horizontal" ng-show="vmUserMobile.ajax">
+﻿<form class="form-horizontal" ng-show="vmUserMobile.initDone">
 	<legend>Mon mobile</legend>
-	<div class="alert alert-info" role="alert">
+	<div class="alert alert-info" role="alert" ng-show="vmUserMobile.editMode=='new'">
 		<p>Avoir un numéro de mobile <strong>validé</strong> est primordial pour montrer son implication et assurer une <strong>réactivité</strong> nécessaire pour la <strong>communauté</strong>
 		</p>
 		<p>Un code de vérification va vous être envoyé afin de vérifier votre numéro
 		</p>
 	</div>
-	<div class="form-group spacer">
+	<div class="form-group spacer" ng-show="vmUserMobile.editMode=='edit' || vmUserMobile.editMode=='new'">
 	    <label for="mobile" class="col-xs-2 control-label">Mobile</label>
 	    <div class=" col-xs-8">
 	      <input type="text" class="form-control" id="mobile" ng-model="vmUserMobile.user.mobile" placeholder="Téléphone Mobile">
@@ -14,5 +14,35 @@
 	    <div class="col-xs-offset-10">
 	        <a id="saveMobileButton" ng-click="vmUserMobile.saveMobile()" class="btn btn-sm btn-success">Recevoir mon code</a>
 	    </div>
+	</div>
+	<div class="form-group" ng-show="vmUserMobile.editMode=='read'">
+		<label for="email" class=" col-xs-2 control-label">Mobile</label>
+		<div class="col-xs-6">
+			<p class="form-control-static">{{vmUserMobile.user.mobile}}</p>
+		</div>
+		<div class=" col-xs-2">
+			<a ng-click="vmUserMobile.editMode='edit'" id="modifyMobileButton" class="btn btn-warning">Modifier mon numéro </a>
+		</div>
+		<div class=" col-xs-2">
+			<a id="resendVerificationButton" class="btn  btn-warning">Me renvoyer le code</a>
+		</div>
+	</div>
+	<div class="alert alert-success" role="alert" ng-show="vmUserMobile.user.mobile_verified==1">
+		<p>Votre numéro de mobile est <strong>validé</strong> !</p>
+	</div>
+	<div ng-show="vmUserMobile.editMode=='read' && vmUserMobile.user.mobile_verified==0">
+		<div class="alert alert-warning" role="alert">
+			<p>Votre numéro de mobile n'est pas ecore validé. </p>
+			<p>Pour le valider, entrez le code qui vous a été transmis par SMS</p>
+		</div>
+		<div class="alert alert-info container" role="alert" >
+			<label for="mobileVerificationTokenInput" class="col-xs-4 control-label">Entrez votre code de vérification</label>
+			<div class="col-xs-2"> 
+				<input type="text" class="form-control" id="mobileVerificationTokenInput" ng-model="vmUserMobile.tokenEntered">
+			</div>
+			<div class="col-xs-offset-6">
+		        <a id="verificationMobileButton" ng-click="vmUserMobile.verifyMobile()" class="btn btn-info">Valider mon code</a>
+		    </div>	
+		</div>
 	</div>
 </form>

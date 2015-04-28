@@ -7,6 +7,7 @@ var models   		= require('../models/');
 var Promise 		= require("bluebird");
 var logger			= require('../util/logger');
 var config			= require('../../secret/config');
+var S 				= require('string');
 
 Promise.promisifyAll(crypto);
 Promise.promisifyAll(fs);
@@ -224,8 +225,23 @@ module.exports = {
 		}
 	},
 	mobile : {
+
+		get : function (req, res, next) {
+			logger.log('debug','get du mobile d\' un utilisateur requête '+JSON.stringify(req.body));
+			models.User.find({	where:	{id_user : req.params.id_user}})
+			.then(function(user){
+				if(user.mobile){
+					res.status(HttpStatus.OK).send(user.dataValues);
+				}
+				else{
+					res.status(HttpStatus.NOT_FOUND).send();
+				}
+			})
+		},
 		/* Save or update of the user's mobile phone. To achieve this, we query the user :
+				- if phone  number bad format (french)
 				- if user not found => 404
+
 				- if user has no mobile phone :
 					1. We insert the mobile phone
 					2. return 200
@@ -234,18 +250,6 @@ module.exports = {
 					2. We send a message to the mobile phone
 					4. return 200				
 		*/
-		get : function (req, res, next) {
-			logger.log('debug','get du mobile d\' un utilisateur requête '+JSON.stringify(req.body));
-			models.User.find({	where:	{id_user : req.params.id_user}})
-			.then(function(user){
-				if(user){
-					res.status(HttpStatus.OK).send(user.dataValues);
-				}
-				else{
-					res.status(HttpStatus.NOT_FOUND).send();
-				}
-			})
-		},
 		save : function (req, res, next) {
 			logger.log('debug','sauvegarde du mobile d\'un utilisateur requête '+JSON.stringify(req.body));
 			var req_id_user = req.params.id_user;
@@ -253,7 +257,7 @@ module.exports = {
 			var db_user;
 			var mobile_verification_token;
 			var myT;
-			if(/^\d{10}$/.test(form_mobile)){
+			if(/^\d{10}$/.test(form_mobile) && ( S(form_mobile).left(2)=='06' || S(form_mobile).left(2)=='07')){
 				models.sequelize.transaction()
 				.then(function(t){
 					logger.log('debug','userController|mobile|save|query user'); 
