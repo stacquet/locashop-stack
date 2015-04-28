@@ -675,14 +675,16 @@ function modal(){
 
 		  
 	   function saveMobile(){
-			$rootScope.busy = vmUserMobile.user.entity.$save({id_user:$stateParams.id_user})
+	   		var mobile = new mobileService.entity({mobile : vmUserMobile.user.mobile});
+			$rootScope.busy = mobile.$save({id_user:$stateParams.id_user})
 				.then(function(){
 					vmUserMobile.editMode='read';
 				});
 		}
 
 		function verifyMobile(){
-			$rootScope.busy = vmUserMobile.user.verify.$save({id_user:$stateParams.id_user})
+	   		var verify = new mobileService.verify({tokenEntered : vmUserMobile.tokenEntered});
+			$rootScope.busy = verify.$save({id_user:$stateParams.id_user})
 				.then(function(){
 					vmUserMobile.editMode='read';
 				});

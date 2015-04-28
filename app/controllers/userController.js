@@ -289,9 +289,39 @@ module.exports = {
 				res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('format mobile invalide');
 			}
 		},
-		validate : function (req, res, next) {
+		verify : function (req, res, next) {
 			logger.log('debug','validation du mobile d\'un utilisateur requête '+JSON.stringify(req.body));
-			
+			var req_id_user = req.params.id_user;
+			var tokenEntered = req.body.tokenEntered;
+			var db_user;
+			var mobile_verification_token;
+			var myT;
+			models.sequelize.transaction()
+				.then(function(t){
+					logger.log('debug','userController|mobile|verify|query user'); 
+					myT=t;
+					return models.User.find({	where:	{id_user : req.params.id_user}})
+				})
+				.then(function(user){
+					db_user=user;
+					db_user.mobile=form_mobile;
+					db_user.mobile_verified=false;
+					var mobile_verification_token = Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10)
+						+''+Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10);
+					db_user.mobile_verification_token=mobile_verification_token;
+					logger.log('debug','userController|mobile|save|save mobile with new mobile_verification_token'); 
+					return db_user.save({transaction:myT})
+				})
+				.then(function(){
+					logger.log('debug','user|mobile : commit transaction');
+					myT.commit();
+					res.status(HttpStatus.OK).send();
+				})
+				.catch(function(err){
+					myT.rollback();
+					logger.log('error','error : '+err);
+					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+				});
 		}
 	}
 }

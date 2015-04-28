@@ -16,7 +16,8 @@ module.exports = function (app,passport) {
 	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 
 	app.get('/api/user/:id_user/adresse'							, controllers.user.adresse.get); 
 	app.get('/api/user/:id_user/mobile'								, controllers.user.mobile.get); 
-	app.post('/api/user/:id_user/mobile'							, controllers.user.mobile.save); 
+	app.post('/api/user/:id_user/mobile'							, controllers.user.mobile.save);
+	app.post('/api/user/:id_user/mobile/verify'						, controllers.user.mobile.verify); 
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.get('*'														, controllers.home.home);
 };
