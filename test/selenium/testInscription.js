@@ -31,7 +31,7 @@ describe('Page de profil', function() {
 		expect($('[ng-show="!vm.emailAvailable && vm.formSubmitted"]').isDisplayed()).toBeTruthy();
 	});
 	
-	it('enter 2 != password should lead to error message', function() {
+	it('enter 2 different passwords should lead to error message', function() {
 		inscriptionLink.click();
 		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/inscription');
 		element(by.model('vm.user.email')).sendKeys('sylvain.tacquet@gmail.comd');
