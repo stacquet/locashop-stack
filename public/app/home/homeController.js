@@ -5,9 +5,9 @@
         .module('locashopApp')
         .controller('homeController', homeController);
 
-    homeController.$inject = ['$rootScope','$location','notifier','homeService'];
+    homeController.$inject = ['$rootScope','$location','$state','notifier','homeService'];
 
-	function homeController($rootScope,$location,notifier,homeService){
+	function homeController($rootScope,$location,$state,notifier,homeService){
 	
 		var vm = this;
 		
@@ -17,11 +17,11 @@
 		initLogin();
 		
 		function login(){
-			vm.busy = homeService.login(vm.user.email,vm.user.password)
+			$rootScope.busy = homeService.login(vm.user.email,vm.user.password)
 				.success(function(data, status, headers, config){
 					$rootScope.userInfos=data.user;
 					$rootScope.isLoggedIn=true;
-					$location.path('/');
+					$state.go('home');
 				})
 				.error(function(data, status, headers, config) {
 					console.log(data);
@@ -40,11 +40,11 @@
 		}
 
 		function logout(){
-			vm.busy = homeService.logout()
+			$rootScope.busy = homeService.logout()
 				.success(function(data, status, headers, config){
 					$rootScope.userInfos=null;
 					$rootScope.isLoggedIn=false;
-					$location.path('/');
+					$state.go('home');
 			});
 		}
 	}
