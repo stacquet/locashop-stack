@@ -228,15 +228,33 @@ module.exports = {
 
 		get : function (req, res, next) {
 			logger.log('debug','get du mobile d\' un utilisateur requête '+JSON.stringify(req.body));
+			var returnBody;
+			var returnStatus;
 			models.User.find({	where:	{id_user : req.params.id_user}})
 			.then(function(user){
-				if(user.mobile){
-					res.status(HttpStatus.OK).send(user.dataValues);
+				if(user){
+					if(user.mobile){
+						returnStatus = HttpStatus.OK;
+						returnBody = user.dataValues;
+					}
+					else{
+						returnStatus = HttpStatus.NOT_FOUND;
+					}
 				}
 				else{
-					res.status(HttpStatus.NOT_FOUND).send();
+					returnStatus = HttpStatus.NOT_FOUND;
 				}
 			})
+			.catch(function(err){
+				myT.rollback();
+				if(err){
+					logger.log('error','user|mobile|get : '+err);
+					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+				}
+			})
+			.finally(function(){
+				res.status(returnStatus).send(returnBody);
+			});
 		},
 		/* Save or update of the user's mobile phone. To achieve this, we query the user :
 				- if phone  number bad format (french)
@@ -294,8 +312,9 @@ module.exports = {
 			var req_id_user = req.params.id_user;
 			var tokenEntered = req.body.tokenEntered;
 			var db_user;
-			var mobile_verification_token;
 			var myT;
+			var returnBody;
+			var returnStatus;
 			models.sequelize.transaction()
 				.then(function(t){
 					logger.log('debug','userController|mobile|verify|query user'); 
@@ -304,23 +323,34 @@ module.exports = {
 				})
 				.then(function(user){
 					db_user=user;
-					db_user.mobile=form_mobile;
-					db_user.mobile_verified=false;
-					var mobile_verification_token = Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10)
-						+''+Math.floor(Math.random()*10)+''+Math.floor(Math.random()*10);
-					db_user.mobile_verification_token=mobile_verification_token;
-					logger.log('debug','userController|mobile|save|save mobile with new mobile_verification_token'); 
-					return db_user.save({transaction:myT})
+					if(db_user.mobile_verification_token==tokenEntered){
+						db_user.mobile_verified=true;
+						logger.log('debug','userController|mobile|verify|verification correct'); 
+						return db_user.save({transaction:myT})
+					}
+					else{
+						logger.log('debug','userController|mobile|verify|verification KO');
+						returnBody = {verify:false};
+						returnStatus = HttpStatus.OK;				
+						return Promise.reject() 
+					}
 				})
 				.then(function(){
-					logger.log('debug','user|mobile : commit transaction');
+					logger.log('debug','user|mobile|verify : commit transaction');
 					myT.commit();
-					res.status(HttpStatus.OK).send();
+					returnBody = {verify:true};
+					returnStatus = HttpStatus.OK;
+					return Promise.resolve()
 				})
 				.catch(function(err){
 					myT.rollback();
-					logger.log('error','error : '+err);
-					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+					if(err){
+						logger.log('error','user|mobile|verify : '+err);
+						returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+					} 
+				})
+				.finally(function(){
+					res.status(returnStatus).send(returnBody);
 				});
 		}
 	}

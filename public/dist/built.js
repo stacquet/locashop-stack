@@ -698,7 +698,7 @@ function modal(){
 					if(vmUserMobile.user.mobile) vmUserMobile.editMode='read';
 				})
 				.catch(function(err){
-					vmUserMobile.user=new mobileService();
+					vmUserMobile.user=new mobileService.entity();
 					vmUserMobile.editMode='new';
 				})
 				.finally(function(){
