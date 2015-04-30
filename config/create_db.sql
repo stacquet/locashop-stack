@@ -117,6 +117,7 @@ CREATE TABLE user (
   mobile_verification_fail_attempts INT DEFAULT 0,
   nom VARCHAR(45) NULL,
   prenom VARCHAR(45) NULL,
+  age INT NULL,
   password VARCHAR(100) NULL,
   password_change_token VARCHAR(200) NULL,
   createdAt DATETIME NULL,

@@ -16,7 +16,7 @@ module.exports = function(sequelize, Sequelize) {
     email_verified                            : Sequelize.INTEGER,
     email_verification_token                  : Sequelize.STRING,
     mobile                                    : Sequelize.STRING,
-    mobile_verified                           : Sequelize.INTEGER,
+    mobile_verified                           : Sequelize.BOOLEAN,
     mobile_verification_token                 : Sequelize.STRING,
     mobile_verification_fail_attempts         : Sequelize.INTEGER,
     nom                                       : Sequelize.STRING,

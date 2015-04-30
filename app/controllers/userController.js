@@ -275,6 +275,7 @@ module.exports = {
 			var db_user;
 			var mobile_verification_token;
 			var myT;
+			var returnStatus;
 			if(/^\d{10}$/.test(form_mobile) && ( S(form_mobile).left(2)=='06' || S(form_mobile).left(2)=='07')){
 				models.sequelize.transaction()
 				.then(function(t){
@@ -295,12 +296,15 @@ module.exports = {
 				.then(function(){
 					logger.log('debug','user|mobile : commit transaction');
 					myT.commit();
-					res.status(HttpStatus.OK).send();
+					returnStatus=HttpStatus.OK;
 				})
 				.catch(function(err){
 					myT.rollback();
 					logger.log('error','error : '+err);
-					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+					returnStatus=HttpStatus.INTERNAL_SERVER_ERROR;
+				})
+				.finally(function(){
+					res.status(returnStatus).send();
 				});
 			}
 			else{

@@ -679,13 +679,15 @@ function modal(){
 			$rootScope.busy = mobile.$save({id_user:$stateParams.id_user})
 				.then(function(){
 					vmUserMobile.editMode='read';
+					vmUserMobile.user.mobile_verified=false;
 				});
 		}
 
 		function verifyMobile(){
 	   		var verify = new mobileService.verify({tokenEntered : vmUserMobile.tokenEntered});
 			$rootScope.busy = verify.$save({id_user:$stateParams.id_user})
-				.then(function(){
+				.then(function(data){
+					vmUserMobile.user.mobile_verified=data.verify;
 					vmUserMobile.editMode='read';
 				});
 		}

@@ -24,13 +24,13 @@
 			<a ng-click="vmUserMobile.editMode='edit'" id="modifyMobileButton" class="btn btn-warning">Modifier mon numéro </a>
 		</div>
 		<div class=" col-xs-2">
-			<a id="resendVerificationButton" class="btn  btn-warning">Me renvoyer le code</a>
+			<a id="resendVerificationButton" class="btn  btn-warning" ng-show="!vmUserMobile.user.mobile_verified">Me renvoyer le code</a>
 		</div>
 	</div>
-	<div class="alert alert-success" role="alert" ng-show="vmUserMobile.user.mobile_verified==1">
+	<div class="alert alert-success" role="alert" ng-show="vmUserMobile.user.mobile_verified">
 		<p>Votre numéro de mobile est <strong>validé</strong> !</p>
 	</div>
-	<div ng-show="vmUserMobile.editMode=='read' && vmUserMobile.user.mobile_verified==0">
+	<div ng-show="vmUserMobile.editMode=='read' && !vmUserMobile.user.mobile_verified">
 		<div class="alert alert-warning" role="alert">
 			<p>Votre numéro de mobile n'est pas ecore validé. </p>
 			<p>Pour le valider, entrez le code qui vous a été transmis par SMS</p>
