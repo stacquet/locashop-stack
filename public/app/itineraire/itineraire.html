@@ -1,0 +1,86 @@
+<div class="container">
+    
+    
+    <div class="alert alert-danger text-center" role="alert" ng-show="vmItineraire.apiError">
+        <b>API Error : </b>
+        <span>{{ apiStatus }}</span>
+    </div>
+    <form  novalidate>
+        <label class="col-xs-2 control-label">Départ</label>
+        <div class="input-group">
+            <input id="pac-input-start" name="place" type="text" class="form-control"  required autofocus />
+            <span class="input-group-btn">
+                <button class="btn btn-primary" 
+                >départ</button>
+            </span>
+        </div>
+    </form>
+    <form  novalidate>
+        <label class="col-xs-2 control-label">Arrivée</label>
+        <div class="input-group">
+            <input id="pac-input-arrival" name="place" type="text" class="form-control"  required autofocus />
+            <span class="input-group-btn">
+                <button class="btn btn-primary" 
+                >Arrivée</button>
+            </span>
+        </div>
+    </form> 
+    <div class="form-group">
+        <div class="col-xs-offset-5 ">
+            <!-- <a ui-sref="profil.mobile" id="adresseButton" ng-click="vm.saveAdresse()" class="btn btn-success"> -->
+            <a id="itineraireButton" ng-click="vmItineraire.calcRoute()" class="btn btn-success">Calculer ! </a>
+        </div>
+    </div>
+
+    calcRoute 
+    <div id="map"></div>
+      
+    <form name="resForm" class="form-horizontal" novalidate 
+    ng-submit="vmItineraire.send()">
+        <div class="form-group">
+            <label for="resName" class="col-xs-2 control-label">{{showModal}}</label>
+            <div class="col-xs-10">
+                <input name="resName" type="text" class="form-control" 
+                ng-model="showModal" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="resLat" class="col-xs-2 control-label">Latitude</label>
+            <div class="col-xs-10">
+                <input name="resLat" type="number" class="form-control" 
+                ng-model="vmItineraire.place.lat" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="resLng" class="col-xs-2 control-label">Longitude</label>
+            <div class="col-xs-10">
+                <input name="resLng" type="number" class="form-control" 
+                ng-model="vmItineraire.place.lng" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-offset-2 col-xs-10">
+                <button class="btn btn-success" 
+                ng-disabled="resForm.$invalid">Confirm</button>
+            </div>
+        </div>
+    </form>
+    <!-- modal pour valider son adresse -->
+    <modal title="Votre adresse" visible="showModal">
+        <div class="form-horizontal" >
+            <div class="form-group">
+                <label for="email" class=" col-xs-6 control-label">Votre adresse</label>
+                <div class="col-xs-6">
+                    <p class="form-control-static">{{vmItineraire.start.formatted_address}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                    <div class="col-xs-offset-5 ">
+                        <!-- <a ui-sref="profil.mobile" id="adresseButton" ng-click="vm.saveAdresse()" class="btn btn-success"> -->
+                        <a id="adresseButton" class="btn btn-success">J'habite ici ! </a>
+                    </div>
+           </div>
+        </div>
+    </modal>
+    <pre>{{showModal}}</pre>
+</div>

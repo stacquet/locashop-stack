@@ -21,6 +21,7 @@ module.exports = function(sequelize, Sequelize) {
     mobile_verification_fail_attempts         : Sequelize.INTEGER,
     nom                                       : Sequelize.STRING,
     prenom                                    : Sequelize.STRING,
+    age                                       : Sequelize.INTEGER,
     password                                  : Sequelize.STRING,
     password_change_token                     : Sequelize.STRING
 	},

@@ -24,7 +24,7 @@
     <script src="libs/angular/angular.min.js"></script>
     <script src="libs/angular-ui-router/release/angular-ui-router.min.js"></script>
 	<script src='libs/lodash/dist/lodash.js'></script>
-	<script src='libs/angular-google-maps/dist/angular-google-maps.js'></script>
+	<!-- <script src='libs/angular-google-maps/dist/angular-google-maps.js'></script> -->
 	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
 	<script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="libs/angular-notifier/dist/angular-notifier.min.js"></script>
@@ -36,6 +36,7 @@
 	<script src="libs/angular-ui-tinymce/src/tinymce.js"></script>
 	<script src="libs/ngImgCrop/compile/unminified/ng-img-crop.js"></script>
 	<script src="/libs/ng-file-upload/angular-file-upload-all.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaltcXLcF5sXatgxNpP5d_ILcybLPiWt0&libraries=places"></script>
    <!-- ANGULAR CUSTOM -->
    
     <script src="dist/built.js"></script>
@@ -63,7 +64,7 @@
 			<div class="collapse navbar-collapse" id="menu-principal">
 			  <ul class="nav navbar-nav">
 				<li><a href="/magasin" data-toggle="collapse" data-target=".navbar-collapse">Le magasin </a></li>
-				<li><a href="#" data-toggle="collapse" data-target=".navbar-collapse">Nos producteurs</a></li>
+				<li><a ui-sref="itineraire" data-toggle="collapse" data-target=".navbar-collapse">Itinéraire</a></li>
 				<li><a ui-sref="ferme" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Ferme</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
 				<li ng-show="!$root.isLoggedIn"><a ui-sref="inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>

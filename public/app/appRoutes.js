@@ -28,6 +28,11 @@
 						}
 					}*/
 				})
+				.state('itineraire', {
+					url : '/itineraire',
+					templateUrl: 'app/itineraire/itineraire.html',
+					controller : 'itineraireController as vmItineraire'
+				})
 				.state('user', {
 					url: '/user/:id_user',
 					templateUrl: 'app/user/user.html'

@@ -3,11 +3,11 @@
 	
 	angular	
 		.module('locashopApp')
-		.factory('mapsService', mapsService);
+		.factory('userMapsService', userMapsService);
 	
-	mapsService.$inject=['$resource'];
+	userMapsService.$inject=['$resource'];
 
-    function mapsService($resource){
+    function userMapsService($resource){
 		
 		var maps = $resource('/api/user/:id_user/adresse');
 		
