@@ -5,10 +5,10 @@
         .module('locashopApp')
         .controller('userInfoController', userInfoController);
 
-    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','userService','mapsService'];
+    userInfoController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','userService'];
 
-	function userInfoController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,userService,mapsService){
-		var vmUserInfo = this;	
+	function userInfoController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,userService){
+		var vmUserInfo = this;
 		vmUserInfo.uploadedImage='';
         vmUserInfo.croppedImage='';
         vmUserInfo.profilImage='';
