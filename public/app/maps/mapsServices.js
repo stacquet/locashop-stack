@@ -54,15 +54,13 @@
 			  }
 
 			  mapsService.map.fitBounds(mapsService.bounds);
+			  mapsService.map.setZoom(11);
 			});
 
 			google.maps.event.addListener(mapsService.map, 'bounds_changed', function() {
 			  var bounds = mapsService.map.getBounds();
 			  searchBox.setBounds(bounds);
-			});
-			
-			console.log('carte chargée');
-			
+			});			
 	    }
 		
 		function search(str) {

@@ -535,15 +535,13 @@ angular
 			  }
 
 			  mapsService.map.fitBounds(mapsService.bounds);
+			  mapsService.map.setZoom(11);
 			});
 
 			google.maps.event.addListener(mapsService.map, 'bounds_changed', function() {
 			  var bounds = mapsService.map.getBounds();
 			  searchBox.setBounds(bounds);
-			});
-			
-			console.log('carte charg�e');
-			
+			});			
 	    }
 		
 		function search(str) {
@@ -827,7 +825,7 @@ function modal(){
 						MapsService.bounds.extend(myPoint);
 						MapsService.addMarker(place,false);
 						MapsService.map.fitBounds(MapsService.bounds);
-						MapsService.map.setZoom(10);
+						MapsService.map.setZoom(11);
 					}
 				})
 				.catch(function(err){

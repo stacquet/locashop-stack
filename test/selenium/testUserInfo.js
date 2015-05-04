@@ -37,7 +37,7 @@ describe('User info page', function() {
 		element(by.id('pac-input')).sendKeys('7 rue lauz');
 		saveProfilButton.click();
 	});*/
-	it('work with userInfo form', function() {
+	it('user info form first entry', function() {
 		browser.get(baseUrl+"/#/user/1/infos");
 		expect(element(by.id('userInfoEmail')).getText()).toEqual('sylvain.tacquet@gmail.com');
 		element(by.model('vmUserInfo.user.nom')).clear();
@@ -46,14 +46,13 @@ describe('User info page', function() {
 		element(by.model('vmUserInfo.user.nom')).sendKeys('tacquet');
 		element(by.model('vmUserInfo.user.prenom')).sendKeys('sylvain');
 		element(by.model('vmUserInfo.user.age')).sendKeys('26');
-		/*var fileToUpload = '20140829_142035.jpg';
-		var absolutePath = path.resolve(__dirname, fileToUpload);
-		element(by.id('userInfoUploadButtonModify')).click();
-		$('input[type="file"]').sendKeys(absolutePath);
-		element(by.id('userInfoUploadButtonOK')).click();
-		browser.sleep(5000);
-		*/
+		saveProfilButton.click();
 		expect(browser.getCurrentUrl()).toEqual(baseUrl+'/#/user/1/adresse');
-
+	});
+	it('user info back to check result', function() {
+		browser.get(baseUrl+"/#/user/1/infos");
+		expect(element(by.model('vmUserInfo.user.nom')).getAttribute('value')).toEqual('tacquet');
+		expect(element(by.model('vmUserInfo.user.prenom')).getAttribute('value')).toEqual('sylvain');
+		expect(element(by.model('vmUserInfo.user.age')).getAttribute('value')).toEqual('26');
 	});
 });

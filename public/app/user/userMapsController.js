@@ -54,7 +54,7 @@
 						MapsService.bounds.extend(myPoint);
 						MapsService.addMarker(place,false);
 						MapsService.map.fitBounds(MapsService.bounds);
-						MapsService.map.setZoom(10);
+						MapsService.map.setZoom(11);
 					}
 				})
 				.catch(function(err){
