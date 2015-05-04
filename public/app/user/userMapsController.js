@@ -45,15 +45,16 @@
 						vmUserMaps.editMode='read';
 						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
 						var place = {
+							name : vmUserMaps.user.Adresse.formatted_address,
 							geometry : {
-								latitude: vmUserMaps.user.Adresse.latitude,
-								longitude: vmUserMaps.user.Adresse.longitude
+								location : myPoint
 							}
 						};
 						MapsService.bounds = new google.maps.LatLngBounds();
 						MapsService.bounds.extend(myPoint);
 						MapsService.addMarker(place,false);
 						MapsService.map.fitBounds(MapsService.bounds);
+						MapsService.map.setZoom(10);
 					}
 				})
 				.catch(function(err){
