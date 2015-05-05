@@ -66,14 +66,15 @@ angular
         .module('locashopApp')
         .controller('homeController', homeController);
 
-    homeController.$inject = ['$rootScope','$location','$state','notifier','homeService'];
+    homeController.$inject = ['$timeout','$rootScope','$scope','$location','$state','notifier','homeService'];
 
-	function homeController($rootScope,$location,$state,notifier,homeService){
+	function homeController($timeout,$rootScope,$scope,$location,$state,notifier,homeService){
 	
 		var vm = this;
-		
+		$scope.showModal=false;
 		vm.login=login;
 		vm.logout=logout;
+		vm.toggleModal = toggleModal;
 		
 		initLogin();
 		
@@ -92,7 +93,7 @@ angular
 		
 		function initLogin(){
 			if(!$rootScope.isLoggedIn){
-				vm.busy = homeService.userInfos()
+				$rootScope.busy = homeService.userInfos()
 					.success(function(data, status, headers, config){
 							$rootScope.userInfos=data;
 							$rootScope.isLoggedIn=true;
@@ -106,6 +107,12 @@ angular
 					$rootScope.userInfos=null;
 					$rootScope.isLoggedIn=false;
 					$state.go('home');
+			});
+		}
+		function toggleModal(){
+			$timeout(function(){
+				$scope.showModal = !$scope.showModal;
+				console.log('toggle');
 			});
 		}
 	}

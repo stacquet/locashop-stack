@@ -18,10 +18,28 @@
 				<input type="password" class="form-control" ng-model="vm.user.password" id="password" required>
 			</div>
 
-			<button id="loginButton" type="submit" ng-click="vm.login()" ng-disabled="!userForm.$valid" class="btn btn-warning btn-lg">Login</button>
+			<button id="loginButton" type="submit" ng-click="vm.login()" ng-disabled="!userForm.$valid" class="btn btn-success btn-lg">Login</button>
 		</form>
+	<p class="spacer"><a href="" ng-click="vm.toggleModal()">J'ai oublié mon mot de passe</a></p>
     <p class="spacer">Pas encore de compte ? <a href="/auth/inscription">Inscrivez-vous !</a></p>
     <p>Ou retournez à l'<a href="/">accueil </a></p>
+	 <!-- modal for reset password -->
+    <modal title="Votre email" visible="showModal">
+        <div class="form-horizontal" >
+            <div class="form-group">
+                <label for="email" class=" col-xs-6 control-label">Votre email</label>
+                <div class="col-xs-6">
+                    <p class="form-control-static">{{vm.user.email}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-offset-5 ">
+                    <!-- <a ui-sref="profil.mobile" id="adresseButton" ng-click="vm.saveAdresse()" class="btn btn-success"> -->
+                    <a id="adresseButton" class="btn btn-success" ng-click="vm.toggleModal()">Réinitialiser mon mot de passe</a>
+                </div>
+           </div>
+        </div>
+    </modal>
 
 </div>
 

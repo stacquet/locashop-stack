@@ -357,5 +357,20 @@ module.exports = {
 					res.status(returnStatus).send(returnBody);
 				});
 		}
+	},
+	resetPassword : function (req, res, next) {
+		/* 
+			Reset password for a user :
+				- Retrieve user information from DB :
+					- if not found => 404
+					- if found next()						
+				- Check that id_rand in the url match the user field email_verification_token
+					- if not => 404
+					- if found send request_page				
+		*/
+		logger.log('debug','user|resetPassword'+JSON.stringify(req.body));
+		var req_id_user = req.params.id_user;
+		var req_id_rand = req.params.id_rand;
+
 	}
 }

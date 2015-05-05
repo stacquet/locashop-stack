@@ -39,10 +39,10 @@ module.exports = {
 		});	
 	},
 	
-	emailForgotPassword: function (req, res, next) {
+	emailResetPassword: function (req, res, next) {
 		rand=bcrypt.hashSync(req.user.email, null, null);
 	    host=req.get('host');
-	    link="http://"+req.get('host')+"/password_forgot?id="+rand;
+	    link="http://"+req.get('host')+"/user/"+"/resetPassword/"+rand;
 		models.User.find({where:	{email : req.body.email}}).then(function(user){
 			user.set("password_change_token" , rand);
 			user.save().then(function(){
