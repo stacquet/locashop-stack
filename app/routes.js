@@ -11,7 +11,7 @@ module.exports = function (app,passport) {
 	app.get('/api/home/logout'										, controllers.auth.logout);
 	app.get('/auth/facebook'										, controllers.auth.facebook);
 	app.get('/auth/facebook/callback'								, controllers.auth.facebook_callback);
-	app.get('/auth/resetPassword/:id_rand'							, controllers.auth.resetPassword);
+	app.get('/api/auth/emailResetPassword/:email'					, controllers.auth.emailResetPassword);
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.post('/api/user/:id'										, controllers.user.save); 
 	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 

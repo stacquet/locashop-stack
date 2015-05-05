@@ -50,6 +50,7 @@
 		}
 		function toggleModal(){
 			$timeout(function(){
+				console.log($scope);
 				$scope.showModal = !$scope.showModal;
 				console.log('toggle');
 			});

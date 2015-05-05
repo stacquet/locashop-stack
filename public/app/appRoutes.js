@@ -16,7 +16,8 @@
 				})
 				.state('login', {
 					url: '/login',
-					templateUrl: 'app/home/login.html'
+					templateUrl: 'app/home/login.html',
+					controller : 'loginController as vmLogin'
 				})
 				.state('ferme', {
 					url : '/ferme',

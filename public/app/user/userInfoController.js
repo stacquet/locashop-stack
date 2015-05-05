@@ -24,6 +24,7 @@
 
 		$scope.showModal = false;
 		function toggleModal(){
+			console.log($scope);
 			$scope.showModal = !$scope.showModal;
 		};
 		init();
@@ -67,20 +68,18 @@
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {
-	                	console.log('pas bon');
 	                    deferred.reject('error : '+data);
 	                });
 	        return deferred.promise;
 	    }
 		function crop(){
 			if(vmUserInfo.files){
-				console.log(vmUserInfo.files);
 				var file=vmUserInfo.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
 		              vmUserInfo.uploadedImage=evt.target.result;
-					  $scope.showModal = true;
+					  toggleModal();
 		            });
 		        }
 	        	reader.readAsDataURL(file);
@@ -90,7 +89,6 @@
     		vmUserInfo.profilImage=vmUserInfo.croppedImage;
     		vmUserInfo.profilImageChanged=true;
     		toggleModal();
-			console.log(vmUserInfo.user);
     	}
     	$scope.$watch('vmUserInfo.files',function(){
           vmUserInfo.crop();

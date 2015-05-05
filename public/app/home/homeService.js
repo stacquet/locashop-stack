@@ -12,7 +12,8 @@
 		var service = {
 			userInfos			: userInfos,
 			logout				: logout,
-			login				: login
+			login				: login,
+			emailResetPassword	: emailResetPassword
 		};
 		
 		return service;
@@ -27,6 +28,10 @@
 		
 		function login(email,password){
 			return $http.post('/api/home/login',{'email':email,'password':password});
+		}
+
+		function emailResetPassword(email){
+			return $http.get('/api/auth/emailResetPassword/'+email);
 		}
     }       
 })();

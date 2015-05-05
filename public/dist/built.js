@@ -19,7 +19,8 @@ angular
 				})
 				.state('login', {
 					url: '/login',
-					templateUrl: 'app/home/login.html'
+					templateUrl: 'app/home/login.html',
+					controller : 'loginController as vmLogin'
 				})
 				.state('ferme', {
 					url : '/ferme',
@@ -111,6 +112,7 @@ angular
 		}
 		function toggleModal(){
 			$timeout(function(){
+				console.log($scope);
 				$scope.showModal = !$scope.showModal;
 				console.log('toggle');
 			});
@@ -131,7 +133,8 @@ angular
 		var service = {
 			userInfos			: userInfos,
 			logout				: logout,
-			login				: login
+			login				: login,
+			emailResetPassword	: emailResetPassword
 		};
 		
 		return service;
@@ -146,6 +149,10 @@ angular
 		
 		function login(email,password){
 			return $http.post('/api/home/login',{'email':email,'password':password});
+		}
+
+		function emailResetPassword(email){
+			return $http.get('/api/auth/emailResetPassword/'+email);
 		}
     }       
 })();
@@ -488,6 +495,58 @@ angular
 })();
 ;(function () {
     'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('loginController', loginController);
+
+    loginController.$inject = ['$timeout','$rootScope','$scope','$location','$state','notifier','homeService'];
+
+	function loginController($timeout,$rootScope,$scope,$location,$state,notifier,homeService){
+	
+		var vmLogin = this;
+		$scope.showModal=false;
+		vmLogin.login=login;
+		vmLogin.toggleModal = toggleModal;
+		vmLogin.emailResetPassword=emailResetPassword;
+				
+		function login(){
+			$rootScope.busy = homeService.login(vmLogin.user.email,vmLogin.user.password)
+				.success(function(data, status, headers, config){
+					$rootScope.userInfos=data.user;
+					$rootScope.isLoggedIn=true;
+					$state.go('home');
+				})
+				.error(function(data, status, headers, config) {
+					console.log(data);
+					vmLogin.messages=data.messages;
+				});				
+		}
+
+		function toggleModal(){
+			$timeout(function(){
+				$scope.showModal = !$scope.showModal;
+			});
+		}
+
+		function emailResetPassword(){
+			$rootScope.loadingMessage='Envoi d\'un email pour réinitialiser le mot de passe';
+			if(vmLogin.user.email){
+				$rootScope.busy = homeService.emailResetPassword(vmLogin.user.email)
+					.success(function(data, status, headers, config){
+						notifier.notify({template : 'Envoi email OK'});
+				})
+				.error(function(data, status, headers, config) {
+					console.log(data);
+					vmLogin.messages=data.messages;
+					notifier.notify({template : 'Envoi email KO',type:'error'});
+				});
+			}
+		}
+	}
+	
+})();;(function () {
+    'use strict';
 	
 	angular	
 		.module('locashopApp')
@@ -649,9 +708,9 @@ function modal(){
 		});
 		
 		$(element).on('shown.bs.modal', function(){
-		  scope.$apply(function(scope){
-			scope[attrs.visible] = true;
-		  });
+			scope.$apply(function(scope){
+				scope[attrs.visible] = true;
+			});
 		});
 
 		$(element).on('hidden.bs.modal', function(){
@@ -690,6 +749,7 @@ function modal(){
 
 		$scope.showModal = false;
 		function toggleModal(){
+			console.log($scope);
 			$scope.showModal = !$scope.showModal;
 		};
 		init();
@@ -733,20 +793,18 @@ function modal(){
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {
-	                	console.log('pas bon');
 	                    deferred.reject('error : '+data);
 	                });
 	        return deferred.promise;
 	    }
 		function crop(){
 			if(vmUserInfo.files){
-				console.log(vmUserInfo.files);
 				var file=vmUserInfo.files[0];
 	          	var reader = new FileReader();
 	          	reader.onload = function (evt) {
 		            $scope.$apply(function(){
 		              vmUserInfo.uploadedImage=evt.target.result;
-					  $scope.showModal = true;
+					  toggleModal();
 		            });
 		        }
 	        	reader.readAsDataURL(file);
@@ -756,7 +814,6 @@ function modal(){
     		vmUserInfo.profilImage=vmUserInfo.croppedImage;
     		vmUserInfo.profilImageChanged=true;
     		toggleModal();
-			console.log(vmUserInfo.user);
     	}
     	$scope.$watch('vmUserInfo.files',function(){
           vmUserInfo.crop();

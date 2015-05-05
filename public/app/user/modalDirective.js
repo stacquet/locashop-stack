@@ -40,9 +40,9 @@ function modal(){
 		});
 		
 		$(element).on('shown.bs.modal', function(){
-		  scope.$apply(function(scope){
-			scope[attrs.visible] = true;
-		  });
+			scope.$apply(function(scope){
+				scope[attrs.visible] = true;
+			});
 		});
 
 		$(element).on('hidden.bs.modal', function(){

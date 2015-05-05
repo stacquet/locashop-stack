@@ -3,44 +3,42 @@
 <div class="col-sm-6 col-sm-offset-3">
 
     <h1><span class="fa fa-sign-in"></span> Login</h1>
-		<form cg-busy="vm.login.promise" name="userForm" novalidate>
-			<div class="alert alert-danger" ng-show="(vm.messages.length > 0)">
-				<p ng-repeat="message in vm.messages">{{message}}</p>
+		<form cg-busy="vmLogin.login.promise" name="userForm" novalidate>
+			<div class="alert alert-danger" ng-show="(vmLogin.messages.length > 0)">
+				<p ng-repeat="message in vmLogin.messages">{{message}}</p>
 			</div>
 
 			<div class="form-group">
 				<label>Email</label>
-				<input type="email" class="form-control" ng-model="vm.user.email" id="email" name="email" required>
+				<input type="email" class="form-control" ng-model="vmLogin.user.email" id="email" name="email" required>
 <!--				<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Le format du mail est invalide.</p> -->
 			</div>
 			<div class="form-group">
 				<label>Password</label>
-				<input type="password" class="form-control" ng-model="vm.user.password" id="password" required>
+				<input type="password" class="form-control" ng-model="vmLogin.user.password" id="password" required>
 			</div>
 
-			<button id="loginButton" type="submit" ng-click="vm.login()" ng-disabled="!userForm.$valid" class="btn btn-success btn-lg">Login</button>
+			<button id="loginButton" type="submit" ng-click="vmLogin.login()" ng-disabled="!userForm.$valid" class="btn btn-success btn-lg">Login</button>
 		</form>
-	<p class="spacer"><a href="" ng-click="vm.toggleModal()">J'ai oublié mon mot de passe</a></p>
+	<p class="spacer"><a href="" ng-click="vmLogin.toggleModal()">J'ai oublié mon mot de passe</a></p>
     <p class="spacer">Pas encore de compte ? <a href="/auth/inscription">Inscrivez-vous !</a></p>
     <p>Ou retournez à l'<a href="/">accueil </a></p>
 	 <!-- modal for reset password -->
-    <modal title="Votre email" visible="showModal">
-        <div class="form-horizontal" >
-            <div class="form-group">
-                <label for="email" class=" col-xs-6 control-label">Votre email</label>
-                <div class="col-xs-6">
-                    <p class="form-control-static">{{vm.user.email}}</p>
+    
+      <modal title="Votre email" visible="showModal">
+        <div class="container">
+            <div class="form-horizontal col-xs-6" >
+                <div class="form-group ">
+                    <label>Email</label>
+                    <input type="email" class="form-control" ng-model="vmLogin.user.email" id="email" name="email" required>
+    <!--                <p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Le format du mail est invalide.</p> -->
                 </div>
+                <div class="form-group">
+                        <a id="adresseButton" class="btn btn-success" ng-click="vmLogin.emailResetPassword()">Réinitialiser mon mot de passe</a>
+               </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-offset-5 ">
-                    <!-- <a ui-sref="profil.mobile" id="adresseButton" ng-click="vm.saveAdresse()" class="btn btn-success"> -->
-                    <a id="adresseButton" class="btn btn-success" ng-click="vm.toggleModal()">Réinitialiser mon mot de passe</a>
-                </div>
-           </div>
-        </div>
+        </div>  
     </modal>
-
 </div>
 
 </div>
