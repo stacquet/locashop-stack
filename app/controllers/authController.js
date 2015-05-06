@@ -1,8 +1,12 @@
-var passport	= require('passport');
-var models   	= require('../models/');
-var HttpStatus	= require('http-status-codes');
-var logger		= require('../util/logger');
-var bcrypt = require('bcrypt-nodejs');
+var Promise 		= require("bluebird");
+var passport		= require('passport');
+var models   		= require('../models/');
+var HttpStatus		= require('http-status-codes');
+var logger			= require('../util/logger');
+var bcrypt 			= require('bcrypt-nodejs');
+var mailFactory		= require('../modules/mailFactory');
+
+Promise.promisifyAll(mailFactory);
 
 
 module.exports = {
@@ -70,14 +74,19 @@ module.exports = {
 				- Retrieve user with url_param email information from DB :
 					- if not found => 404
 					- if found next						
-				- Check that id_rand in the url match the user field email_verification_token
-					- if not => 404
-					- if found send request_page				
+				- Retrieve mail template from DB for RESET_PASSWORD
+				    - if not found => 500
+					- if found next
+				- Fill mail template with password_change_token
+				- Send email
+					- if send KO => 500
+					- if send OK =>200
 		*/
 		logger.log('debug','auth|emailResetPassword'+JSON.stringify(req.body));
 		var req_email = req.params.email;
 		var returnBody;
 		var returnStatus;
+		var mailTemplate;
 		models.sequelize.transaction()
 			.then(function(t){
 				logger.log('debug','auth|emailResetPassword|query user'); 
@@ -99,6 +108,11 @@ module.exports = {
 			})
 			.then(function(){
 				logger.log('debug','auth|emailResetPassword|send email with password_change_token');
+				return mailFactory.initAsync('RESET_PASSWORD')
+			})
+			.then(function(mailTemplate){
+				mailTemplate = mailTemplate;
+				console.log(mailTemplate.object);				
 				myT.commit();
 				returnStatus = HttpStatus.OK;
 				return Promise.resolve()
@@ -106,7 +120,7 @@ module.exports = {
 			.catch(function(err){
 				myT.rollback();
 				if(err){
-					logger.log('error','user|mobile|verify : '+err);
+					logger.log('error','auth|emailResetPassword : '+err);
 					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 				} 
 			})

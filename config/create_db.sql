@@ -295,3 +295,13 @@ CREATE TABLE sessions (
   data text COLLATE utf8_bin,
   PRIMARY KEY (`session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE mail_template (
+  id_mail_template varchar(20) NOT NULL,
+  statut int(11) DEFAULT '1',
+  object varchar(300) DEFAULT NULL,
+  content varchar(4000) DEFAULT NULL,
+  createdAt DATETIME NULL,
+  updatedAt DATETIME NULL,
+  PRIMARY KEY (`id_mail_template`)
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;

@@ -530,16 +530,16 @@ angular
 		}
 
 		function emailResetPassword(){
-			$rootScope.loadingMessage='Envoi d\'un email pour réinitialiser le mot de passe';
+			toggleModal();
 			if(vmLogin.user.email){
 				$rootScope.busy = homeService.emailResetPassword(vmLogin.user.email)
 					.success(function(data, status, headers, config){
-						notifier.notify({template : 'Envoi email OK'});
+						notifier.notify({template : 'Nous vous avons envoyé un mail, consultez-le !'});
 				})
 				.error(function(data, status, headers, config) {
 					console.log(data);
 					vmLogin.messages=data.messages;
-					notifier.notify({template : 'Envoi email KO',type:'error'});
+					notifier.notify({template : 'Email non trouvé',type:'error'});
 				});
 			}
 		}

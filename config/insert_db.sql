@@ -27,4 +27,8 @@ VALUES (1,null,'presentation_ferme','presentation_produits','presentation_method
 
 INSERT INTO ferme_producteur (id_ferme,id_user)
 VALUES(1,1);
+
+INSERT INTO mail_template(id_mail_template,object,content) 
+VALUES ('RESET_PASSWORD','LOCASHOP : Réinitialisation du mot de passe','Bonjour,<br><br>Suite à votre demande de réinitialisation de mot de passe, veuillez cliquer sur le lien : [URL_APPLICATION] et suivre les instructions.<br><br><br>Cordialement,<br><span style="font-weight: bold;">Equipe Locashop</span><br><br>Ceci est un mail automatique. Merci de ne pas y répondre.');
+
 COMMIT;

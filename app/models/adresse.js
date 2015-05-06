@@ -7,9 +7,9 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey:true
     },
-	  formatted_address 			: Sequelize.STRING(500),
-	  longitude 					    : Sequelize.DECIMAL(20,17),
-	  latitude					      : Sequelize.DECIMAL(20,17)
+	  formatted_address 		: Sequelize.STRING(500),
+	  longitude 				: Sequelize.DECIMAL(20,17),
+	  latitude					: Sequelize.DECIMAL(20,17)
 	  },
   {
     timestamps: true,
