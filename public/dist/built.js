@@ -76,6 +76,7 @@ angular
 		vm.login=login;
 		vm.logout=logout;
 		vm.toggleModal = toggleModal;
+		vm.resetDatabase = resetDatabase;
 		
 		initLogin();
 		
@@ -117,6 +118,16 @@ angular
 				console.log('toggle');
 			});
 		}
+		
+		function resetDatabase(){
+			$rootScope.busy = homeService.resetDatabase()
+				.then(function(){
+					
+				})
+				.catch(function(){
+					
+				});
+		}
 	}
 	
 })();;(function () {
@@ -134,7 +145,8 @@ angular
 			userInfos			: userInfos,
 			logout				: logout,
 			login				: login,
-			emailResetPassword	: emailResetPassword
+			emailResetPassword	: emailResetPassword,
+			resetDatabase		: resetDatabase
 		};
 		
 		return service;
@@ -153,6 +165,10 @@ angular
 
 		function emailResetPassword(email){
 			return $http.get('/api/auth/emailResetPassword/'+email);
+		}
+		
+		function resetDatabase(){
+			return $http.get('/api/admin/resetDatabase');
 		}
     }       
 })();

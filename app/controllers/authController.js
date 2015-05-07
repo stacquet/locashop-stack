@@ -87,6 +87,7 @@ module.exports = {
 		var returnBody;
 		var returnStatus;
 		var mailTemplate;
+		console.log(mailFactory);
 		models.sequelize.transaction()
 			.then(function(t){
 				logger.log('debug','auth|emailResetPassword|query user'); 
@@ -108,7 +109,7 @@ module.exports = {
 			})
 			.then(function(){
 				logger.log('debug','auth|emailResetPassword|send email with password_change_token');
-				return mailFactory.initAsync('RESET_PASSWORD')
+				return mailFactory.createMailTemplateAsync('RESET_PASSWORD')
 			})
 			.then(function(mailTemplate){
 				mailTemplate = mailTemplate;

@@ -3,6 +3,7 @@ var controllers = require('./controllers');
 
 module.exports = function (app,passport) {
 	app.get( '/'                           							, controllers.home.home);
+	app.get( '/api/admin/resetDatabase'                           	, controllers.admin.resetDatabase);
 	app.post('/api/inscription/localSignup'                 		, controllers.auth.signup);
 	app.get('/api/inscription/emailVerification'					, controllers.mail.emailVerification);
 	app.post('/api/inscription/checkEmailAvailable'                 , controllers.auth.checkEmailAvailable);

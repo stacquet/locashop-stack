@@ -65,7 +65,7 @@
 			  <ul class="nav navbar-nav">
 				<li><a href="/magasin" data-toggle="collapse" data-target=".navbar-collapse">Le magasin </a></li>
 				<li><a ui-sref="itineraire" data-toggle="collapse" data-target=".navbar-collapse">Itinéraire</a></li>
-				<li><a ui-sref="ferme" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">Ferme</a></li>
+				<li><a href="" ng-click="vm.resetDatabase()" id="profilLink" data-toggle="collapse" data-target=".navbar-collapse">INIT DB</a></li>
 				<li ng-show="$root.isLoggedIn"><a href="/livraisons" data-toggle="collapse" data-target=".navbar-collapse">Livraisons dans l'heure</a></li>
 				<li ng-show="!$root.isLoggedIn"><a ui-sref="inscription" id="inscriptionLink" data-toggle="collapse" data-target=".navbar-collapse">Inscription</a></li>
 			  </ul>

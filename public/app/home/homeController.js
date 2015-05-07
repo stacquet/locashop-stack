@@ -14,6 +14,7 @@
 		vm.login=login;
 		vm.logout=logout;
 		vm.toggleModal = toggleModal;
+		vm.resetDatabase = resetDatabase;
 		
 		initLogin();
 		
@@ -54,6 +55,16 @@
 				$scope.showModal = !$scope.showModal;
 				console.log('toggle');
 			});
+		}
+		
+		function resetDatabase(){
+			$rootScope.busy = homeService.resetDatabase()
+				.then(function(){
+					
+				})
+				.catch(function(){
+					
+				});
 		}
 	}
 	

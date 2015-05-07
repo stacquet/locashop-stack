@@ -40,6 +40,9 @@ module.exports = function(sequelize, Sequelize) {
 		User.belongsTo(models.Adresse,{
     			foreignKey: 'id_adresse'
     		});
+		User.belongsTo(models.Profil,{
+    			foreignKey: 'id_profil'
+    		});
       }
     }
   });

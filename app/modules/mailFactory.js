@@ -46,8 +46,9 @@ module.exports = function() {
 	return mailFactory;
 }*/
 var mailFactory = {};
-mailFactory.init = function(mailTemplate, cb){
+mailFactory.createMailTemplate = function(mailTemplate, cb){
 		if(mailTemplate){
+			
 			models.MailTemplate.find({	where:	{id_mail_template : mailTemplate}})
 				.then(function(mailTemplate){
 					if(mailTemplate){

@@ -13,7 +13,8 @@
 			userInfos			: userInfos,
 			logout				: logout,
 			login				: login,
-			emailResetPassword	: emailResetPassword
+			emailResetPassword	: emailResetPassword,
+			resetDatabase		: resetDatabase
 		};
 		
 		return service;
@@ -32,6 +33,10 @@
 
 		function emailResetPassword(email){
 			return $http.get('/api/auth/emailResetPassword/'+email);
+		}
+		
+		function resetDatabase(){
+			return $http.get('/api/admin/resetDatabase');
 		}
     }       
 })();

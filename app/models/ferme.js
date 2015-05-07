@@ -22,11 +22,11 @@ module.exports = function(sequelize, Sequelize) {
         /*Ferme.belongsToMany(models.User, {
           through: 'ferme_user',
           foreignKey: 'id_ferme'
-        });*/
+        });
           Ferme.hasMany(models.User,{
               through: 'ferme_user',
               foreignKey: 'id_user'
-          })
+          })*/
       }
     }
   });
