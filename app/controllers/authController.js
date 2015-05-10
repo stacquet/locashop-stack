@@ -163,11 +163,9 @@ module.exports = {
 			.then(function(user){
 				if(user){
 				returnStatus = HttpStatus.OK;
-				res.sendfile('./public/app/index.html');	
 				}
 				else{
 					returnStatus = HttpStatus.NOT_FOUND;
-					res.status(returnStatus).send();
 				}
 
 			})
@@ -176,8 +174,10 @@ module.exports = {
 				if(err){
 					logger.log('error','auth|resetPassword : '+err);
 					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-					res.status(returnStatus).send();
 				} 
+			})
+			.finally(function(){
+				res.status(returnStatus).send();
 			})
 	}
 };

@@ -8,6 +8,10 @@ angular
       		$urlRouterProvider.otherwise('/')
 
 			$stateProvider
+				.state('404', {
+					url : '/404',
+					templateUrl: '404.html'
+				})
     			.state('home', {
     				url: '/',
 					templateUrl: 'app/home/home.html'
@@ -31,12 +35,7 @@ angular
 				.state('ferme', {
 					url : '/ferme',
 					templateUrl: 'app/ferme/ferme.html',
-					controller : 'fermeController as vm'/*,
-					resolve : {
-						ferme : function(fermeService){
-							return fermeService.getuser();
-						}
-					}*/
+					controller : 'fermeController as vm'
 				})
 				.state('itineraire', {
 					url : '/itineraire',
@@ -152,6 +151,7 @@ angular
 			logout				: logout,
 			login				: login,
 			emailResetPassword	: emailResetPassword,
+			resetPassword 		: resetPassword,
 			resetDatabase		: resetDatabase
 		};
 		
@@ -171,6 +171,10 @@ angular
 
 		function emailResetPassword(email){
 			return $http.get('/api/auth/emailResetPassword/'+email);
+		}
+
+		function resetPassword(password_change_token){
+			return $http.get('api/auth/resetPassword/'+password_change_token);
 		}
 		
 		function resetDatabase(){
@@ -574,10 +578,12 @@ angular
         .module('locashopApp')
         .controller('resetPasswordController', resetPasswordController);
 
-    resetPasswordController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier'];
+    resetPasswordController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier','homeService'];
 
-	function resetPasswordController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier){
+	function resetPasswordController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier,homeService){
 		var vmResetPassword = this;
+
+		vmResetPassword.initDone = false;
 
 		init();
 
@@ -585,7 +591,22 @@ angular
 
 
 		function init(){
-			
+			if($stateParams.password_change_token) {
+				$rootScope.busy = homeService.resetPassword($stateParams.password_change_token)
+					.then(function(){
+						console.log('ok');
+						vmResetPassword.password_change_token=$stateParams.password_change_token;
+					})
+					.catch(function(){
+						console.log('erreur');
+						$state.go('404');
+					})
+					.finally(function(){
+						vmResetPassword.initDone = true;
+					})
+
+
+			}
 				
 		}
 

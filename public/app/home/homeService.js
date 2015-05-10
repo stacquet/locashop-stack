@@ -14,6 +14,7 @@
 			logout				: logout,
 			login				: login,
 			emailResetPassword	: emailResetPassword,
+			resetPassword 		: resetPassword,
 			resetDatabase		: resetDatabase
 		};
 		
@@ -33,6 +34,10 @@
 
 		function emailResetPassword(email){
 			return $http.get('/api/auth/emailResetPassword/'+email);
+		}
+
+		function resetPassword(password_change_token){
+			return $http.get('api/auth/resetPassword/'+password_change_token);
 		}
 		
 		function resetDatabase(){

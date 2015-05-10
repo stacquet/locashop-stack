@@ -5,6 +5,10 @@
       		$urlRouterProvider.otherwise('/')
 
 			$stateProvider
+				.state('404', {
+					url : '/404',
+					templateUrl: '404.html'
+				})
     			.state('home', {
     				url: '/',
 					templateUrl: 'app/home/home.html'
@@ -28,12 +32,7 @@
 				.state('ferme', {
 					url : '/ferme',
 					templateUrl: 'app/ferme/ferme.html',
-					controller : 'fermeController as vm'/*,
-					resolve : {
-						ferme : function(fermeService){
-							return fermeService.getuser();
-						}
-					}*/
+					controller : 'fermeController as vm'
 				})
 				.state('itineraire', {
 					url : '/itineraire',
