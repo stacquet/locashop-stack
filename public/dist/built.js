@@ -1,7 +1,7 @@
 angular
 	.module('locashopApp', 
 	['llNotifier','cgBusy','ngImgCrop','ui.router','angularFileUpload',
-	'appRoutes','ui.tinymce','ngResource']);// public/js/appRoutes.js
+	'appRoutes','ngResource']);// public/js/appRoutes.js
     angular.module('appRoutes', [] ).
 		config(function($stateProvider, $urlRouterProvider) {
 			// For any unmatched url, send to /
@@ -19,8 +19,14 @@ angular
 				})
 				.state('login', {
 					url: '/login',
-					templateUrl: 'app/home/login.html',
+					templateUrl: 'app/login/login.html',
 					controller : 'loginController as vmLogin'
+				})
+				.state('resetPassword' , {
+					url : '/auth/resetPassword/:password_change_token',
+					templateUrl: 'app/login/resetPassword.html',
+					controller : 'resetPasswordController as vmResetPassword',
+
 				})
 				.state('ferme', {
 					url : '/ferme',
@@ -547,8 +553,8 @@ angular
 
 		function emailResetPassword(){
 			toggleModal();
-			if(vmLogin.user.email){
-				$rootScope.busy = homeService.emailResetPassword(vmLogin.user.email)
+			if(vmLogin.emailReset){
+				$rootScope.busy = homeService.emailResetPassword(vmLogin.emailReset)
 					.success(function(data, status, headers, config){
 						notifier.notify({template : 'Nous vous avons envoyé un mail, consultez-le !'});
 				})
@@ -562,6 +568,33 @@ angular
 	}
 	
 })();;(function () {
+    'use strict';
+
+    angular
+        .module('locashopApp')
+        .controller('resetPasswordController', resetPasswordController);
+
+    resetPasswordController.$inject = ['$rootScope','$timeout','$scope','$stateParams','$state','$upload','$q','notifier'];
+
+	function resetPasswordController($rootScope,$timeout,$scope,$stateParams,$state,$upload,$q,notifier){
+		var vmResetPassword = this;
+
+		init();
+
+		  
+
+
+		function init(){
+			
+				
+		}
+
+	}
+
+
+})();
+
+;(function () {
     'use strict';
 	
 	angular	

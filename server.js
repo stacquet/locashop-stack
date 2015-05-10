@@ -22,8 +22,7 @@ var models   		= require('./app/models/'); // will run index.js
 var dataset			= require('./migration/dataset');
 
 //Promise.promisifyAll(dataset);
-logger.log('info','DB STARTING !');
-models.sequelize.sync({force: true})
+dataset.createDB()
 	.then(function(){
 	
 		return dataset.initData()
@@ -102,5 +101,4 @@ models.sequelize.sync({force: true})
 		console.log(err);
 	})
 	.finally(function(){
-		console.log('END');
 	});                     

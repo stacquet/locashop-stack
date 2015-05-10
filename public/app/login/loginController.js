@@ -36,8 +36,8 @@
 
 		function emailResetPassword(){
 			toggleModal();
-			if(vmLogin.user.email){
-				$rootScope.busy = homeService.emailResetPassword(vmLogin.user.email)
+			if(vmLogin.emailReset){
+				$rootScope.busy = homeService.emailResetPassword(vmLogin.emailReset)
 					.success(function(data, status, headers, config){
 						notifier.notify({template : 'Nous vous avons envoyé un mail, consultez-le !'});
 				})

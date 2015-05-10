@@ -2,7 +2,7 @@ var models   	= require('../models/');
 var bcrypt = require('bcrypt-nodejs');
 
 var env       	= process.env.NODE_ENV || "development";
-var conf    	= require('../../secret/config');
+var conf    	= require(process.env.PWD+'/secret/config');
 var sendgrid  	= require('sendgrid')(conf.mailUser,conf.mailPassword);
 
 module.exports = {

@@ -1,10 +1,11 @@
 var Promise 		= require("bluebird");
 var passport		= require('passport');
-var models   		= require('../models/');
+var models   		= require(process.env.PWD+'/app/models/');
 var HttpStatus		= require('http-status-codes');
-var logger			= require('../util/logger');
+var logger			= require(process.env.PWD+'/app/util/logger');
 var bcrypt 			= require('bcrypt-nodejs');
-var mailFactory		= require('../modules/mailFactory');
+var conf        	= require(process.env.PWD+'/secret/config');
+var mailFactory		= require(process.env.PWD+'/app/modules/mailFactory');
 
 Promise.promisifyAll(mailFactory);
 
@@ -70,7 +71,7 @@ module.exports = {
 	},
 	emailResetPassword : function (req, res, next) {
 		/* 
-			Reset password for a user :
+			Email reset password for a user :
 				- Retrieve user with url_param email information from DB :
 					- if not found => 404
 					- if found next						
@@ -84,10 +85,9 @@ module.exports = {
 		*/
 		logger.log('debug','auth|emailResetPassword'+JSON.stringify(req.body));
 		var req_email = req.params.email;
-		var returnBody;
+		var returnBody = '';
 		var returnStatus;
 		var mailTemplate;
-		console.log(mailFactory);
 		models.sequelize.transaction()
 			.then(function(t){
 				logger.log('debug','auth|emailResetPassword|query user'); 
@@ -102,18 +102,25 @@ module.exports = {
 					return db_user.save({transaction:myT})
 				}
 				else{
-					logger.log('debug','auth|emailResetPassword|email not found');
+					logger.log('debug','auth|emailResetPassword|email not found');db_user.password_change_token
 					returnStatus = HttpStatus.NOT_FOUND;				
 					return Promise.reject() 
 				}
 			})
 			.then(function(){
-				logger.log('debug','auth|emailResetPassword|send email with password_change_token');
+				logger.log('debug','auth|emailResetPassword|create email with password_change_token');
 				return mailFactory.createMailTemplateAsync('RESET_PASSWORD')
 			})
-			.then(function(mailTemplate){
-				mailTemplate = mailTemplate;
-				console.log(mailTemplate.object);				
+			.then(function(mailTemplateInstance){
+				logger.log('debug','auth|emailResetPassword|set email param');
+				mailTemplateInstance.setParam('[URL_RESET_PASSWORD]',conf.base_url+conf.host+':'+conf.port+'/#/auth/resetPassword/'+db_user.password_change_token);
+				mailTemplateInstance.addRecipient(req_email);
+				logger.log('debug','auth|emailResetPassword|send email');
+				console.log(mailTemplateInstance);
+				return mailTemplateInstance.send()
+			})
+			.then(function(){
+				logger.log('debug','auth|emailResetPassword|DB commit');
 				myT.commit();
 				returnStatus = HttpStatus.OK;
 				return Promise.resolve()
@@ -128,5 +135,50 @@ module.exports = {
 			.finally(function(){
 				res.status(returnStatus).send(returnBody);
 			});
+	},
+	resetPassword : function (req, res, next) {
+		/* 
+			Reset password for a user :
+				- Retrieve user with url_param password_change_token information from DB :
+					- if not found => 404
+					- if found next						
+				- Retrieve mail template from DB for RESET_PASSWORD
+				    - if not found => 500
+					- if found next
+				- Fill mail template with password_change_token
+				- Send email
+					- if send KO => 500
+					- if send OK =>200
+		*/
+		logger.log('debug','auth|resetPassword'+JSON.stringify(req.body));
+		var req_password_change_token = req.params.password_change_token;
+		var returnBody = '';
+		var returnStatus;
+		models.sequelize.transaction()
+			.then(function(t){
+				logger.log('debug','auth|resetPassword|query user'); 
+				myT=t;
+				return models.User.find({	where:	{password_change_token : req_password_change_token}})
+			})
+			.then(function(user){
+				if(user){
+				returnStatus = HttpStatus.OK;
+				res.sendfile('./public/app/index.html');	
+				}
+				else{
+					returnStatus = HttpStatus.NOT_FOUND;
+					res.status(returnStatus).send();
+				}
+
+			})
+			.catch(function(err){
+				myT.rollback();
+				if(err){
+					logger.log('error','auth|resetPassword : '+err);
+					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+					res.status(returnStatus).send();
+				} 
+			})
 	}
 };
+

@@ -1,61 +1,30 @@
 var models   	= require('../models/');
+var Promise 	= require("bluebird");
 var logger		= require('../util/logger');
+var S 			= require('string');
+var conf    	= require(process.env.PWD+'/secret/config');
+var sendgrid  	= require('sendgrid')(conf.mailUser,conf.mailPassword);
 
-/*
-function mailFactory(){
-	
-	var mailFactory;
-	mailFactory.init = init;	
-	
-	function init(mailTemplate){
-		if(mailTemplate){
-			models.MailTemplate.find({	where:	{id_mail_template : mailTemplate}})
-				.then(function(mailTemplate){
-					mailFactory.content = mailTemplate.content;
-					mailFactory.object = mailTemplate.object;
-					mailFactory.statut = mailTemplate.statut;
-				});
-		}
-		else{
-			return;
-		}
-	}
-	return mailFactory;
-}
+Promise.promisifyAll(sendgrid);
 
-module.exports = mailFactory;
-
-
-module.exports = function() {
-	var mailFactory = {};
-	mailFactory.init = init;	
-	
-	function init(mailTemplate){
-		if(mailTemplate){
-			models.MailTemplate.find({	where:	{id_mail_template : mailTemplate}})
-				.then(function(mailTemplate){
-					mailFactory.content = mailTemplate.content;
-					mailFactory.object = mailTemplate.object;
-					mailFactory.statut = mailTemplate.statut;
-				});
-		}
-		else{
-			//return;
-		}
-	}
-	return mailFactory;
-}*/
+/* 
+	mailFactory is a module that provide mailTemplate. 
+	mailTemplate are objects with function and attributes that helps build and send mails
+*/
 var mailFactory = {};
-mailFactory.createMailTemplate = function(mailTemplate, cb){
-		if(mailTemplate){
+
+mailFactory.createMailTemplate = function(idMailTemplate, cb){
+		if(idMailTemplate){
 			
-			models.MailTemplate.find({	where:	{id_mail_template : mailTemplate}})
+			models.MailTemplate.find({	where:	{id_mail_template : idMailTemplate}})
 				.then(function(mailTemplate){
 					if(mailTemplate){
-						mailFactory.content = mailTemplate.content;
-						mailFactory.object = mailTemplate.object;
-						mailFactory.statut = mailTemplate.statut;
-						return cb(null,mailFactory);
+						var mailTemplateInstance = new MailTemplate({
+							content : mailTemplate.content,
+							object 	: mailTemplate.object,
+							statut	: mailTemplate.statut
+						});
+						return cb(null,mailTemplateInstance);
 					}
 					else{
 						return cb('no mail template found');
@@ -66,4 +35,36 @@ mailFactory.createMailTemplate = function(mailTemplate, cb){
 			return cb('no mail template passed as parameter');
 		}
 	}
+
+
+var MailTemplate = function(opts){
+	this.recipient=[];
+	if(opts){
+		for(var opt in opts){
+			this[opt]=opts[opt];
+		}
+	} 
+}
+MailTemplate.prototype.send = function(cb){
+	console.log(this.recipient+'-'+conf.mailSender+'-'+this.object+'-'+this.content);
+	sendgrid.sendAsync({
+		to			: this.recipient,
+		from		: conf.mailSender,
+		subject		: this.object,
+		html 		: ""+this.content	
+	});
+}
+
+MailTemplate.prototype.setParam = function(key,value){
+	this.content = S(this.content).replaceAll(key,value);
+}
+
+MailTemplate.prototype.addRecipient = function(email){
+	if(email)	this.recipient.push(email);		
+}
+
+MailTemplate.prototype.formatRecipient = function(){
+
+}
+
 module.exports = mailFactory;

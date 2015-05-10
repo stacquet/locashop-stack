@@ -16,8 +16,14 @@
 				})
 				.state('login', {
 					url: '/login',
-					templateUrl: 'app/home/login.html',
+					templateUrl: 'app/login/login.html',
 					controller : 'loginController as vmLogin'
+				})
+				.state('resetPassword' , {
+					url : '/auth/resetPassword/:password_change_token',
+					templateUrl: 'app/login/resetPassword.html',
+					controller : 'resetPasswordController as vmResetPassword',
+
 				})
 				.state('ferme', {
 					url : '/ferme',
