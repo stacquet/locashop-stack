@@ -1,5 +1,5 @@
 var assert = require("assert"); // node.js core module
-var controllers = require('../app/controllers');
+//var controllers = require('/app/controllers');
 
 describe('Authentification Unit Test', function(){
     it('#checkEmailAvailable() should return false because sylvain.tacquet@gmail.com already exists in database', function(done){

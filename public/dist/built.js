@@ -152,6 +152,7 @@ angular
 			login				: login,
 			emailResetPassword	: emailResetPassword,
 			resetPassword 		: resetPassword,
+			changePassword		: changePassword,
 			resetDatabase		: resetDatabase
 		};
 		
@@ -174,9 +175,17 @@ angular
 		}
 
 		function resetPassword(password_change_token){
-			return $http.get('api/auth/resetPassword/'+password_change_token);
+			return $http.get('/api/auth/resetPassword/'+password_change_token);
 		}
 		
+		function changePassword(password_change_token,password){
+			return $http.post('/api/auth/changePassword',
+						{'user': 
+							{'password_change_token':password_change_token,
+							'password':password
+							}
+						});
+		}
 		function resetDatabase(){
 			return $http.get('/api/admin/resetDatabase');
 		}
@@ -585,11 +594,9 @@ angular
 		var vmResetPassword = this;
 
 		vmResetPassword.initDone = false;
+		vmResetPassword.changePassword = changePassword;
 
 		init();
-
-		  
-
 
 		function init(){
 			if($stateParams.password_change_token) {
@@ -607,8 +614,20 @@ angular
 					})
 
 
+			}		
+		}
+
+		function changePassword(){
+			if(vmResetPassword.password && vmResetPassword.password_bis && vmResetPassword.password == vmResetPassword.password_bis){
+				$rootScope.busy = homeService.changePassword(vmResetPassword.password_change_token, vmResetPassword.password)
+					.then(function(){
+						console.log('ok');						
+					})
+					.catch(function(){
+						console.log('erreur');
+						$state.go('404');
+					});
 			}
-				
 		}
 
 	}

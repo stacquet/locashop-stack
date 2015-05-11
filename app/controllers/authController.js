@@ -6,6 +6,7 @@ var logger			= require(process.env.PWD+'/app/util/logger');
 var bcrypt 			= require('bcrypt-nodejs');
 var conf        	= require(process.env.PWD+'/secret/config');
 var mailFactory		= require(process.env.PWD+'/app/modules/mailFactory');
+var S 				= require('string');
 
 Promise.promisifyAll(mailFactory);
 
@@ -88,6 +89,7 @@ module.exports = {
 		var returnBody = '';
 		var returnStatus;
 		var mailTemplate;
+		var myT;
 		models.sequelize.transaction()
 			.then(function(t){
 				logger.log('debug','auth|emailResetPassword|query user'); 
@@ -97,7 +99,8 @@ module.exports = {
 			.then(function(user){
 				db_user=user;
 				if(db_user){
-					db_user.password_change_token=bcrypt.hashSync(req_email+Math.floor(Math.random()*10), null, null);
+					var var_password_change_token=bcrypt.hashSync(req_email+Math.floor(Math.random()*10), null, null).replace(/#|\//g,"-");
+					db_user.password_change_token=var_password_change_token;
 					logger.log('debug','auth|emailResetPassword|save new password_change_token'); 
 					return db_user.save({transaction:myT})
 				}
@@ -154,6 +157,7 @@ module.exports = {
 		var req_password_change_token = req.params.password_change_token;
 		var returnBody = '';
 		var returnStatus;
+		var myT;
 		models.sequelize.transaction()
 			.then(function(t){
 				logger.log('debug','auth|resetPassword|query user'); 
@@ -167,6 +171,7 @@ module.exports = {
 				else{
 					returnStatus = HttpStatus.NOT_FOUND;
 				}
+				myT.commit();
 
 			})
 			.catch(function(err){
@@ -178,7 +183,68 @@ module.exports = {
 			})
 			.finally(function(){
 				res.status(returnStatus).send();
+				myT.rollback();
 			})
+	},
+	changePassword : function (req, res, next) {
+		/* 
+			Reset password for a user :
+				- Retrieve user with url_param password_change_token information from DB :
+					- if not found => 404
+					- if found next						
+				- crypt and fill user in DB with password
+					- if save KO => 500
+					- if save OK =>200
+		*/
+		logger.log('debug','auth|changePassword'+JSON.stringify(req.body));
+		if(req.body.user && req.body.user.password_change_token && req.body.user.password){
+			var req_password_change_token = req.body.user.password_change_token;
+			var req_password = req.body.user.password;
+			var db_user;
+			var returnBody = '';
+			var returnStatus;
+			var myT;
+			models.sequelize.transaction()
+				.then(function(t){
+					logger.log('debug','auth|changePassword|query user'); 
+					myT=t;
+					return models.User.find({	where:	{password_change_token : req_password_change_token}})
+				})
+				.then(function(user){
+					if(user){
+						db_user = user;
+						db_user.password = bcrypt.hashSync(req_password, null, null);
+						db_user.password_change_token =null;
+						returnStatus = HttpStatus.OK;
+						return db_user.save({transaction:myT});
+					}
+					else{
+						returnStatus = HttpStatus.NOT_FOUND;
+						Promise.reject();
+					}
+		
+				})
+				.then(function(){
+					logger.log('debug','auth|changePassword|commit'); 					
+					myT.commit();
+				})
+				.catch(function(err){
+					myT.rollback();
+					if(err){
+						logger.log('error','auth|changePassword : '+err);
+						returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+					} 
+				})
+				.finally(function(){
+					res.status(returnStatus).send();
+					myT.rollback();
+				})
+		}
+		else{
+			logger.log('debug','auth|changePassword|form input not correct'); 
+			res.status(HttpStatus.NOT_FOUND).send();
+		}
+
 	}
 };
 

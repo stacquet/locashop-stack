@@ -1,5 +1,5 @@
 
-var controllers = require('./controllers');
+var controllers = require(process.env.PWD+'/app/controllers');
 
 module.exports = function (app,passport) {
 	app.get( '/'                           							, controllers.home.home);
@@ -14,6 +14,7 @@ module.exports = function (app,passport) {
 	app.get('/auth/facebook/callback'								, controllers.auth.facebook_callback);
 	app.get('/api/auth/emailResetPassword/:email'					, controllers.auth.emailResetPassword);
 	app.get('/api/auth/resetPassword/:password_change_token'		, controllers.auth.resetPassword);
+	app.post('/api/auth/changePassword'								, controllers.auth.changePassword);
 	app.get('/api/user/:id'											, controllers.user.get); 
 	app.post('/api/user/:id'										, controllers.user.save); 
 	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 

@@ -11,11 +11,9 @@
 		var vmResetPassword = this;
 
 		vmResetPassword.initDone = false;
+		vmResetPassword.changePassword = changePassword;
 
 		init();
-
-		  
-
 
 		function init(){
 			if($stateParams.password_change_token) {
@@ -33,8 +31,20 @@
 					})
 
 
+			}		
+		}
+
+		function changePassword(){
+			if(vmResetPassword.password && vmResetPassword.password_bis && vmResetPassword.password == vmResetPassword.password_bis){
+				$rootScope.busy = homeService.changePassword(vmResetPassword.password_change_token, vmResetPassword.password)
+					.then(function(){
+						console.log('ok');						
+					})
+					.catch(function(){
+						console.log('erreur');
+						$state.go('404');
+					});
 			}
-				
 		}
 
 	}
