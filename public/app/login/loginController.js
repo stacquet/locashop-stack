@@ -44,7 +44,8 @@
 				.error(function(data, status, headers, config) {
 					console.log(data);
 					vmLogin.messages=data.messages;
-					notifier.notify({template : 'Email non trouvé',type:'error'});
+					if(status==404) notifier.notify({template : 'Email non trouvé',type:'error'});
+					if(status==500) notifier.notify({template : 'Erreur interne',type:'error'});
 				});
 			}
 		}

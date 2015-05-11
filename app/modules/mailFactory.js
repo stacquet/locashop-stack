@@ -45,9 +45,9 @@ var MailTemplate = function(opts){
 		}
 	} 
 }
-MailTemplate.prototype.send = function(cb){
+MailTemplate.prototype.send = function(){
 	console.log(this.recipient+'-'+conf.mailSender+'-'+this.object+'-'+this.content);
-	sendgrid.sendAsync({
+	return sendgrid.sendAsync({
 		to			: this.recipient,
 		from		: conf.mailSender,
 		subject		: this.object,

@@ -102,8 +102,8 @@ module.exports = {
 					return db_user.save({transaction:myT})
 				}
 				else{
-					logger.log('debug','auth|emailResetPassword|email not found');db_user.password_change_token
-					returnStatus = HttpStatus.NOT_FOUND;				
+					logger.log('debug','auth|emailResetPassword|email not found');
+					returnStatus = HttpStatus.NOT_FOUND;
 					return Promise.reject() 
 				}
 			})
