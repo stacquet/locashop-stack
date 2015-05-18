@@ -79,7 +79,7 @@ app.use(acl.acl);
 // ralentissement volontaire pour mettre en avant l'asynchrone
 app.use(slowness.slow);
 // routes ==================================================
-require('./app/routes')(app,passport); // configure our routes
+require('./app/routes/routes')(app,passport); // configure our routes
 // start app ===============================================
 // startup our app at http://localhost:8080
 app.listen(port);               
