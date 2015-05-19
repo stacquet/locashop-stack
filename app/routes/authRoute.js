@@ -10,7 +10,6 @@ var mailFactory		= require(process.env.PWD+'/app/modules/mailFactory');
 var S 				= require('string');
 
 Promise.promisifyAll(controllers.auth);
-console.log(controllers);
 Promise.promisifyAll(mailFactory);
 
 
@@ -84,21 +83,22 @@ module.exports = {
 					- if send OK =>200
 		*/
 		
-		logger.log('debug','auth|emailResetPassword'+JSON.stringify(req.body));
+		logger.log('debug','routes|auth|emailResetPassword'+JSON.stringify(req.body));
 		var req_email = req.params.email;
 		var returnBody = '';
 		var returnStatus;
 		controllers.auth.emailResetPasswordAsync(req_email)
 			.then(function(data){
-				returnStatus=HttpStatus.OK;
+				returnStatus=data;
 			})
 			.catch(function(err){
 				if(err){
-					logger.log('error','auth|emailResetPassword : '+err);
+					logger.log('error','routes|auth|emailResetPassword : '+err);
 					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 				} 
 			})
 			.finally(function(){
+				logger.log('debug','routes|auth|emailResetPassword|finally');
 				res.status(returnStatus).send(returnBody);
 			});
 	},

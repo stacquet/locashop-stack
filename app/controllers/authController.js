@@ -13,13 +13,19 @@ Promise.promisifyAll(mailFactory);
 module.exports = {
 
 	checkEmailAvailable : function(email,cb) {
+		if(email){
 			models.User.find({where : {email : email }})
 				.then(function(user){
-				return cb(null,user);
+					console.log(user===null);
+				return cb(null,(user===null));
 			})
 				.catch(function(err){
 				return cb(err);
 			});
+		}
+		else{
+			return cb(null,false);
+		}
 	},
 	emailResetPassword : function (req_email,cb) {
 		/* 
@@ -40,7 +46,7 @@ module.exports = {
 		var myT;
 		models.sequelize.transaction()
 			.then(function(t){
-				logger.log('debug','auth|emailResetPassword|query user'); 
+				logger.log('debug','controllers|auth|emailResetPassword|query user'); 
 				myT=t;
 				return models.User.find({	where:	{email : req_email}})
 			})
@@ -49,29 +55,29 @@ module.exports = {
 				if(db_user){
 					var var_password_change_token=bcrypt.hashSync(req_email+Math.floor(Math.random()*10), null, null).replace(/#|\//g,"-");
 					db_user.password_change_token=var_password_change_token;
-					logger.log('debug','auth|emailResetPassword|save new password_change_token'); 
+					logger.log('debug','controllers|auth|emailResetPassword|save new password_change_token'); 
 					return db_user.save({transaction:myT})
 				}
 				else{
-					logger.log('debug','auth|emailResetPassword|email not found');
+					logger.log('debug','controllers|auth|emailResetPassword|email not found');
 					returnStatus = HttpStatus.NOT_FOUND;
 					return Promise.reject() 
 				}
 			})
 			.then(function(){
-				logger.log('debug','auth|emailResetPassword|create email with password_change_token');
+				logger.log('debug','controllers|auth|emailResetPassword|create email with password_change_token');
 				return mailFactory.createMailTemplateAsync('RESET_PASSWORD')
 			})
 			.then(function(mailTemplateInstance){
-				logger.log('debug','auth|emailResetPassword|set email param');
+				logger.log('debug','controllers|auth|emailResetPassword|set email param');
 				mailTemplateInstance.setParam('[URL_RESET_PASSWORD]',conf.base_url+conf.host+':'+conf.port+'/#/auth/resetPassword/'+db_user.password_change_token);
 				mailTemplateInstance.addRecipient(req_email);
-				logger.log('debug','auth|emailResetPassword|send email');
+				logger.log('debug','controllers|auth|emailResetPassword|send email');
 				console.log(mailTemplateInstance);
 				return mailTemplateInstance.send()
 			})
 			.then(function(){
-				logger.log('debug','auth|emailResetPassword|DB commit');
+				logger.log('debug','controllers|auth|emailResetPassword|DB commit');
 				myT.commit();
 				returnStatus = HttpStatus.OK;
 				return Promise.resolve()
@@ -79,7 +85,7 @@ module.exports = {
 			.catch(function(err){
 				myT.rollback();
 				if(err){
-					logger.log('error','auth|emailResetPassword : '+err);
+					logger.log('error','controllers|auth|emailResetPassword : '+err);
 					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 					return cb(err,returnStatus)
 				} 

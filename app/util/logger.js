@@ -5,7 +5,7 @@ var logger = new winston.Logger({
     transports: [
         new (winston.transports.File)({
             name: 'info-file',
-	    	filename: 'logs/info.log',
+	    	filename: process.env.PWD+'/logs/info.log',
 	    	level: 'info',
             handleExceptions: true,
             json: true,
@@ -15,12 +15,12 @@ var logger = new winston.Logger({
         }),
 	    new (winston.transports.File)({
 	    	name: 'verbose-file',
-	    	filename: 'logs/verbose.log',
+	    	filename: process.env.PWD+'/logs/verbose.log',
 	    	level: 'verbose'
 	    }),
 	    new (winston.transports.File)({
 	    	name: 'debug-file',
-	    	filename: 'logs/debug.log',
+	    	filename: process.env.PWD+'/logs/debug.log',
 	    	level: 'debug'
 	    }),
         new (winston.transports.Console)({
