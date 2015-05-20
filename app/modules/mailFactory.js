@@ -14,8 +14,8 @@ Promise.promisifyAll(sendgrid);
 var mailFactory = {};
 
 mailFactory.createMailTemplate = function(idMailTemplate, cb){
+	return new Promise(function(resolve,reject){
 		if(idMailTemplate){
-			
 			models.MailTemplate.find({	where:	{id_mail_template : idMailTemplate}})
 				.then(function(mailTemplate){
 					if(mailTemplate){
@@ -24,17 +24,18 @@ mailFactory.createMailTemplate = function(idMailTemplate, cb){
 							object 	: mailTemplate.object,
 							statut	: mailTemplate.statut
 						});
-						return cb(null,mailTemplateInstance);
+						resolve(mailTemplateInstance);
 					}
 					else{
-						return cb('no mail template found');
+						reject('no mail template found');
 					}
 				});
 		}
 		else{
-			return cb('no mail template passed as parameter');
+			reject('no mail template passed as parameter');
 		}
-	}
+	});
+}
 
 
 var MailTemplate = function(opts){
@@ -46,7 +47,6 @@ var MailTemplate = function(opts){
 	} 
 }
 MailTemplate.prototype.send = function(){
-	console.log(this.recipient+'-'+conf.mailSender+'-'+this.object+'-'+this.content);
 	return sendgrid.sendAsync({
 		to			: this.recipient,
 		from		: conf.mailSender,

@@ -9,10 +9,6 @@ var conf        	= require(process.env.PWD+'/secret/config');
 var mailFactory		= require(process.env.PWD+'/app/modules/mailFactory');
 var S 				= require('string');
 
-Promise.promisifyAll(controllers.auth);
-Promise.promisifyAll(mailFactory);
-
-
 module.exports = {
 	login: function (req, res, next) {
 		passport.authenticate('local-login', function(err, user, info) {
@@ -40,13 +36,16 @@ module.exports = {
 		res.send({status : "ok"});
 	},
 	checkEmailAvailable : function(req, res, next) {
-			models.User.find({where : {email : req.body.email }})
-				.then(function(user){
-				res.send({"checkEmailAvailable" : (user!==null?false:true)});
-			})
-				.catch(function(err){
-				res.send({"checkEmailAvailable" : false});
-			});
+			if(req.body && req.body.email){
+				controllers.auth.checkEmailAvailable(req.body.email).
+					then(function(cb){
+						res.status(HttpStatus.OK).send({"checkEmailAvailable" : cb});
+					});
+			}
+			else{
+				res.status(HttpStatus.NOT_FOUND).send();
+			}
+			
 	},
 	signup : function(req, res, next) {
 		req.id_profil='P_CONSOMMATEUR';
@@ -82,25 +81,32 @@ module.exports = {
 					- if send KO => 500
 					- if send OK =>200
 		*/
-		
 		logger.log('debug','routes|auth|emailResetPassword'+JSON.stringify(req.body));
-		var req_email = req.params.email;
 		var returnBody = '';
 		var returnStatus;
-		controllers.auth.emailResetPasswordAsync(req_email)
-			.then(function(data){
-				returnStatus=data;
-			})
-			.catch(function(err){
-				if(err){
-					logger.log('error','routes|auth|emailResetPassword : '+err);
-					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-				} 
-			})
-			.finally(function(){
-				logger.log('debug','routes|auth|emailResetPassword|finally');
-				res.status(returnStatus).send(returnBody);
-			});
+		if(req.params && req.params.email){
+			var req_email = req.params.email;
+			controllers.auth.emailResetPassword(req_email)
+				.then(function(data){
+					logger.log('debug','routes|auth|emailResetPassword|user found');
+					returnStatus=data;
+				})
+				.catch(function(err){
+					if(err){
+						logger.log('error','routes|auth|emailResetPassword : '+err);
+						returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+					} 
+				})
+				.finally(function(){
+					logger.log('debug','routes|auth|emailResetPassword|finally');
+					res.status(returnStatus).send(returnBody); 
+				});
+		}
+		else{
+			logger.log('debug','routes|auth|emailResetPassword|bad params');
+			returnStatus=HttpStatus.NOT_FOUND;
+			res.status(returnStatus).send(returnBody); 
+		}
 	},
 	resetPassword : function (req, res, next) {
 		/* 
@@ -116,38 +122,25 @@ module.exports = {
 					- if send KO => 500
 					- if send OK =>200
 		*/
-		logger.log('debug','auth|resetPassword'+JSON.stringify(req.body));
-		var req_password_change_token = req.params.password_change_token;
 		var returnBody = '';
 		var returnStatus;
 		var myT;
-		models.sequelize.transaction()
-			.then(function(t){
-				logger.log('debug','auth|resetPassword|query user'); 
-				myT=t;
-				return models.User.find({	where:	{password_change_token : req_password_change_token}})
-			})
-			.then(function(user){
-				if(user){
-				returnStatus = HttpStatus.OK;
-				}
-				else{
-					returnStatus = HttpStatus.NOT_FOUND;
-				}
-				myT.commit();
+		logger.log('debug','routes|auth|resetPassword');
+		if(req.params && req.params.password_change_token){
+			var req_password_change_token = req.params.password_change_token;
 
-			})
-			.catch(function(err){
-				myT.rollback();
-				if(err){
-					logger.log('error','auth|resetPassword : '+err);
-					returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-				} 
-			})
-			.finally(function(){
-				res.status(returnStatus).send();
-				myT.rollback();
-			})
+			controllers.auth.resetPassword(req_password_change_token)
+				.then(function(cb){
+					res.status(cb).send();
+				})
+				.catch(function(err){
+					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+				})
+		}
+		else{
+			logger.log('debug','routes|auth|resetPassword|form input not correct'); 
+			res.status(HttpStatus.NOT_FOUND).send();
+		}
 	},
 	changePassword : function (req, res, next) {
 		/* 
@@ -159,52 +152,24 @@ module.exports = {
 					- if save KO => 500
 					- if save OK =>200
 		*/
-		logger.log('debug','auth|changePassword'+JSON.stringify(req.body));
-		if(req.body.user && req.body.user.password_change_token && req.body.user.password){
+		logger.log('debug','routes|auth|changePassword'+JSON.stringify(req.body));
+		if(req.body && req.body.user && req.body.user.password_change_token && req.body.user.password){
 			var req_password_change_token = req.body.user.password_change_token;
 			var req_password = req.body.user.password;
 			var db_user;
 			var returnBody = '';
 			var returnStatus;
 			var myT;
-			models.sequelize.transaction()
-				.then(function(t){
-					logger.log('debug','auth|changePassword|query user'); 
-					myT=t;
-					return models.User.find({	where:	{password_change_token : req_password_change_token}})
-				})
-				.then(function(user){
-					if(user){
-						db_user = user;
-						db_user.password = bcrypt.hashSync(req_password, null, null);
-						db_user.password_change_token =null;
-						returnStatus = HttpStatus.OK;
-						return db_user.save({transaction:myT});
-					}
-					else{
-						returnStatus = HttpStatus.NOT_FOUND;
-						Promise.reject();
-					}
-		
-				})
-				.then(function(){
-					logger.log('debug','auth|changePassword|commit'); 					
-					myT.commit();
+			controllers.auth.changePassword(req_password_change_token,req_password)
+				.then(function(cd){
+					res.status(cb).send();
 				})
 				.catch(function(err){
-					myT.rollback();
-					if(err){
-						logger.log('error','auth|changePassword : '+err);
-						returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-					} 
-				})
-				.finally(function(){
-					res.status(returnStatus).send();
-					myT.rollback();
+					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 				})
 		}
 		else{
-			logger.log('debug','auth|changePassword|form input not correct'); 
+			logger.log('debug','routes|auth|changePassword|form input not correct'); 
 			res.status(HttpStatus.NOT_FOUND).send();
 		}
 
