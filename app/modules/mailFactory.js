@@ -66,5 +66,6 @@ MailTemplate.prototype.addRecipient = function(email){
 MailTemplate.prototype.formatRecipient = function(){
 
 }
+Promise.promisifyAll(mailFactory);
 
 module.exports = mailFactory;

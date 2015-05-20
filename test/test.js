@@ -1,6 +1,5 @@
 var Promise 		= require("bluebird");
 var assert = require("assert"); // node.js core module
-process.env.PWD="C:/locashop";
 var controllers = require(process.env.PWD+'/app/controllers');
 Promise.promisifyAll(controllers.auth);
 
