@@ -16,7 +16,7 @@ module.exports = function (app,passport) {
 	app.get('/api/auth/emailResetPassword/:email'					, routes.auth.emailResetPassword);
 	app.get('/api/auth/resetPassword/:password_change_token'		, routes.auth.resetPassword);
 	app.post('/api/auth/changePassword'								, routes.auth.changePassword);
-	app.get('/api/user/:id'											, controllers.user.get); 
+	app.get('/api/user/:id'											, routes.user.get); 
 	app.post('/api/user/:id'										, controllers.user.save); 
 	app.post('/api/user/:id_user/adresse'							, controllers.user.adresse.save); 
 	app.get('/api/user/:id_user/adresse'							, controllers.user.adresse.get); 

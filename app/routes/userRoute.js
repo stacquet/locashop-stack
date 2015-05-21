@@ -3,33 +3,33 @@ var formidable 		= require('formidable');
 var fs   			= require('fs-extra');
 var path			= require('path');
 var HttpStatus		= require('http-status-codes');
-var models   		= require('../models/');
+var models   		= require(process.env.PWD+'/app/models/');
+var controllers		= require(process.env.PWD+'/app/controllers/');
 var Promise 		= require('bluebird');
-var logger			= require('../util/logger');
-var config			= require('../../secret/config');
+var logger			= require(process.env.PWD+'/app/util/logger');
+var config			= require(process.env.PWD+'/secret/config');
 var S 				= require('string');
 
 Promise.promisifyAll(crypto);
-
+Promise.promisifyAll(fs);
+Promise.promisifyAll(formidable);
 
 module.exports = {
 	//var adresse={};
-	get: function (id_user) {
-		return new Promise(function(resolve,reject){
-			if(id_user){
-				models.User.find({
-					where:	{id_user : id_user},
-					include: [models.Photo]
-				}).then(function(user){
-					resolve(user);
-				}).catch(function(err){
-					reject(new Error('No user found'))
+	get: function (req, res, next) {
+		if(req.params && req.params.id){
+			controllers.user.get(req.params.id)
+				.then(function(user){
+					res.status(HttpStatus.OK).send(user);
+				})
+				.catch(function(err){
+					logger.log('error','routes|userController|get| '+err);
+					res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
 				});
-			}
-			else{
-				reject(new Error('No id_user passed as parameter'))
-			}
-		})
+		}
+		else{
+			res.status(HttpStatus.NOT_FOUND).send();
+		}
 	},
 	save: function (req, res, next) {
 		/* Sauvegarde du profil utilisateur : */
