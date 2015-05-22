@@ -13,7 +13,7 @@ Promise.promisifyAll(sendgrid);
 */
 var mailFactory = {};
 
-mailFactory.createMailTemplate = function(idMailTemplate, cb){
+mailFactory.createMailTemplate = function(idMailTemplate){
 	return new Promise(function(resolve,reject){
 		if(idMailTemplate){
 			models.MailTemplate.find({	where:	{id_mail_template : idMailTemplate}})
