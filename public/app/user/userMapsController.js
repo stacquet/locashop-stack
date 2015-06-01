@@ -36,34 +36,43 @@
 
 		}
 		function init(){
-			MapsService.init($rootScope);
-			$rootScope.busy = UserMapsService.get({id_user : $stateParams.id_user}).$promise
-				.then(function(data, status, headers, config){
-					
-					vmUserMaps.user.Adresse=data;
-					if(vmUserMaps.user.Adresse){
-						vmUserMaps.editMode='read';
-						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
-						var place = {
-							name : vmUserMaps.user.Adresse.formatted_address,
-							geometry : {
-								location : myPoint
+			MapsService.init($rootScope)
+				.then(function(){
+					$rootScope.busy = UserMapsService.get({id_user : $stateParams.id_user}).$promise
+						.then(function(data, status, headers, config){
+							
+							vmUserMaps.user.Adresse=data;
+							if(vmUserMaps.user.Adresse){
+								vmUserMaps.editMode='read';
+								var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
+								var place = {
+									name : vmUserMaps.user.Adresse.formatted_address,
+									geometry : {
+										location : myPoint
+									}
+								};
+								MapsService.bounds = new google.maps.LatLngBounds();
+								MapsService.bounds.extend(myPoint);
+								MapsService.addMarker(place,false);
+								MapsService.map.fitBounds(MapsService.bounds);
+								MapsService.map.setZoom(11);
 							}
-						};
-						MapsService.bounds = new google.maps.LatLngBounds();
-						MapsService.bounds.extend(myPoint);
-						MapsService.addMarker(place,false);
-						MapsService.map.fitBounds(MapsService.bounds);
-						MapsService.map.setZoom(11);
-					}
+						})
+						.catch(function(err){
+							vmUserMaps.user.Adresse=new UserMapsService();
+							vmUserMaps.editMode='new';
+						})
+						.finally(function(){
+							vmUserMaps.initDone=true;
+						});
 				})
 				.catch(function(err){
-					vmUserMaps.user.Adresse=new UserMapsService();
-					vmUserMaps.editMode='new';
+					console.log('erreur maps : '+err);
 				})
 				.finally(function(){
 					vmUserMaps.initDone=true;
 				});
+			
 		}
 
 		function toggleModal(){

@@ -41,7 +41,7 @@
 				$state.go('user.adresse');
 				},
 				function(error){
-					notifier.notify({template : error,type:'error'});
+					notifier.notify({template : 'erreur de sauvegarde : '+error,type:'error'});
 				});
 		}
 
@@ -65,6 +65,7 @@
 	            fields: {'user' : vmUserInfo.user},
 	            file: file
 			}
+			console.log('lo ! ');
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {

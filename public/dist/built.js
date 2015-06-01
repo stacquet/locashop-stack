@@ -653,51 +653,59 @@ angular
 		return mapsService;
 
 		function init(scope) {
-			mapsService.scope=scope;
-			mapsService.markers = [];
-			var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
-			var searchBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(input));
-	        var options = {
-	            center: new google.maps.LatLng(40.7127837, -74.00594130000002),
-	            zoom: 13,
-	            disableDefaultUI: true    
-	        }
-	        mapsService.map = new google.maps.Map(
-	            document.getElementById("map"), options
-	        );
-	        mapsService.places = new google.maps.places.PlacesService(mapsService.map);
+			var deferred = $q.defer();
+			try{
+				mapsService.scope=scope;
+				mapsService.markers = [];
+				var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
+				var searchBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(input));
+		        var options = {
+		            center: new google.maps.LatLng(40.7127837, -74.00594130000002),
+		            zoom: 13,
+		            disableDefaultUI: true    
+		        }
+		        mapsService.map = new google.maps.Map(
+		            document.getElementById("map"), options
+		        );
+		        mapsService.places = new google.maps.places.PlacesService(mapsService.map);
 
-			google.maps.event.addListener(searchBox, 'places_changed', function() {
-			  var places = searchBox.getPlaces();
+				google.maps.event.addListener(searchBox, 'places_changed', function() {
+				  var places = searchBox.getPlaces();
 
-			  if (places.length == 0) {
-			    return;
-			  }
-			  for (var i = 0, marker; marker = mapsService.markers[i]; i++) {
-			    marker.setMap(null);
-			  }
+				  if (places.length == 0) {
+				    return;
+				  }
+				  for (var i = 0, marker; marker = mapsService.markers[i]; i++) {
+				    marker.setMap(null);
+				  }
 
-			  // For each place, get the icon, place name, and location.
-			  mapsService.markers = [];
-			  mapsService.bounds = new google.maps.LatLngBounds();
-			  for (var i = 0, place; place = places[i]; i++) {
-			  	console.log(place);
-			    addMarker(place,true);
-				
+				  // For each place, get the icon, place name, and location.
+				  mapsService.markers = [];
+				  mapsService.bounds = new google.maps.LatLngBounds();
+				  for (var i = 0, place; place = places[i]; i++) {
+				  	console.log(place);
+				    addMarker(place,true);
+					
 
-			    mapsService.markers.push(marker);
+				    mapsService.markers.push(marker);
 
-			    mapsService.bounds.extend(place.geometry.location);
-			  }
+				    mapsService.bounds.extend(place.geometry.location);
+				  }
 
-			  mapsService.map.fitBounds(mapsService.bounds);
-			  mapsService.map.setZoom(11);
-			});
+				  mapsService.map.fitBounds(mapsService.bounds);
+				  mapsService.map.setZoom(11);
+				});
 
-			google.maps.event.addListener(mapsService.map, 'bounds_changed', function() {
-			  var bounds = mapsService.map.getBounds();
-			  searchBox.setBounds(bounds);
-			});			
+				google.maps.event.addListener(mapsService.map, 'bounds_changed', function() {
+				  var bounds = mapsService.map.getBounds();
+				  searchBox.setBounds(bounds);
+				});
+				deferred.resolve();
+			}
+			catch(err){
+				deferred.reject('error : '+err);
+			}
+			return deferred.promise;
 	    }
 		
 		function search(str) {
@@ -856,7 +864,7 @@ function modal(){
 				$state.go('user.adresse');
 				},
 				function(error){
-					notifier.notify({template : error,type:'error'});
+					notifier.notify({template : 'erreur de sauvegarde : '+error,type:'error'});
 				});
 		}
 
@@ -880,6 +888,7 @@ function modal(){
 	            fields: {'user' : vmUserInfo.user},
 	            file: file
 			}
+			console.log('lo ! ');
 	        $upload.upload(dataForm).success(function (data, status, headers, config) {
 	                    deferred.resolve();
 	                }).error(function (data, status, headers, config) {
@@ -961,34 +970,43 @@ function modal(){
 
 		}
 		function init(){
-			MapsService.init($rootScope);
-			$rootScope.busy = UserMapsService.get({id_user : $stateParams.id_user}).$promise
-				.then(function(data, status, headers, config){
-					
-					vmUserMaps.user.Adresse=data;
-					if(vmUserMaps.user.Adresse){
-						vmUserMaps.editMode='read';
-						var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
-						var place = {
-							name : vmUserMaps.user.Adresse.formatted_address,
-							geometry : {
-								location : myPoint
+			MapsService.init($rootScope)
+				.then(function(){
+					$rootScope.busy = UserMapsService.get({id_user : $stateParams.id_user}).$promise
+						.then(function(data, status, headers, config){
+							
+							vmUserMaps.user.Adresse=data;
+							if(vmUserMaps.user.Adresse){
+								vmUserMaps.editMode='read';
+								var myPoint  = new google.maps.LatLng(vmUserMaps.user.Adresse.latitude,vmUserMaps.user.Adresse.longitude);
+								var place = {
+									name : vmUserMaps.user.Adresse.formatted_address,
+									geometry : {
+										location : myPoint
+									}
+								};
+								MapsService.bounds = new google.maps.LatLngBounds();
+								MapsService.bounds.extend(myPoint);
+								MapsService.addMarker(place,false);
+								MapsService.map.fitBounds(MapsService.bounds);
+								MapsService.map.setZoom(11);
 							}
-						};
-						MapsService.bounds = new google.maps.LatLngBounds();
-						MapsService.bounds.extend(myPoint);
-						MapsService.addMarker(place,false);
-						MapsService.map.fitBounds(MapsService.bounds);
-						MapsService.map.setZoom(11);
-					}
+						})
+						.catch(function(err){
+							vmUserMaps.user.Adresse=new UserMapsService();
+							vmUserMaps.editMode='new';
+						})
+						.finally(function(){
+							vmUserMaps.initDone=true;
+						});
 				})
 				.catch(function(err){
-					vmUserMaps.user.Adresse=new UserMapsService();
-					vmUserMaps.editMode='new';
+					console.log('erreur maps : '+err);
 				})
 				.finally(function(){
 					vmUserMaps.initDone=true;
 				});
+			
 		}
 
 		function toggleModal(){
