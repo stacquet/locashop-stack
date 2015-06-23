@@ -16,7 +16,7 @@
 				.state('inscription', {
 					url : '/inscription',
 					templateUrl: 'app/inscription/inscription.html',
-					controller:	'inscriptionController as vm'
+					controller:	'inscriptionController as vm' 
 				})
 				.state('login', {
 					url: '/login',
@@ -30,10 +30,20 @@
 
 				})
 				.state('ferme', {
-					url : '/ferme',
+					url : '/ferme/:id_ferme',
 					templateUrl: 'app/ferme/ferme.html',
-					controller : 'fermeController as vm'
+					controller : 'fermeController as vmFerme'
 				})
+					.state('ferme.infos', {
+						url : '/infos',
+						templateUrl: 'app/ferme/fermeInfos.html',
+						controller : 'userInfoController as vmFermeInfo'
+					})
+					.state('ferme.catalogue', {
+						url : '/catalogue',
+						templateUrl: 'app/ferme/fermeCatalogue.html',
+						controller : 'fermeCatalogueController as vmFermeCatalogue'
+					})
 				.state('itineraire', {
 					url : '/itineraire',
 					templateUrl: 'app/itineraire/itineraire.html',
