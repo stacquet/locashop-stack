@@ -37,7 +37,7 @@
 					.state('ferme.infos', {
 						url : '/infos',
 						templateUrl: 'app/ferme/fermeInfos.html',
-						controller : 'userInfoController as vmFermeInfo'
+						controller : 'fermeInfoController as vmFermeInfo'
 					})
 					.state('ferme.catalogue', {
 						url : '/catalogue',

@@ -7,11 +7,11 @@ var transactionManager={}
 transactionManager.getTransaction = function(myT){
 	return new Promise(function(resolve,reject){
 		if(myT && myT.connection){
-			logger.log('debug','modules|transactionManager|getTransaction|transaction OK, juste resolve'); 
+			logger.log('debug','modules|transactionManager|getTransaction|transaction already OK, juste resolve'); 
 			resolve(myT)
 		}
 		else{
-			logger.log('debug','modules|transactionManager|getTransaction|no transaction or incorrect transaction provided so we create a new one'); 
+			logger.log('debug','modules|transactionManager|getTransaction|no transaction or incorrect transaction : '+myT+' provided so we create a new one'); 
 			models.sequelize.transaction()
 				.then(function(t){
 					resolve(t);

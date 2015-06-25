@@ -5,5 +5,6 @@ module.exports = {
 	model 		: require('./modelController'),
 	user		: require('./userController'),
  	mail		: require('./mailController'),
-	admin		: require('./adminController')
+	admin		: require('./adminController'),
+	ferme		: require('./fermeController')
  };

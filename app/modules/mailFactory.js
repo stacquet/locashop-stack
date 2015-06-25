@@ -49,12 +49,17 @@ var MailTemplate = function(opts){
 	} 
 }
 MailTemplate.prototype.send = function(){
-	return sendgrid.sendAsync({
-		to			: this.recipient,
-		from		: conf.mailSender,
-		subject		: this.object,
-		html 		: ""+this.content	
-	});
+	if(conf.shouldEmailBeSend){
+		return sendgrid.sendAsync({
+			to			: this.recipient,
+			from		: conf.mailSender,
+			subject		: this.object,
+			html 		: ""+this.content	
+		})
+	}
+	else{
+		Promise.resolve()
+	}
 }
 
 MailTemplate.prototype.setParam = function(key,value){

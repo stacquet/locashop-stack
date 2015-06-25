@@ -91,6 +91,7 @@ module.exports = {
 						} 
 					})
 					.finally(function(){
+						console.log(req_email)
 						myT.rollback();
 						resolve(returnStatus)
 					});

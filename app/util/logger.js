@@ -1,11 +1,16 @@
 var winston = require('winston');
 winston.emitErrs = true;
 
+var infoFile = process.env.PWD+'/logs/info.log';
+var verboseFile = process.env.PWD+'/logs/verbose.log';
+var debugFile = process.env.PWD+'/logs/debug.log';
+
+
 var logger = new winston.Logger({
     transports: [
         new (winston.transports.File)({
             name: 'info-file',
-	    	filename: process.env.PWD+'/logs/info.log',
+	    	filename: infoFile,
 	    	level: 'info',
             handleExceptions: true,
             json: true,
@@ -15,12 +20,12 @@ var logger = new winston.Logger({
         }),
 	    new (winston.transports.File)({
 	    	name: 'verbose-file',
-	    	filename: process.env.PWD+'/logs/verbose.log',
+	    	filename: verboseFile,
 	    	level: 'verbose'
 	    }),
 	    new (winston.transports.File)({
 	    	name: 'debug-file',
-	    	filename: process.env.PWD+'/logs/debug.log',
+	    	filename: debugFile,
 	    	level: 'debug'
 	    }),
         new (winston.transports.Console)({
@@ -32,5 +37,6 @@ var logger = new winston.Logger({
     ],
     exitOnError: false
 });
+console.log('I will log in '+infoFile+'\n'+verboseFile+'\n'+debugFile);
 
 module.exports = logger;

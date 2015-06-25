@@ -25,7 +25,7 @@ describe('checkEmailAvailable Unit Test', function(){
 });
 
 describe('emailResetPassword Unit Test', function(){
-    it('#emailResetPassword(tes) should return OK because sylvain.tacquet@gmail.com exists in database', function(){
+    it('#emailResetPassword('+testEmail+') should return OK because '+testEmail+' exists in database', function(){
 		return controllers.auth.emailResetPassword(testEmail).should.fulfilledWith(HttpStatus.OK);			
 	});
 	it('#emailResetPassword(zzzzz@zzzzz.zzzzz) should return NOT_FOUND because zzzzz@zzzzz.zzzzz does not exist in database', function(){
@@ -42,12 +42,12 @@ describe('emailResetPassword Unit Test', function(){
 
 describe('resetPassword Unit Test', function(){
  	it('#resetPassword() should return OK because testEmail exist in database', function(){
- 		models.User.find({	where:	{email : testEmail}})
+ 		return models.User.find({	where:	{email : testEmail}})
  			.then(function(user){
 				user.password_change_token = testpassword_change_token;
 				return user.save()
 			})
-			.then(function(){
+			.then(function(user){
 				return controllers.auth.resetPassword(user.password_change_token).should.fulfilledWith(HttpStatus.OK);
 			});		
 	});
