@@ -7,6 +7,8 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey:true
     },
+
+    nom                   : Sequelize.STRING(100),
     id_adresse_livraison : Sequelize.INTEGER,
     presentation_ferme : Sequelize.STRING(2000),
     presentation_produits : Sequelize.STRING(2000),
