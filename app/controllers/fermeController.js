@@ -15,14 +15,17 @@ module.exports = {
 					})
 					.then(function(ferme){
 						return ferme.save({transaction:myT})
-						})
+					})
 					.then(function(ferme){
-						console.log(ferme);
-						resolve(ferme);
+						myT.commit();
+						resolve();
 					})
 					.catch(function(err){
-						console.log(err)
+						logger.log('debug',err);
 						reject(err);
+					})
+					.finally(function(){
+						myT.rollback();
 					});
 				}
 				else{

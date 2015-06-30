@@ -29,13 +29,13 @@ describe('create ferme Unit Test', function(){
 		return controllers.ferme.createFerme(fermeNomOK).should.fulfilledWith(true);			
 	});
 	it('#createFerme('+fermeNomEmpty+') should return false because '+fermeNomEmpty+' is empty', function(){
-		return controllers.ferme.createFerme(fermeNomOK).should.fulfilledWith(false);			
+		return controllers.ferme.createFerme(fermeNomEmpty).should.fulfilledWith(false);			
 	});
 	it('#createFerme('+fermeNomUndefined+') should return false because '+fermeNomUndefined+' is undefined', function(){
-		return controllers.ferme.createFerme(fermeNomOK).should.fulfilledWith(false);			
+		return controllers.ferme.createFerme(fermeNomUndefined).should.fulfilledWith(false);			
 	});
 	it('#createFerme(too long string) should return false because description is too long (>2000 char)', function(){
-		return controllers.ferme.createFerme(fermeNomOK).should.fulfilledWith(false);			
+		return controllers.ferme.createFerme(fermeNomTooLong).should.fulfilledWith(false);			
 	});	
 });
 
